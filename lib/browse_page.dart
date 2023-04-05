@@ -74,12 +74,12 @@ class _BrowsePageState extends State<BrowsePage> {
     void _onPageFinished(String url) async {
       print("onPageFinished===${_currentAccountIndex}");
       if (_currentAccountIndex > -1) {
-        // in logging
+        // in auto logging
         if (url == 'https://m.zmxyj.com/login/me.html') {
           if(_processedAccountIndexes.contains(_currentAccountIndex)) {
             return; // if processed, ignore. Due to onPageFinished multi-callback
           }
-          accountProvider.updateLoginStatus(_currentAccountIndex, true);
+          accountProvider.toggleLoginStatus(_currentAccountIndex);
           _processedAccountIndexes.add(_currentAccountIndex);
           await Future.delayed(Duration(seconds: 1));
           await _logout();
