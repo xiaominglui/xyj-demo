@@ -30,7 +30,8 @@ CREATE TABLE accounts (
   id $idType,
   phoneNumber $textType,
   password $textType,
-  isLoggedIn INTEGER
+  isLoggedIn INTEGER NOT NULL,
+  lastLoggedIn TEXT
 )
 ''');
   }

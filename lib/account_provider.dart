@@ -45,6 +45,7 @@ class AccountProvider with ChangeNotifier {
       phoneNumber: account.phoneNumber,
       password: account.password,
       isLoggedIn: !account.isLoggedIn,
+      lastLoggedIn: DateTime.now(),
     );
     await updateAccount(updatedAccount);
   }

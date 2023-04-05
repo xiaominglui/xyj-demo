@@ -154,14 +154,21 @@ class _AccountItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLoggedToday = account.lastLoggedIn != null && DateTime.now().difference(account.lastLoggedIn!).inDays == 0;
+
     return ListTile(
       leading: Icon(
-        account.isLoggedIn ? Icons.check_circle_outline : Icons.radio_button_unchecked,
-        color: account.isLoggedIn ? Colors.green : null,
+        isLoggedToday ? Icons.check_circle_outline : Icons.radio_button_unchecked,
+        color: isLoggedToday ? Colors.green : null,
       ),
       title: Text('手机号: ${account.phoneNumber}'),
-      subtitle: Text('登录状态: ${account.isLoggedIn ? '已登录' : '未登录'}'),
+      subtitle: Text('登录状态: ${isLoggedToday ? '已登录' : '未登录'}'),
+      trailing: isLoggedToday ? Text('登录成功: ${_formatDate(account.lastLoggedIn!)}') : null,
       onLongPress: onLongPress,
     );
+  }
+
+  String _formatDate(DateTime dateTime) {
+    return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}';
   }
 }
