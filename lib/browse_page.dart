@@ -14,6 +14,7 @@ class _BrowsePageState extends State<BrowsePage> {
   final _url = 'https://m.zmxyj.com/login/index';
   WebViewController? _webViewController;
   int _currentAccountIndex = -1;
+  Set<int> _processedAccountIndexes = {};
   final _accountProcessedController = StreamController<void>.broadcast();
 
 
@@ -56,28 +57,41 @@ class _BrowsePageState extends State<BrowsePage> {
     }
 
     void _autoLogin() async {
-      print("autoLogin");
-      for (int i = 0; i < accountProvider.accounts.length; i++) {
+      var length = accountProvider.accounts.length;
+      print("autoLogin===${length}");
+      _processedAccountIndexes.clear();
+
+      for (int i = 0; i < length; i++) {
         _currentAccountIndex = i;
-        print("autoLogin---${i}---${_currentAccountIndex}");
+        print("autoLogin===${i}===${_currentAccountIndex}");
+        await Future.delayed(Duration(seconds: 3));
         await _loginWithAccount(accountProvider.accounts[i]);
-        print("autoLogin---waiting---${_currentAccountIndex}");
+        print("autoLogin waiting===${_currentAccountIndex}");
         await _accountProcessedController.stream.first;
       }
     }
 
     void _onPageFinished(String url) async {
-      print("onPageFinished");
-      if (url == 'https://m.zmxyj.com/login/me.html' && _currentAccountIndex != -1) {
-        accountProvider.updateLoginStatus(_currentAccountIndex, true);
-        await Future.delayed(Duration(seconds: 1));
-        await _logout();
-        await Future.delayed(Duration(seconds: 1));
-        _accountProcessedController.add(null);
-        print("autoLogin---continue via logged in---${_currentAccountIndex}");
+      print("onPageFinished===${_currentAccountIndex}");
+      if (_currentAccountIndex > -1) {
+        // in logging
+        if (url == 'https://m.zmxyj.com/login/me.html') {
+          if(_processedAccountIndexes.contains(_currentAccountIndex)) {
+            return; // if processed, ignore. Due to onPageFinished multi-callback
+          }
+          accountProvider.updateLoginStatus(_currentAccountIndex, true);
+          _processedAccountIndexes.add(_currentAccountIndex);
+          await Future.delayed(Duration(seconds: 1));
+          await _logout();
+          await Future.delayed(Duration(seconds: 1));
+          _accountProcessedController.add(null);
+          print("autoLogin continue via logged in===${_currentAccountIndex}");
+        } else {
+          print("autoLogin continue");
+        }
       } else {
-        // _accountProcessedController.add(null);
-        // print("continue via error");
+        // normal loading
+        print("normal loading");
       }
     }
 
