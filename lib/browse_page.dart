@@ -16,7 +16,7 @@ class _BrowsePageState extends State<BrowsePage> {
   int _currentAccountIndex = -1;
   Set<int> _processedAccountIndexes = {};
   final _accountProcessedController = StreamController<void>.broadcast();
-
+  var _completers = Map<int, Completer<void>>();
 
   @override
   void dispose() {
@@ -60,6 +60,7 @@ class _BrowsePageState extends State<BrowsePage> {
       var length = accountProvider.accounts.length;
       print("autoLogin===${length}");
       _processedAccountIndexes.clear();
+      _completers.clear();
 
       for (int i = 0; i < length; i++) {
         _currentAccountIndex = i;
@@ -67,6 +68,8 @@ class _BrowsePageState extends State<BrowsePage> {
         await Future.delayed(Duration(seconds: 3));
         await _loginWithAccount(accountProvider.accounts[i]);
         print("autoLogin waiting===${_currentAccountIndex}");
+        _completers[i] = Completer<void>();
+        _waitForPageFinishedOrTimeout(i, Duration(seconds: 10));
         await _accountProcessedController.stream.first;
       }
     }
@@ -84,10 +87,11 @@ class _BrowsePageState extends State<BrowsePage> {
           await Future.delayed(Duration(seconds: 1));
           await _logout();
           await Future.delayed(Duration(seconds: 1));
+          _completers[_currentAccountIndex]!.complete();
           _accountProcessedController.add(null);
-          print("autoLogin continue via logged in===${_currentAccountIndex}");
+          print("autoLogin continue via logged in===${_currentAccountIndex}, continue");
         } else {
-          print("autoLogin continue");
+          print("autoLogin ignore");
         }
       } else {
         // normal loading
@@ -110,5 +114,19 @@ class _BrowsePageState extends State<BrowsePage> {
         child: Icon(Icons.login),
       ),
     );
+  }
+
+  Future<void> _waitForPageFinishedOrTimeout(int p, Duration timeout) async {
+    Future.delayed(timeout).then((_) {
+      if (!_completers[p]!.isCompleted) {
+        print("autoLogin timeout===${p}");
+        _accountProcessedController.add(null);
+        _completers[p]!.complete();
+      } else {
+        print("autoLogin page finished===${p}");
+      }
+    });
+
+    return _completers[p]!.future;
   }
 }
