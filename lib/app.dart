@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:webview_app/my_page.dart';
+import 'package:webview_app/today_overview_page.dart';
 import 'browse_page.dart';
 import 'account_page.dart';
 
@@ -21,8 +23,10 @@ class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
+    TodayOverviewPage(),
     BrowsePage(),
     AccountPage(),
+    MyPage(),
   ];
 
   void _onTap(int index) {
@@ -39,8 +43,10 @@ class _MainPageState extends State<MainPage> {
         currentIndex: _currentIndex,
         onTap: _onTap,
         items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: '今日'),
           BottomNavigationBarItem(icon: Icon(Icons.explore_rounded), label: '浏览器'),
           BottomNavigationBarItem(icon: Icon(Icons.account_tree_rounded), label: '帐号'),
+          // BottomNavigationBarItem(icon: Icon(Icons.menu), label: '我的'),
         ],
       ),
     );
