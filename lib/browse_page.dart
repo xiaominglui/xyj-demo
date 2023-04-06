@@ -111,7 +111,7 @@ class _BrowsePageState extends State<BrowsePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _autoLogin,
-        child: Icon(Icons.login),
+        child: Icon(Icons.auto_mode),
       ),
     );
   }

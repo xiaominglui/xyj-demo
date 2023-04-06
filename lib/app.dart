@@ -39,8 +39,8 @@ class _MainPageState extends State<MainPage> {
         currentIndex: _currentIndex,
         onTap: _onTap,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.explore), label: '浏览'),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: '帐号'),
+          BottomNavigationBarItem(icon: Icon(Icons.explore_rounded), label: '浏览器'),
+          BottomNavigationBarItem(icon: Icon(Icons.account_tree_rounded), label: '帐号'),
         ],
       ),
     );
