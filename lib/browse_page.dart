@@ -17,6 +17,8 @@ class _BrowsePageState extends State<BrowsePage> {
   Set<int> _processedAccountIndexes = {};
   final _accountProcessedController = StreamController<void>.broadcast();
   var _completers = Map<int, Completer<void>>();
+  bool _isAutoLoggingIn = false;
+  bool _isManualStop = false;
 
   @override
   void dispose() {
@@ -56,13 +58,18 @@ class _BrowsePageState extends State<BrowsePage> {
       ''');
     }
 
-    void _autoLogin() async {
+    Future<void> _autoLogin() async {
+      setState(() {
+        _isAutoLoggingIn = true;
+        _isManualStop = false;
+      });
       var length = accountProvider.accounts.length;
       print("autoLogin===${length}");
       _processedAccountIndexes.clear();
       _completers.clear();
 
-      for (int i = 0; i < length; i++) {
+
+      for (int i = 0; i < length && !_isManualStop; i++) {
         _currentAccountIndex = i;
         print("autoLogin===${i}===${_currentAccountIndex}");
         await Future.delayed(Duration(seconds: 3));
@@ -72,6 +79,10 @@ class _BrowsePageState extends State<BrowsePage> {
         _waitForPageFinishedOrTimeout(i, Duration(seconds: 10));
         await _accountProcessedController.stream.first;
       }
+
+      setState(() {
+        _isAutoLoggingIn = false;
+      });
     }
 
     void _onPageFinished(String url) async {
@@ -101,13 +112,18 @@ class _BrowsePageState extends State<BrowsePage> {
 
     return Scaffold(
       appBar: AppBar(title: Text('浏览')),
-      body: WebView(
-        initialUrl: '$_url',
-        javascriptMode: JavascriptMode.unrestricted,
-        onWebViewCreated: (WebViewController webViewController) {
-          _webViewController = webViewController;
-        },
-        onPageFinished: _onPageFinished,
+      body: Stack(
+        children: [
+          WebView(
+            initialUrl: '$_url',
+            javascriptMode: JavascriptMode.unrestricted,
+            onWebViewCreated: (WebViewController webViewController) {
+              _webViewController = webViewController;
+            },
+            onPageFinished: _onPageFinished,
+          ),
+          if (_isAutoLoggingIn) _buildAutoLoginOverlay(),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _autoLogin,
@@ -128,5 +144,39 @@ class _BrowsePageState extends State<BrowsePage> {
     });
 
     return _completers[p]!.future;
+  }
+
+
+
+  Widget _buildAutoLoginOverlay() {
+    final accountProvider = Provider.of<AccountProvider>(context);
+    return Positioned.fill(
+      child: Opacity(
+        opacity: 0.5,
+        child: Container(
+          color: Colors.black,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '正在登录：${_currentAccountIndex != -1 ? accountProvider.accounts[_currentAccountIndex].phoneNumber : ''}',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _isManualStop = true;
+                    });
+                  },
+                  child: Text('停止自动登录'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
