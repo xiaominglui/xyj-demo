@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 import 'account.dart';
 import 'account_provider.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +15,8 @@ class BrowsePage extends StatefulWidget {
 
 class _BrowsePageState extends State<BrowsePage> {
   final _url = 'https://m.zmxyj.com/login/index';
-  WebViewController? _webViewController;
+  late final WebViewController _webViewController;
+  late AccountProvider _accountProvider;
   int _currentAccountIndex = -1;
   Set<int> _processedAccountIndexes = {};
   final _accountProcessedController = StreamController<void>.broadcast();
@@ -20,18 +24,34 @@ class _BrowsePageState extends State<BrowsePage> {
   bool _isAutoLoggingIn = false;
   bool _isManualStop = false;
 
-  @override
-  void dispose() {
-    _accountProcessedController.close();
-    super.dispose();
+  void _onPageFinished(String url) async {
+    print("onPageFinished===${_currentAccountIndex}");
+    if (_currentAccountIndex > -1) {
+      // in auto logging
+      if (url == 'https://m.zmxyj.com/login/me.html') {
+        if(_processedAccountIndexes.contains(_currentAccountIndex)) {
+          return; // if processed, ignore. Due to onPageFinished multi-callback
+        }
+        _accountProvider.toggleLoginStatus(_currentAccountIndex);
+        _processedAccountIndexes.add(_currentAccountIndex);
+        await Future.delayed(Duration(seconds: 1));
+        await _logout();
+        await Future.delayed(Duration(seconds: 1));
+        _completers[_currentAccountIndex]!.complete();
+        _accountProcessedController.add(null);
+        print("autoLogin continue via logged in===${_currentAccountIndex}, continue");
+      } else {
+        print("autoLogin ignore");
+      }
+    } else {
+      // normal loading
+      print("normal loading");
+    }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final accountProvider = Provider.of<AccountProvider>(context);
 
-    Future<void> _logout() async {
-      await _webViewController?.evaluateJavascript('''
+  Future<void> _logout() async {
+    await _webViewController?.runJavaScript('''
         (function() {
           document.getElementsByClassName("header-message-t back")[2].click();
           setTimeout(function() {
@@ -39,13 +59,95 @@ class _BrowsePageState extends State<BrowsePage> {
           }, 500);
         })();
       ''');
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    late final PlatformWebViewControllerCreationParams params;
+    if (WebViewPlatform.instance is WebKitWebViewPlatform) {
+      params = WebKitWebViewControllerCreationParams(
+        allowsInlineMediaPlayback: true,
+        mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
+      );
+    } else {
+      params = const PlatformWebViewControllerCreationParams();
     }
+
+    final WebViewController controller = WebViewController.fromPlatformCreationParams(params);
+    // #enddocregion platform_features
+
+    controller
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            debugPrint('WebView is loading (progress : $progress%)');
+          },
+          onPageStarted: (String url) {
+            debugPrint('Page started loading: $url');
+          },
+          onPageFinished: (String url) {
+            debugPrint('Page finished loading: $url');
+            _onPageFinished(url);
+          },
+          onWebResourceError: (WebResourceError error) {
+            debugPrint('''
+Page resource error:
+  code: ${error.errorCode}
+  description: ${error.description}
+  errorType: ${error.errorType}
+  isForMainFrame: ${error.isForMainFrame}
+          ''');
+          },
+          onNavigationRequest: (NavigationRequest request) {
+            if (request.url.startsWith('https://www.youtube.com/')) {
+              debugPrint('blocking navigation to ${request.url}');
+              return NavigationDecision.prevent;
+            }
+            debugPrint('allowing navigation to ${request.url}');
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..addJavaScriptChannel(
+        'Toaster',
+        onMessageReceived: (JavaScriptMessage message) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(message.message)),
+          );
+        },
+      )
+      ..loadRequest(Uri.parse(_url));
+
+    // #docregion platform_features
+    if (controller.platform is AndroidWebViewController) {
+      AndroidWebViewController.enableDebugging(true);
+      (controller.platform as AndroidWebViewController)
+          .setMediaPlaybackRequiresUserGesture(false);
+    }
+    // #enddocregion platform_features
+
+    _webViewController = controller;
+  }
+  @override
+  void dispose() {
+    _accountProcessedController.close();
+    _accountProvider.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+     _accountProvider = Provider.of<AccountProvider>(context);
 
     Future<void> _loginWithAccount(Account account) async {
       String phoneNumber = account.phoneNumber;
       String password = account.password;
 
-      await _webViewController?.evaluateJavascript('''
+      await _webViewController?.runJavaScript('''
         (function() {
           document.getElementById('phone').value = '$phoneNumber';
           document.getElementById('password').value = '$password';
@@ -63,7 +165,7 @@ class _BrowsePageState extends State<BrowsePage> {
         _isAutoLoggingIn = true;
         _isManualStop = false;
       });
-      var length = accountProvider.accounts.length;
+      var length = _accountProvider.accounts.length;
       print("autoLogin===${length}");
       _processedAccountIndexes.clear();
       _completers.clear();
@@ -73,7 +175,7 @@ class _BrowsePageState extends State<BrowsePage> {
         _currentAccountIndex = i;
         print("autoLogin===${i}===${_currentAccountIndex}");
         await Future.delayed(Duration(seconds: 3));
-        await _loginWithAccount(accountProvider.accounts[i]);
+        await _loginWithAccount(_accountProvider.accounts[i]);
         print("autoLogin waiting===${_currentAccountIndex}");
         _completers[i] = Completer<void>();
         _waitForPageFinishedOrTimeout(i, Duration(seconds: 10));
@@ -85,43 +187,13 @@ class _BrowsePageState extends State<BrowsePage> {
       });
     }
 
-    void _onPageFinished(String url) async {
-      print("onPageFinished===${_currentAccountIndex}");
-      if (_currentAccountIndex > -1) {
-        // in auto logging
-        if (url == 'https://m.zmxyj.com/login/me.html') {
-          if(_processedAccountIndexes.contains(_currentAccountIndex)) {
-            return; // if processed, ignore. Due to onPageFinished multi-callback
-          }
-          accountProvider.toggleLoginStatus(_currentAccountIndex);
-          _processedAccountIndexes.add(_currentAccountIndex);
-          await Future.delayed(Duration(seconds: 1));
-          await _logout();
-          await Future.delayed(Duration(seconds: 1));
-          _completers[_currentAccountIndex]!.complete();
-          _accountProcessedController.add(null);
-          print("autoLogin continue via logged in===${_currentAccountIndex}, continue");
-        } else {
-          print("autoLogin ignore");
-        }
-      } else {
-        // normal loading
-        print("normal loading");
-      }
-    }
+
 
     return Scaffold(
-      appBar: AppBar(title: Text('浏览')),
+      // appBar: AppBar(title: Text('浏览')),
       body: Stack(
         children: [
-          WebView(
-            initialUrl: '$_url',
-            javascriptMode: JavascriptMode.unrestricted,
-            onWebViewCreated: (WebViewController webViewController) {
-              _webViewController = webViewController;
-            },
-            onPageFinished: _onPageFinished,
-          ),
+          WebViewWidget(controller: _webViewController),
           if (_isAutoLoggingIn) _buildAutoLoginOverlay(),
         ],
       ),
@@ -149,7 +221,6 @@ class _BrowsePageState extends State<BrowsePage> {
 
 
   Widget _buildAutoLoginOverlay() {
-    final accountProvider = Provider.of<AccountProvider>(context);
     return Positioned.fill(
       child: Opacity(
         opacity: 0.5,
@@ -160,7 +231,7 @@ class _BrowsePageState extends State<BrowsePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '正在登录：${_currentAccountIndex != -1 ? accountProvider.accounts[_currentAccountIndex].phoneNumber : ''}',
+                  '正在登录：${_currentAccountIndex != -1 ? _accountProvider.accounts[_currentAccountIndex].phoneNumber : ''}',
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
                 SizedBox(height: 20),
