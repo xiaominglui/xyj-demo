@@ -44,15 +44,15 @@ class AccountPage extends StatelessWidget {
           ),
           actions: [
             TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('取消'),
+            ),
+            TextButton(
               onPressed: () {
                 _addAccount(context);
                 Navigator.pop(context);
               },
               child: Text('添加'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('取消'),
             ),
           ],
         );
@@ -64,17 +64,19 @@ class AccountPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final accountProvider = Provider.of<AccountProvider>(context);
     return Scaffold(
-      appBar: AppBar(title: Text('帐号')),
-      body: ListView.builder(
-        itemCount: accountProvider.accounts.length,
-        itemBuilder: (context, index) {
-          Account account = accountProvider.accounts[index];
-          return _AccountItem(account: account, onToggle: () => accountProvider.toggleLoginStatus(index), onLongPress: () => _showAccountContextMenu(context, account),);
-        },
+      body: SafeArea(
+        child: ListView.builder(
+          itemCount: accountProvider.accounts.length,
+          itemBuilder: (context, index) {
+            Account account = accountProvider.accounts[index];
+            return _AccountItem(account: account, onToggle: () => accountProvider.toggleLoginStatus(index), onLongPress: () => _showAccountContextMenu(context, account),);
+          },
+        )
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showAddAccountDialog(context),
-        child: Icon(Icons.add),
+        icon: Icon(Icons.add),
+        label: const Text('Add'),
       ),
     );
   }

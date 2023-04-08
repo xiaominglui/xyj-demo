@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
@@ -191,11 +190,13 @@ Page resource error:
 
     return Scaffold(
       // appBar: AppBar(title: Text('浏览')),
-      body: Stack(
-        children: [
-          WebViewWidget(controller: _webViewController),
-          if (_isAutoLoggingIn) _buildAutoLoginOverlay(),
-        ],
+      body: SafeArea(
+        child: Stack(
+          children: [
+            WebViewWidget(controller: _webViewController),
+            if (_isAutoLoggingIn) _buildAutoLoginOverlay(),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _autoLogin,
