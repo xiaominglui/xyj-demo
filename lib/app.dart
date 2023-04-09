@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:webview_app/account_list_page.dart';
 import 'package:webview_app/my_page.dart';
 import 'package:webview_app/overview_page.dart';
 import 'browse_page.dart';
-import 'account_page.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -26,7 +25,7 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> _pages = [
     OverviewPage(),
     BrowsePage(),
-    AccountPage(),
+    AccountListPage(),
     MyPage(),
   ];
 

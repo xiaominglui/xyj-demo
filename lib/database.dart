@@ -28,6 +28,7 @@ class AppDatabase {
     await db.execute('''
 CREATE TABLE accounts (
   id $idType,
+  alias $textType,
   phoneNumber $textType,
   password $textType,
   isLoggedIn INTEGER NOT NULL,

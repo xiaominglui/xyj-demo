@@ -186,7 +186,42 @@ Page resource error:
       });
     }
 
+     void _beginCompose() {
 
+       showModalBottomSheet(
+         context: context,
+         builder: (context) {
+           final theme = Theme.of(context);
+           // Using Wrap makes the bottom sheet height the height of the content.
+           // Otherwise, the height will be half the height of the screen.
+           return Wrap(
+             children: [
+               ListTile(
+                 title: Text(
+                   'Header',
+                 ),
+                 tileColor: theme.colorScheme.primary,
+               ),
+               ListTile(
+                 title: Text('Title 1'),
+               ),
+               ListTile(
+                 title: Text('Title 2'),
+               ),
+               ListTile(
+                 title: Text('Title 3'),
+               ),
+               ListTile(
+                 title: Text('Title 4'),
+               ),
+               ListTile(
+                 title: Text('Title 5'),
+               ),
+             ],
+           );
+         },
+       );
+     }
 
     return Scaffold(
       // appBar: AppBar(title: Text('浏览')),
@@ -199,8 +234,9 @@ Page resource error:
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _autoLogin,
+        onPressed: _beginCompose,
         child: Icon(Icons.auto_mode),
+        tooltip: "Compose auto task",
       ),
     );
   }
@@ -251,4 +287,6 @@ Page resource error:
       ),
     );
   }
+
+
 }

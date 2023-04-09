@@ -3,14 +3,22 @@ import 'account.dart';
 import 'database.dart';
 
 class AccountProvider with ChangeNotifier {
-  List<Account> _accounts = [];
-
-  List<Account> get accounts => _accounts;
-
   AccountProvider() {
     print("AccountProvider instance");
     _loadAccounts();
   }
+
+  bool _showAlias = false;
+  bool get showAlias => _showAlias;
+
+  void toggleShowAlias() {
+    _showAlias = !_showAlias;
+    notifyListeners();
+  }
+
+  List<Account> _accounts = [];
+
+  List<Account> get accounts => _accounts;
 
   Future<void> _loadAccounts() async {
     final db = await AppDatabase.instance.database;
