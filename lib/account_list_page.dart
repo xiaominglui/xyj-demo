@@ -66,7 +66,7 @@ class _AccountListPageState extends State<AccountListPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AccountFormScreen()),
+            MaterialPageRoute(builder: (context) => const AccountFormScreen()),
           );
         },
         tooltip: "Add an account",

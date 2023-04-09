@@ -7,7 +7,7 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (context) => AccountProvider(),
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }

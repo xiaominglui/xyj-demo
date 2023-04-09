@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'dart:async';
 
 class BrowsePage extends StatefulWidget {
+  const BrowsePage({super.key});
+
   @override
   _BrowsePageState createState() => _BrowsePageState();
 }
@@ -17,14 +19,14 @@ class _BrowsePageState extends State<BrowsePage> {
   late final WebViewController _webViewController;
   late AccountProvider _accountProvider;
   int _currentAccountIndex = -1;
-  Set<int> _processedAccountIndexes = {};
+  final Set<int> _processedAccountIndexes = {};
   final _accountProcessedController = StreamController<void>.broadcast();
-  var _completers = Map<int, Completer<void>>();
+  final _completers = <int, Completer<void>>{};
   bool _isAutoLoggingIn = false;
   bool _isManualStop = false;
 
   void _onPageFinished(String url) async {
-    print("onPageFinished===${_currentAccountIndex}");
+    print("onPageFinished===$_currentAccountIndex");
     if (_currentAccountIndex > -1) {
       // in auto logging
       if (url == 'https://m.zmxyj.com/login/me.html') {
@@ -33,12 +35,12 @@ class _BrowsePageState extends State<BrowsePage> {
         }
         _accountProvider.toggleLoginStatus(_currentAccountIndex);
         _processedAccountIndexes.add(_currentAccountIndex);
-        await Future.delayed(Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
         await _logout();
-        await Future.delayed(Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
         _completers[_currentAccountIndex]!.complete();
         _accountProcessedController.add(null);
-        print("autoLogin continue via logged in===${_currentAccountIndex}, continue");
+        print("autoLogin continue via logged in===$_currentAccountIndex, continue");
       } else {
         print("autoLogin ignore");
       }
@@ -50,7 +52,7 @@ class _BrowsePageState extends State<BrowsePage> {
 
 
   Future<void> _logout() async {
-    await _webViewController?.runJavaScript('''
+    await _webViewController.runJavaScript('''
         (function() {
           document.getElementsByClassName("header-message-t back")[2].click();
           setTimeout(function() {
@@ -146,7 +148,7 @@ Page resource error:
       String phoneNumber = account.phoneNumber;
       String password = account.password;
 
-      await _webViewController?.runJavaScript('''
+      await _webViewController.runJavaScript('''
         (function() {
           document.getElementById('phone').value = '$phoneNumber';
           document.getElementById('password').value = '$password';
@@ -165,19 +167,19 @@ Page resource error:
         _isManualStop = false;
       });
       var length = _accountProvider.accounts.length;
-      print("autoLogin===${length}");
+      print("autoLogin===$length");
       _processedAccountIndexes.clear();
       _completers.clear();
 
 
       for (int i = 0; i < length && !_isManualStop; i++) {
         _currentAccountIndex = i;
-        print("autoLogin===${i}===${_currentAccountIndex}");
-        await Future.delayed(Duration(seconds: 3));
+        print("autoLogin===$i===$_currentAccountIndex");
+        await Future.delayed(const Duration(seconds: 3));
         await _loginWithAccount(_accountProvider.accounts[i]);
-        print("autoLogin waiting===${_currentAccountIndex}");
+        print("autoLogin waiting===$_currentAccountIndex");
         _completers[i] = Completer<void>();
-        _waitForPageFinishedOrTimeout(i, Duration(seconds: 10));
+        _waitForPageFinishedOrTimeout(i, const Duration(seconds: 10));
         await _accountProcessedController.stream.first;
       }
 
@@ -197,24 +199,24 @@ Page resource error:
            return Wrap(
              children: [
                ListTile(
-                 title: Text(
+                 title: const Text(
                    'Header',
                  ),
                  tileColor: theme.colorScheme.primary,
                ),
-               ListTile(
+               const ListTile(
                  title: Text('Title 1'),
                ),
-               ListTile(
+               const ListTile(
                  title: Text('Title 2'),
                ),
-               ListTile(
+               const ListTile(
                  title: Text('Title 3'),
                ),
-               ListTile(
+               const ListTile(
                  title: Text('Title 4'),
                ),
-               ListTile(
+               const ListTile(
                  title: Text('Title 5'),
                ),
              ],
@@ -235,8 +237,8 @@ Page resource error:
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _beginCompose,
-        child: Icon(Icons.auto_mode),
         tooltip: "Compose auto task",
+        child: const Icon(Icons.auto_mode),
       ),
     );
   }
@@ -244,11 +246,11 @@ Page resource error:
   Future<void> _waitForPageFinishedOrTimeout(int p, Duration timeout) async {
     Future.delayed(timeout).then((_) {
       if (!_completers[p]!.isCompleted) {
-        print("autoLogin timeout===${p}");
+        print("autoLogin timeout===$p");
         _accountProcessedController.add(null);
         _completers[p]!.complete();
       } else {
-        print("autoLogin page finished===${p}");
+        print("autoLogin page finished===$p");
       }
     });
 
@@ -269,16 +271,16 @@ Page resource error:
               children: [
                 Text(
                   '正在登录：${_currentAccountIndex != -1 ? _accountProvider.accounts[_currentAccountIndex].phoneNumber : ''}',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  style: const TextStyle(color: Colors.white, fontSize: 20),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
                       _isManualStop = true;
                     });
                   },
-                  child: Text('停止自动登录'),
+                  child: const Text('停止自动登录'),
                 ),
               ],
             ),

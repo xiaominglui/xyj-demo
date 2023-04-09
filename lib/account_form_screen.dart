@@ -8,7 +8,7 @@ import 'account_provider.dart';
 class AccountFormScreen extends StatefulWidget {
   final Account? account;
 
-  AccountFormScreen({this.account});
+  const AccountFormScreen({super.key, this.account});
 
   @override
   _AccountFormScreenState createState() => _AccountFormScreenState();
@@ -42,7 +42,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
     children: [
     TextFormField(
     controller: _phoneNumberController,
-    decoration: InputDecoration(labelText: '手机号'),
+    decoration: const InputDecoration(labelText: '手机号'),
     keyboardType: TextInputType.phone,
     validator: (value) {
     if (value == null || value.isEmpty) {
@@ -53,7 +53,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
     ),
     TextFormField(
     controller: _passwordController,
-    decoration: InputDecoration(labelText: '登录密码'),
+    decoration: const InputDecoration(labelText: '登录密码'),
     obscureText: true,
     validator: (value) {
     if (value == null || value.isEmpty) {
@@ -64,9 +64,9 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
     ),
     TextFormField(
     controller: _aliasController,
-    decoration: InputDecoration(labelText: '别名'),
+    decoration: const InputDecoration(labelText: '别名'),
     ),
-    SizedBox(height: 16),
+    const SizedBox(height: 16),
     ElevatedButton(
       onPressed: _saveAccount,
       child: Text(widget.account == null ? '添加' : '更新'),
