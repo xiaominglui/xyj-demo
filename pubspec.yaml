@@ -30,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   provider: ^6.0.5
   webview_flutter: ^4.0.7
   webview_flutter_android: ^3.0.0

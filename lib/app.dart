@@ -3,6 +3,8 @@ import 'package:webview_app/account_list_page.dart';
 import 'package:webview_app/my_page.dart';
 import 'package:webview_app/overview_page.dart';
 import 'browse_page.dart';
+import 'l10n/l10n.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -10,7 +12,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+      onGenerateTitle: (context) =>
+      DemoLocalizations.of(context).title,
+      localizationsDelegates: const [
+        DemoLocalizationsDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', ''),
+        Locale('es', ''),
+      ],
       home: const MainPage(),
     );
   }
@@ -43,6 +55,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return Scaffold(
+      appBar: AppBar(title: Text(DemoLocalizations.of(context).title),),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
