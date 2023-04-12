@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context).title,
+      onGenerateTitle: (context) => AppLocalizations.of(context).hello,
       localizationsDelegates: const [
         AppLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
@@ -57,7 +57,7 @@ class _MainPageState extends State<MainPage> {
     // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).title),
+        title: Text(AppLocalizations.of(context).hello),
       ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -67,13 +67,13 @@ class _MainPageState extends State<MainPage> {
         items: [
           BottomNavigationBarItem(
               icon: const Icon(Icons.home_rounded),
-              label: AppLocalizations.of(context).title),
+              label: AppLocalizations.of(context).overall),
           BottomNavigationBarItem(
-              icon: Icon(Icons.explore_rounded), label: '自动登录'),
+              icon: Icon(Icons.explore_rounded), label: AppLocalizations.of(context).autoTask),
           BottomNavigationBarItem(
-              icon: Icon(Icons.account_tree_rounded), label: '帐号管理'),
+              icon: Icon(Icons.account_tree_rounded), label: AppLocalizations.of(context).accountManager),
           BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle_rounded), label: '我的'),
+              icon: Icon(Icons.account_circle_rounded), label: AppLocalizations.of(context).my),
         ],
       ),
     );
