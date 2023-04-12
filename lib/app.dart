@@ -6,22 +6,23 @@ import 'browse_page.dart';
 import 'l10n/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'l10n/l10n_utils.dart';
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      onGenerateTitle: (context) =>
-      DemoLocalizations.of(context).title,
+      onGenerateTitle: (context) => AppLocalizations.of(context).title,
       localizationsDelegates: const [
-        DemoLocalizationsDelegate(),
+        AppLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: const [
         Locale('en', ''),
-        Locale('es', ''),
+        Locale('zh', ''),
       ],
       home: const MainPage(),
     );
@@ -55,17 +56,24 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return Scaffold(
-      appBar: AppBar(title: Text(DemoLocalizations.of(context).title),),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).title),
+      ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onTap,
         type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: '概览'),
-          BottomNavigationBarItem(icon: Icon(Icons.explore_rounded), label: '自动登录'),
-          BottomNavigationBarItem(icon: Icon(Icons.account_tree_rounded), label: '帐号管理'),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle_rounded), label: '我的'),
+        items: [
+          BottomNavigationBarItem(
+              icon: const Icon(Icons.home_rounded),
+              label: AppLocalizations.of(context).title),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.explore_rounded), label: '自动登录'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_tree_rounded), label: '帐号管理'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle_rounded), label: '我的'),
         ],
       ),
     );
