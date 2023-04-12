@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:webview_app/l10n/l10n.dart';
 
 class MyPage extends StatelessWidget {
   const MyPage({super.key});
@@ -10,43 +11,19 @@ class MyPage extends StatelessWidget {
         child: ListView(
           children: [
             ListTile(
-              title: const Text('隐私政策'),
-              onTap: () {
-                // TODO: 实现隐私政策页面
-              },
-            ),
-            ListTile(
-              title: const Text('用户信息收集清单'),
-              onTap: () {
-                // TODO: 实现用户信息收集清单页面
-              },
-            ),
-            ListTile(
-              title: const Text('第三方信息共享清单'),
-              onTap: () {
-                // TODO: 实现第三方信息共享清单页面
-              },
-            ),
-            ListTile(
-              title: const Text('设置'),
+              title: Text(AppLocalizations.of(context).settings),
               onTap: () {
                 // TODO: 实现设置页面
               },
             ),
             ListTile(
-              title: const Text('帮助和反馈'),
-              onTap: () {
-                // TODO: 实现帮助与反馈页面
-              },
-            ),
-            ListTile(
-              title: const Text('分享'),
+              title: Text(AppLocalizations.of(context).share),
               onTap: () {
                 // TODO: 实现分享功能
               },
             ),
             ListTile(
-              title: const Text('关于'),
+              title: Text(AppLocalizations.of(context).about),
               onTap: () {
                 // TODO: 实现关于页面
               },

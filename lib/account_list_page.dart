@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:webview_app/l10n/l10n.dart';
 
 import 'account.dart';
 import 'account_form_screen.dart';
@@ -21,7 +22,7 @@ class _AccountListPageState extends State<AccountListPage> {
     // final accountProvider = Provider.of<AccountProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Accounts'),
+        title: Text(AppLocalizations.of(context).accountManager),
         actions: [
           IconButton(
             icon: const Icon(Icons.mobile_friendly),
@@ -127,7 +128,7 @@ class _AccountListPageState extends State<AccountListPage> {
           children: [
             ListTile(
               leading: const Icon(Icons.edit),
-              title: const Text('编辑'),
+              title: Text(AppLocalizations.of(context).edit),
               onTap: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).push(
@@ -139,7 +140,7 @@ class _AccountListPageState extends State<AccountListPage> {
             ),
             ListTile(
               leading: const Icon(Icons.delete),
-              title: const Text('删除'),
+              title: Text(AppLocalizations.of(context).delete),
               onTap: () {
                 Navigator.of(context).pop();
                 Provider.of<AccountProvider>(context, listen: false).deleteAccount(account.id!);

@@ -16,18 +16,24 @@ class AppLocalizations {
       'autoTask': 'Auto Task',
       'welcome': 'Welcome',
       'signIn': 'Sign In',
-      'accountManager': 'Account Manager',
-      'my': 'My',
-      'about': 'About',
-      'share': 'Share',
-      'settings': 'Settings',
       'addAccount': 'Add Account',
+      'accountManager': 'Account Manager',
       'mobile': 'Mobile',
       'password': 'Password',
-      'alisa': 'Alisa',
+      'alias': 'Alias',
       'remark': 'Remark',
       'add': 'Add',
       'update': 'Update',
+      'settings': 'Settings',
+      'share': 'Share',
+      'about': 'About',
+      'composeAutoTask': 'Compose Auto Task',
+      'delete': 'Delete',
+      'edit': 'Edit',
+      'addAnAccount': 'Add an Account',
+      'passwordEmptyHint': 'Password cannot be empty',
+      'mobileEmptyHint': 'Mobile number cannot be empty',
+      'editAccount': 'Edit Account',
     },
     'zh': {
       'hello': '你好世界',
@@ -35,18 +41,24 @@ class AppLocalizations {
       'autoTask': '自动任务',
       'welcome': '欢迎',
       'signIn': '登录',
-      'accountManager': '账户管理',
-      'my': '我的',
-      'about': '关于',
-      'share': '分享',
-      'settings': '设置',
       'addAccount': '添加账户',
+      'accountManager': '账户管理',
       'mobile': '手机号',
       'password': '密码',
-      'alisa': '别名',
+      'alias': '别名',
       'remark': '备注',
       'add': '添加',
       'update': '更新',
+      'settings': '设置',
+      'share': '分享',
+      'about': '关于',
+      'composeAutoTask': '编写自动任务',
+      'delete': '删除',
+      'edit': '编辑',
+      'addAnAccount': '添加一个账户',
+      'passwordEmptyHint': '密码不能为空',
+      'mobileEmptyHint': '手机号不能为空',
+      'editAccount': '编辑账户',
     },
   };
 
@@ -72,28 +84,12 @@ class AppLocalizations {
     return _localizedValues[locale.languageCode]!['signIn']!;
   }
 
-  String get accountManager {
-    return _localizedValues[locale.languageCode]!['accountManager']!;
-  }
-
-  String get my {
-    return _localizedValues[locale.languageCode]!['my']!;
-  }
-
-  String get about {
-    return _localizedValues[locale.languageCode]!['about']!;
-  }
-
-  String get share {
-    return _localizedValues[locale.languageCode]!['share']!;
-  }
-
-  String get settings {
-    return _localizedValues[locale.languageCode]!['settings']!;
-  }
-
   String get addAccount {
     return _localizedValues[locale.languageCode]!['addAccount']!;
+  }
+
+  String get accountManager {
+    return _localizedValues[locale.languageCode]!['accountManager']!;
   }
 
   String get mobile {
@@ -104,8 +100,8 @@ class AppLocalizations {
     return _localizedValues[locale.languageCode]!['password']!;
   }
 
-  String get alisa {
-    return _localizedValues[locale.languageCode]!['alisa']!;
+  String get alias {
+    return _localizedValues[locale.languageCode]!['alias']!;
   }
 
   String get remark {
@@ -118,5 +114,45 @@ class AppLocalizations {
 
   String get update {
     return _localizedValues[locale.languageCode]!['update']!;
+  }
+
+  String get settings {
+    return _localizedValues[locale.languageCode]!['settings']!;
+  }
+
+  String get share {
+    return _localizedValues[locale.languageCode]!['share']!;
+  }
+
+  String get about {
+    return _localizedValues[locale.languageCode]!['about']!;
+  }
+
+  String get composeAutoTask {
+    return _localizedValues[locale.languageCode]!['composeAutoTask']!;
+  }
+
+  String get delete {
+    return _localizedValues[locale.languageCode]!['delete']!;
+  }
+
+  String get edit {
+    return _localizedValues[locale.languageCode]!['edit']!;
+  }
+
+  String get addAnAccount {
+    return _localizedValues[locale.languageCode]!['addAnAccount']!;
+  }
+
+  String get passwordEmptyHint {
+    return _localizedValues[locale.languageCode]!['passwordEmptyHint']!;
+  }
+
+  String get mobileEmptyHint {
+    return _localizedValues[locale.languageCode]!['mobileEmptyHint']!;
+  }
+
+  String get editAccount {
+    return _localizedValues[locale.languageCode]!['editAccount']!;
   }
 }

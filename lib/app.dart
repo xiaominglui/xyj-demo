@@ -43,7 +43,7 @@ class _MainPageState extends State<MainPage> {
     const OverviewPage(),
     const BrowsePage(),
     const AccountListPage(),
-    const MyPage(),
+    // const MyPage(),
   ];
 
   void _onTap(int index) {
@@ -72,8 +72,8 @@ class _MainPageState extends State<MainPage> {
               icon: Icon(Icons.explore_rounded), label: AppLocalizations.of(context).autoTask),
           BottomNavigationBarItem(
               icon: Icon(Icons.account_tree_rounded), label: AppLocalizations.of(context).accountManager),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle_rounded), label: AppLocalizations.of(context).my),
+          // BottomNavigationBarItem(
+          //     icon: Icon(Icons.account_circle_rounded), label: AppLocalizations.of(context).my),
         ],
       ),
     );

@@ -34,7 +34,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.account == null ? '添加帐号' : '编辑帐号'),
+        title: Text(widget.account == null ? AppLocalizations.of(context).addAccount : AppLocalizations.of(context).editAccount),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -49,30 +49,30 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
                 keyboardType: TextInputType.phone,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return '手机号不能为空';
+                    return AppLocalizations.of(context).mobileEmptyHint;
                   }
                   return null;
                 },
               ),
               TextFormField(
                 controller: _passwordController,
-                decoration: const InputDecoration(labelText: '登录密码'),
+                decoration: InputDecoration(labelText: AppLocalizations.of(context).password),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return '登录密码不能为空';
+                    return AppLocalizations.of(context).passwordEmptyHint;
                   }
                   return null;
                 },
               ),
               TextFormField(
                 controller: _aliasController,
-                decoration: const InputDecoration(labelText: '别名'),
+                decoration: InputDecoration(labelText: AppLocalizations.of(context).alias),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _saveAccount,
-                child: Text(widget.account == null ? '添加' : '更新'),
+                child: Text(widget.account == null ? AppLocalizations.of(context).add : AppLocalizations.of(context).update),
               ),
             ],
           ),
