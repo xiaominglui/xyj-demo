@@ -48,7 +48,7 @@ class _AccountListPageState extends State<AccountListPage> {
                 ? GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 3 / 2,
+                childAspectRatio: 4 / 3,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),
@@ -82,11 +82,13 @@ class _AccountListPageState extends State<AccountListPage> {
         return Card(
           child: Column(
             children: [
+              SizedBox(height: 6,),
               const CircleAvatar(
                 child: Icon(Icons.account_circle),
               ),
               ListTile(
                 title: Text(_retrieveDisplayName(accountProvider, account)),
+                subtitle: Text(account.remark ?? ""),
                 trailing: IconButton(
                   icon: const Icon(Icons.more_vert),
                   onPressed: () => _showAccountOptions(account),
@@ -110,6 +112,7 @@ class _AccountListPageState extends State<AccountListPage> {
               child: Icon(Icons.account_circle),
             ),
             title: Text(_retrieveDisplayName(accountProvider, account)),
+            subtitle: Text(account.remark ?? ""),
             trailing: IconButton(
               icon: const Icon(Icons.more_vert),
               onPressed: () => _showAccountOptions(account),

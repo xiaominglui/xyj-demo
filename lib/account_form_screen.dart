@@ -19,6 +19,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
   late TextEditingController _phoneNumberController;
   late TextEditingController _passwordController;
   late TextEditingController _aliasController;
+  late TextEditingController _remarkController;
 
   @override
   void initState() {
@@ -28,6 +29,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
     _passwordController =
         TextEditingController(text: widget.account?.password ?? '');
     _aliasController = TextEditingController(text: widget.account?.alias ?? '');
+    _remarkController = TextEditingController(text: widget.account?.remark ?? '');
   }
 
   @override
@@ -69,6 +71,10 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
                 controller: _aliasController,
                 decoration: InputDecoration(labelText: AppLocalizations.of(context).alias),
               ),
+              TextFormField(
+                controller: _remarkController,
+                decoration: InputDecoration(labelText: AppLocalizations.of(context).remark),
+              ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _saveAccount,
@@ -90,6 +96,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
           phoneNumber: _phoneNumberController.text,
           password: _passwordController.text,
           alias: _aliasController.text,
+          remark: _remarkController.text,
         );
         accountProvider.addAccount(newAccount);
       } else {
@@ -98,6 +105,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
           phoneNumber: _phoneNumberController.text,
           password: _passwordController.text,
           alias: _aliasController.text,
+          remark: _remarkController.text,
         );
         accountProvider.updateAccount(updatedAccount);
       }

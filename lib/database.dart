@@ -29,6 +29,7 @@ class AppDatabase {
 CREATE TABLE accounts (
   id $idType,
   alias $textType,
+  remark $textType,
   phoneNumber $textType,
   password $textType,
   isLoggedIn INTEGER NOT NULL,
