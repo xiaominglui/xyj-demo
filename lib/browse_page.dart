@@ -136,7 +136,6 @@ Page resource error:
   @override
   void dispose() {
     _accountProcessedController.close();
-    _accountProvider.dispose();
     super.dispose();
   }
 

@@ -69,9 +69,9 @@ class _MainPageState extends State<MainPage> {
               icon: const Icon(Icons.home_rounded),
               label: AppLocalizations.of(context).overall),
           BottomNavigationBarItem(
-              icon: Icon(Icons.explore_rounded), label: AppLocalizations.of(context).autoTask),
+              icon: const Icon(Icons.explore_rounded), label: AppLocalizations.of(context).autoTask),
           BottomNavigationBarItem(
-              icon: Icon(Icons.account_tree_rounded), label: AppLocalizations.of(context).accountManager),
+              icon: const Icon(Icons.account_tree_rounded), label: AppLocalizations.of(context).accountManager),
           // BottomNavigationBarItem(
           //     icon: Icon(Icons.account_circle_rounded), label: AppLocalizations.of(context).my),
         ],
