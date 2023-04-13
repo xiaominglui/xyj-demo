@@ -52,7 +52,7 @@ class AppLocalizations {
       'settings': '设置',
       'share': '分享',
       'about': '关于',
-      'composeAutoTask': '编写自动任务',
+      'composeAutoTask': '创建自动任务',
       'delete': '删除',
       'edit': '编辑',
       'addAnAccount': '添加一个账户',

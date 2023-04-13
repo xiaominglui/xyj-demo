@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:webview_app/l10n/l10n.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
@@ -7,14 +8,14 @@ import 'account_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 
-class BrowsePage extends StatefulWidget {
-  const BrowsePage({super.key});
+class BrowserPage extends StatefulWidget {
+  const BrowserPage({super.key});
 
   @override
-  _BrowsePageState createState() => _BrowsePageState();
+  _BrowserPageState createState() => _BrowserPageState();
 }
 
-class _BrowsePageState extends State<BrowsePage> {
+class _BrowserPageState extends State<BrowserPage> {
   final _url = 'https://m.zmxyj.com/login/index';
   late final WebViewController _webViewController;
   late AccountProvider _accountProvider;
@@ -236,7 +237,7 @@ Page resource error:
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _beginCompose,
-        tooltip: "Compose auto task",
+        tooltip: AppLocalizations.of(context).composeAutoTask,
         child: const Icon(Icons.auto_mode),
       ),
     );

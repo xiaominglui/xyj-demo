@@ -47,8 +47,8 @@ class _AccountListPageState extends State<AccountListPage> {
             return _isGrid
                 ? GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 4 / 3,
+                crossAxisCount: 3,
+                childAspectRatio: 3 / 4,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),
@@ -70,7 +70,7 @@ class _AccountListPageState extends State<AccountListPage> {
             MaterialPageRoute(builder: (context) => const AccountFormScreen()),
           );
         },
-        tooltip: "Add an account",
+        tooltip: AppLocalizations.of(context).addAnAccount,
         child: const Icon(Icons.add),
       ),
     );
@@ -86,14 +86,12 @@ class _AccountListPageState extends State<AccountListPage> {
               const CircleAvatar(
                 child: Icon(Icons.account_circle),
               ),
-              ListTile(
-                title: Text(_retrieveDisplayName(accountProvider, account)),
-                subtitle: Text(account.remark ?? ""),
-                trailing: IconButton(
-                  icon: const Icon(Icons.more_vert),
-                  onPressed: () => _showAccountOptions(account),
-                ),
-              )
+              Text(_retrieveDisplayName(accountProvider, account)),
+              Text(account.remark ?? ""),
+              IconButton(
+                icon: const Icon(Icons.more_vert),
+                onPressed: () => _showAccountOptions(account),
+              ),
             ],
           ),
         );

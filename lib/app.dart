@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:webview_app/account_list_page.dart';
 import 'package:webview_app/my_page.dart';
 import 'package:webview_app/overview_page.dart';
-import 'browse_page.dart';
+import 'browser_page.dart';
 import 'l10n/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -41,7 +41,7 @@ class _MainPageState extends State<MainPage> {
 
   final List<Widget> _pages = [
     const OverviewPage(),
-    const BrowsePage(),
+    const BrowserPage(),
     const AccountListPage(),
     // const MyPage(),
   ];
@@ -56,9 +56,6 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).hello),
-      ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
