@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:webview_app/l10n/l10n.dart';
+import 'package:xyj_helper/l10n/l10n.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';

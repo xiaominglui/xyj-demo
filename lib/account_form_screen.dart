@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:webview_app/l10n/l10n.dart';
+import 'package:xyj_helper/l10n/l10n.dart';
 
 import 'account.dart';
 import 'account_provider.dart';

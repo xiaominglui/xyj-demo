@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:webview_app/account_list_page.dart';
-import 'package:webview_app/my_page.dart';
-import 'package:webview_app/overview_page.dart';
+import 'package:xyj_helper/account_list_page.dart';
+import 'package:xyj_helper/overview_page.dart';
 import 'browser_page.dart';
 import 'l10n/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
