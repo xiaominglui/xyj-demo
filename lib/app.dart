@@ -39,7 +39,7 @@ class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    const OverviewPage(),
+    // const OverviewPage(),
     const BrowserPage(),
     const AccountListPage(),
     // const MyPage(),
@@ -61,9 +61,9 @@ class _MainPageState extends State<MainPage> {
         onTap: _onTap,
         type: BottomNavigationBarType.fixed,
         items: [
-          BottomNavigationBarItem(
-              icon: const Icon(Icons.home_rounded),
-              label: AppLocalizations.of(context).overall),
+          // BottomNavigationBarItem(
+          //     icon: const Icon(Icons.home_rounded),
+          //     label: AppLocalizations.of(context).overall),
           BottomNavigationBarItem(
               icon: const Icon(Icons.explore_rounded), label: AppLocalizations.of(context).autoTask),
           BottomNavigationBarItem(
