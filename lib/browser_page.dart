@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
@@ -165,37 +166,55 @@ Page resource error:
     }
 
     Future<void> _startAutoLogin(ExecuteScope? scope) async {
-      setState(() {
-        _isAutoLoggingIn = true;
-        _isManualStop = false;
-      });
-      var length = _accountProvider.accounts.length;
-      print("autoLogin===$length===@$scope");
-      _processedAccountIndexes.clear();
-      _completers.clear();
-
       // get accounts list to login by filtering out accounts based on scope
-      List<Account> accountsToExecute = List.empty();
+      List<Account> accountsToExecute = List.empty(growable: true);
       if (scope == ExecuteScope.notLoggedInOnly) {
-        accountsToExecute = _accountProvider.accounts.where((element) => !element.isLoggedIn).toList();
+        var notLoggedInAccounts = _accountProvider.accounts.where((a) => !a.isLoggedIn).toList();
+        accountsToExecute.addAll(notLoggedInAccounts);
       } else {
-        _accountProvider.accounts;
+        var allAccounts = _accountProvider.accounts;
+        accountsToExecute.addAll(allAccounts);
       }
+      var length = accountsToExecute.length;
+      print("autoLogin===$length===@$scope");
 
-      for (int i = 0; i < length && !_isManualStop; i++) {
-        _currentAccountIndex = i;
-        print("autoLogin===$i===$_currentAccountIndex");
-        await Future.delayed(const Duration(seconds: 3));
-        await _loginWithAccount(accountsToExecute[i]);
-        print("autoLogin waiting===$_currentAccountIndex");
-        _completers[i] = Completer<void>();
-        _waitForPageFinishedOrTimeout(i, const Duration(seconds: 10));
-        await _accountProcessedController.stream.first;
+      if (length > 0) {
+        setState(() {
+          _isAutoLoggingIn = true;
+          _isManualStop = false;
+        });
+
+
+        _processedAccountIndexes.clear();
+        _completers.clear();
+
+        for (int i = 0; i < length && !_isManualStop; i++) {
+          _currentAccountIndex = i;
+          print("autoLogin===$i===$_currentAccountIndex");
+          await Future.delayed(const Duration(seconds: 3));
+          await _loginWithAccount(accountsToExecute[i]);
+          print("autoLogin waiting===$_currentAccountIndex");
+          _completers[i] = Completer<void>();
+          _waitForPageFinishedOrTimeout(i, const Duration(seconds: 10));
+          await _accountProcessedController.stream.first;
+        }
+
+        setState(() {
+          _isAutoLoggingIn = false;
+        });
+      } else {
+        print("autoLogin === no account need to log in");
+
+        Fluttertoast.showToast(
+            msg: "This is a toast",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
       }
-
-      setState(() {
-        _isAutoLoggingIn = false;
-      });
     }
 
     void _showBottomSheet() {
