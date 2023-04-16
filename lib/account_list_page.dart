@@ -26,7 +26,7 @@ class _AccountListPageState extends State<AccountListPage> {
         title: Text(AppLocalizations.of(context).accountManager),
         actions: [
           IconButton(
-            icon: const Icon(Icons.mobile_friendly),
+            icon: const Icon(Icons.notes_rounded),
             onPressed: () {
               Provider.of<AccountProvider>(context, listen: false).toggleShowAlias();
             },
