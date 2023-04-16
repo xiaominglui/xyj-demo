@@ -29,8 +29,6 @@ class _BrowserPageState extends State<BrowserPage> {
   ExecuteScope? _taskScope = ExecuteScope.notLoggedInOnly;
   ExecuteType _taskType = ExecuteType.auto;
 
-  String? _selectedOption;
-
   void _onPageFinished(String url) async {
     print("onPageFinished===$_currentAccountIndex");
     if (_currentAccountIndex > -1) {
@@ -167,31 +165,7 @@ Page resource error:
       ''');
     }
 
-    Future<void> _autoLogin() async {
-      setState(() {
-        _isAutoLoggingIn = true;
-        _isManualStop = false;
-      });
-      var length = _accountProvider.accounts.length;
-      print("autoLogin===$length");
-      _processedAccountIndexes.clear();
-      _completers.clear();
 
-      for (int i = 0; i < length && !_isManualStop; i++) {
-        _currentAccountIndex = i;
-        print("autoLogin===$i===$_currentAccountIndex");
-        await Future.delayed(const Duration(seconds: 3));
-        await _loginWithAccount(_accountProvider.accounts[i]);
-        print("autoLogin waiting===$_currentAccountIndex");
-        _completers[i] = Completer<void>();
-        _waitForPageFinishedOrTimeout(i, const Duration(seconds: 10));
-        await _accountProcessedController.stream.first;
-      }
-
-      setState(() {
-        _isAutoLoggingIn = false;
-      });
-    }
 
     void _beginCompose() {
       showModalBottomSheet(
@@ -247,6 +221,91 @@ Page resource error:
                   icon: const Icon(Icons.start),
                   label: const Text("立即执行")),
             ],
+          );
+        },
+      );
+    }
+
+    Future<void> _startAutoLogin(ExecuteScope? scope) async {
+      setState(() {
+        _isAutoLoggingIn = true;
+        _isManualStop = false;
+      });
+      var length = _accountProvider.accounts.length;
+      print("autoLogin===$length===@$scope");
+      _processedAccountIndexes.clear();
+      _completers.clear();
+
+      // get accounts list to login by filtering out accounts based on scope
+
+
+      for (int i = 0; i < length && !_isManualStop; i++) {
+        _currentAccountIndex = i;
+        print("autoLogin===$i===$_currentAccountIndex");
+        await Future.delayed(const Duration(seconds: 3));
+        await _loginWithAccount(_accountProvider.accounts[i]);
+        print("autoLogin waiting===$_currentAccountIndex");
+        _completers[i] = Completer<void>();
+        _waitForPageFinishedOrTimeout(i, const Duration(seconds: 10));
+        await _accountProcessedController.stream.first;
+      }
+
+      setState(() {
+        _isAutoLoggingIn = false;
+      });
+    }
+
+    void _showBottomSheet() {
+      showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Container(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      'Choose the execution scope',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    ListTile(
+                      title: const Text('Accounts not logged in'),
+                      leading: Radio<ExecuteScope>(
+                        value: ExecuteScope.notLoggedInOnly,
+                        groupValue: _taskScope,
+                        onChanged: (ExecuteScope? value) {
+                          setState(() {
+                            _taskScope = value;
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('All accounts'),
+                      leading: Radio<ExecuteScope>(
+                        value: ExecuteScope.all,
+                        groupValue: _taskScope,
+                        onChanged: (ExecuteScope? value) {
+                          setState(() {
+                            _taskScope = value;
+                          });
+                        },
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _startAutoLogin(_taskScope);
+                      },
+                      child: const Text('Start to execute'),
+                    ),
+                  ],
+                ),
+              );
+            },
           );
         },
       );
@@ -316,58 +375,4 @@ Page resource error:
     );
   }
 
-  void _showBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return Container(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    'Choose an option',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  ListTile(
-                    title: const Text('Option A'),
-                    leading: Radio<String>(
-                      value: 'A',
-                      groupValue: _selectedOption,
-                      onChanged: (String? value) {
-                        setState(() {
-                          _selectedOption = value;
-                        });
-                      },
-                    ),
-                  ),
-                  ListTile(
-                    title: const Text('Option B'),
-                    leading: Radio<String>(
-                      value: 'B',
-                      groupValue: _selectedOption,
-                      onChanged: (String? value) {
-                        setState(() {
-                          _selectedOption = value;
-                        });
-                      },
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Submit'),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
 }
