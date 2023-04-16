@@ -38,6 +38,7 @@ class AppLocalizations {
       'accountsNotLoggedIn': 'Accounts not logged in',
       'allAccounts': 'All accounts',
       'startToExecute': 'Start to execute',
+      'NoAccountsNeedToLogInToday': 'No accounts need to log in today',
     },
     'zh': {
       'hello': '你好世界',
@@ -67,6 +68,7 @@ class AppLocalizations {
       'accountsNotLoggedIn': '未登录',
       'allAccounts': '全部',
       'startToExecute': '开始登录',
+      'noAccountsNeedToLogInToday': '今天没有账户需要登录',
     },
   };
 
@@ -178,5 +180,9 @@ class AppLocalizations {
 
   String get startToExecute {
     return _localizedValues[locale.languageCode]!['startToExecute']!;
+  }
+
+  String get noAccountsNeedToLogInToday {
+    return _localizedValues[locale.languageCode]!['noAccountsNeedToLogInToday']!;
   }
 }

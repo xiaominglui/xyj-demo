@@ -5,6 +5,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 import 'package:xyj_helper/task_config.dart';
+import 'package:xyj_helper/utils.dart';
 import 'account.dart';
 import 'account_provider.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +30,7 @@ class _BrowserPageState extends State<BrowserPage> {
   bool _isManualStop = false;
   ExecuteScope? _taskScope = ExecuteScope.notLoggedInOnly;
   ExecuteType _taskType = ExecuteType.auto;
+  List<Account> _accountsToExecute = List.empty(growable: true);
 
   void _onPageFinished(String url) async {
     print("onPageFinished===$_currentAccountIndex");
@@ -38,7 +40,7 @@ class _BrowserPageState extends State<BrowserPage> {
         if (_processedAccountIndexes.contains(_currentAccountIndex)) {
           return; // if processed, ignore. Due to onPageFinished multi-callback
         }
-        _accountProvider.toggleLoginStatus(_currentAccountIndex);
+        _accountProvider.markAccountLoggedIn(_accountsToExecute[_currentAccountIndex]);
         _processedAccountIndexes.add(_currentAccountIndex);
         await Future.delayed(const Duration(seconds: 1));
         await _logout();
@@ -167,15 +169,15 @@ Page resource error:
 
     Future<void> _startAutoLogin(ExecuteScope? scope) async {
       // get accounts list to login by filtering out accounts based on scope
-      List<Account> accountsToExecute = List.empty(growable: true);
+
       if (scope == ExecuteScope.notLoggedInOnly) {
-        var notLoggedInAccounts = _accountProvider.accounts.where((a) => !a.isLoggedIn).toList();
-        accountsToExecute.addAll(notLoggedInAccounts);
+        var notLoggedInAccounts = _accountProvider.accounts.where((a) => !isLoggedToday(a)).toList();
+        _accountsToExecute.addAll(notLoggedInAccounts);
       } else {
         var allAccounts = _accountProvider.accounts;
-        accountsToExecute.addAll(allAccounts);
+        _accountsToExecute.addAll(allAccounts);
       }
-      var length = accountsToExecute.length;
+      var length = _accountsToExecute.length;
       print("autoLogin===$length===@$scope");
 
       if (length > 0) {
@@ -192,7 +194,7 @@ Page resource error:
           _currentAccountIndex = i;
           print("autoLogin===$i===$_currentAccountIndex");
           await Future.delayed(const Duration(seconds: 3));
-          await _loginWithAccount(accountsToExecute[i]);
+          await _loginWithAccount(_accountsToExecute[i]);
           print("autoLogin waiting===$_currentAccountIndex");
           _completers[i] = Completer<void>();
           _waitForPageFinishedOrTimeout(i, const Duration(seconds: 10));
@@ -206,11 +208,11 @@ Page resource error:
         print("autoLogin === no account need to log in");
 
         Fluttertoast.showToast(
-            msg: "This is a toast",
+            msg: AppLocalizations.of(context).noAccountsNeedToLogInToday,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.blue,
             textColor: Colors.white,
             fontSize: 16.0
         );
@@ -316,7 +318,7 @@ Page resource error:
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '正在登录：${_currentAccountIndex != -1 ? _accountProvider.accounts[_currentAccountIndex].phoneNumber : ''}',
+                  '正在登录：${_currentAccountIndex != -1 ? _accountsToExecute[_currentAccountIndex].phoneNumber : ''}',
                   style: const TextStyle(color: Colors.white, fontSize: 20),
                 ),
                 const SizedBox(height: 20),

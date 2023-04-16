@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
+import 'package:xyj_helper/utils.dart';
 
 import 'account.dart';
 import 'account_form_screen.dart';
@@ -84,7 +85,7 @@ class _AccountListPageState extends State<AccountListPage> {
             children: [
               const SizedBox(height: 6,),
               CircleAvatar(
-                child: account.isLoggedIn ? const Icon(Icons.check_box) : const Icon(Icons.check_box_outline_blank),
+                child: isLoggedToday(account) ? const Icon(Icons.check_box) : const Icon(Icons.check_box_outline_blank),
               ),
               Text(_retrieveDisplayName(accountProvider, account)),
               Text(account.remark ?? ""),
@@ -107,7 +108,7 @@ class _AccountListPageState extends State<AccountListPage> {
         return Card(
           child: ListTile(
             leading: CircleAvatar(
-              child: account.isLoggedIn ? const Icon(Icons.check_box) : const Icon(Icons.check_box_outline_blank),
+              child: isLoggedToday(account) ? const Icon(Icons.check_box) : const Icon(Icons.check_box_outline_blank),
             ),
             title: Text(_retrieveDisplayName(accountProvider, account)),
             subtitle: Text(account.remark ?? ""),

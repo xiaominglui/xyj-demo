@@ -46,6 +46,18 @@ class AccountProvider with ChangeNotifier {
     await _loadAccounts();
   }
 
+
+  Future<void> markAccountLoggedIn(Account account) async {
+    final loggedInAccount = Account(
+      id: account.id,
+      phoneNumber: account.phoneNumber,
+      password: account.password,
+      isLoggedIn: true,
+      lastLoggedIn: DateTime.now(),
+    );
+    await updateAccount(loggedInAccount);
+  }
+
   Future<void> toggleLoginStatus(int index) async {
     final account = _accounts[index];
     final updatedAccount = Account(
