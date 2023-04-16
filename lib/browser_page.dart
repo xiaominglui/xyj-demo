@@ -44,8 +44,7 @@ class _BrowserPageState extends State<BrowserPage> {
         await Future.delayed(const Duration(seconds: 1));
         _completers[_currentAccountIndex]!.complete();
         _accountProcessedController.add(null);
-        print(
-            "autoLogin continue via logged in===$_currentAccountIndex, continue");
+        print("autoLogin continue via logged in===$_currentAccountIndex, continue");
       } else {
         print("autoLogin ignore");
       }
@@ -165,67 +164,6 @@ Page resource error:
       ''');
     }
 
-
-
-    void _beginCompose() {
-      showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          final theme = Theme.of(context);
-          // Using Wrap makes the bottom sheet height the height of the content.
-          // Otherwise, the height will be half the height of the screen.
-
-          return Wrap(
-            children: [
-              ListTile(
-                title: const Text(
-                  'Header',
-                ),
-                tileColor: theme.colorScheme.primary,
-              ),
-              const ListTile(
-                title: Text('Execute Scope'),
-              ),
-              Column(
-                children: <Widget>[
-                  RadioListTile<ExecuteScope>(
-                    title: const Text('notLoggedInOnly 2'),
-                    value: ExecuteScope.notLoggedInOnly,
-                    groupValue: _taskScope,
-                    onChanged: (ExecuteScope? value) {
-                      setState(() {
-                        _taskScope = value;
-                      });
-                    },
-                  ),
-                  RadioListTile<ExecuteScope>(
-                    title: const Text('all 2'),
-                    value: ExecuteScope.all,
-                    groupValue: _taskScope,
-                    onChanged: (ExecuteScope? value) {
-                      setState(() {
-                        _taskScope = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              const ListTile(
-                title: Text('Title 3'),
-              ),
-              const ListTile(
-                title: Text('Title 4'),
-              ),
-              ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.start),
-                  label: const Text("立即执行")),
-            ],
-          );
-        },
-      );
-    }
-
     Future<void> _startAutoLogin(ExecuteScope? scope) async {
       setState(() {
         _isAutoLoggingIn = true;
@@ -237,13 +175,18 @@ Page resource error:
       _completers.clear();
 
       // get accounts list to login by filtering out accounts based on scope
-
+      List<Account> accountsToExecute = List.empty();
+      if (scope == ExecuteScope.notLoggedInOnly) {
+        accountsToExecute = _accountProvider.accounts.where((element) => !element.isLoggedIn).toList();
+      } else {
+        _accountProvider.accounts;
+      }
 
       for (int i = 0; i < length && !_isManualStop; i++) {
         _currentAccountIndex = i;
         print("autoLogin===$i===$_currentAccountIndex");
         await Future.delayed(const Duration(seconds: 3));
-        await _loginWithAccount(_accountProvider.accounts[i]);
+        await _loginWithAccount(accountsToExecute[i]);
         print("autoLogin waiting===$_currentAccountIndex");
         _completers[i] = Completer<void>();
         _waitForPageFinishedOrTimeout(i, const Duration(seconds: 10));
@@ -268,11 +211,11 @@ Page resource error:
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Text(
-                      'Choose the execution scope',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      AppLocalizations.of(context).chooseTheExecutionScope,
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     ListTile(
-                      title: const Text('Accounts not logged in'),
+                      title: Text(AppLocalizations.of(context).accountsNotLoggedIn),
                       leading: Radio<ExecuteScope>(
                         value: ExecuteScope.notLoggedInOnly,
                         groupValue: _taskScope,
@@ -284,7 +227,7 @@ Page resource error:
                       ),
                     ),
                     ListTile(
-                      title: const Text('All accounts'),
+                      title: Text(AppLocalizations.of(context).allAccounts),
                       leading: Radio<ExecuteScope>(
                         value: ExecuteScope.all,
                         groupValue: _taskScope,
@@ -300,7 +243,7 @@ Page resource error:
                         Navigator.pop(context);
                         _startAutoLogin(_taskScope);
                       },
-                      child: const Text('Start to execute'),
+                      child: Text(AppLocalizations.of(context).startToExecute),
                     ),
                   ],
                 ),
@@ -312,7 +255,6 @@ Page resource error:
     }
 
     return Scaffold(
-      // appBar: AppBar(title: Text('浏览')),
       body: SafeArea(
         child: Stack(
           children: [

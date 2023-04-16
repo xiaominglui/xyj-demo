@@ -82,9 +82,9 @@ class _AccountListPageState extends State<AccountListPage> {
         return Card(
           child: Column(
             children: [
-              SizedBox(height: 6,),
-              const CircleAvatar(
-                child: Icon(Icons.account_circle),
+              const SizedBox(height: 6,),
+              CircleAvatar(
+                child: account.isLoggedIn ? const Icon(Icons.check_box) : const Icon(Icons.check_box_outline_blank),
               ),
               Text(_retrieveDisplayName(accountProvider, account)),
               Text(account.remark ?? ""),
@@ -106,8 +106,8 @@ class _AccountListPageState extends State<AccountListPage> {
       builder: (context, accountProvider, child) {
         return Card(
           child: ListTile(
-            leading: const CircleAvatar(
-              child: Icon(Icons.account_circle),
+            leading: CircleAvatar(
+              child: account.isLoggedIn ? const Icon(Icons.check_box) : const Icon(Icons.check_box_outline_blank),
             ),
             title: Text(_retrieveDisplayName(accountProvider, account)),
             subtitle: Text(account.remark ?? ""),

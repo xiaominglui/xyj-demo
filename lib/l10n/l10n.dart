@@ -34,6 +34,10 @@ class AppLocalizations {
       'passwordEmptyHint': 'Password cannot be empty',
       'mobileEmptyHint': 'Mobile number cannot be empty',
       'editAccount': 'Edit Account',
+      'chooseTheExecutionScope': 'Choose the execution scope',
+      'accountsNotLoggedIn': 'Accounts not logged in',
+      'allAccounts': 'All accounts',
+      'startToExecute': 'Start to execute',
     },
     'zh': {
       'hello': '你好世界',
@@ -59,6 +63,10 @@ class AppLocalizations {
       'passwordEmptyHint': '密码不能为空',
       'mobileEmptyHint': '手机号不能为空',
       'editAccount': '编辑账户',
+      'chooseTheExecutionScope': '选择自动登录帐号',
+      'accountsNotLoggedIn': '未登录',
+      'allAccounts': '全部',
+      'startToExecute': '开始登录',
     },
   };
 
@@ -154,5 +162,21 @@ class AppLocalizations {
 
   String get editAccount {
     return _localizedValues[locale.languageCode]!['editAccount']!;
+  }
+
+  String get chooseTheExecutionScope {
+    return _localizedValues[locale.languageCode]!['chooseTheExecutionScope']!;
+  }
+
+  String get accountsNotLoggedIn {
+    return _localizedValues[locale.languageCode]!['accountsNotLoggedIn']!;
+  }
+
+  String get allAccounts {
+    return _localizedValues[locale.languageCode]!['allAccounts']!;
+  }
+
+  String get startToExecute {
+    return _localizedValues[locale.languageCode]!['startToExecute']!;
   }
 }
