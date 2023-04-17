@@ -8,4 +8,4 @@ class TaskConfig {
 }
 
 enum ExecuteScope {all, notLoggedInOnly}
-enum ExecuteType {auto, manual}
+enum ExecuteType {checkIn, login}

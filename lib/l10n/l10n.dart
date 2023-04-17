@@ -35,10 +35,13 @@ class AppLocalizations {
       'mobileEmptyHint': 'Mobile number cannot be empty',
       'editAccount': 'Edit Account',
       'chooseTheExecutionScope': 'Choose the execution scope',
+      'chooseTaskType': 'Choose task type',
       'accountsNotLoggedIn': 'Accounts not logged in',
       'allAccounts': 'All accounts',
       'startToExecute': 'Start to execute',
-      'NoAccountsNeedToLogInToday': 'No accounts need to log in today',
+      'noAccountsNeedToLogInToday': 'No accounts need to log in today',
+      'checkInTask': 'Check in',
+      'logInTask': 'Login',
     },
     'zh': {
       'hello': '你好世界',
@@ -64,11 +67,14 @@ class AppLocalizations {
       'passwordEmptyHint': '密码不能为空',
       'mobileEmptyHint': '手机号不能为空',
       'editAccount': '编辑帐号',
-      'chooseTheExecutionScope': '选择自动登录帐号',
+      'chooseTheExecutionScope': '选择登录帐号范围',
+      'chooseTaskType': '选择任务类型',
       'accountsNotLoggedIn': '未登录',
       'allAccounts': '全部',
       'startToExecute': '开始登录',
       'noAccountsNeedToLogInToday': '👏🏻所有帐号今日已登录',
+      'checkInTask': '签到',
+      'logInTask': '登录',
     },
   };
 
@@ -166,6 +172,10 @@ class AppLocalizations {
     return _localizedValues[locale.languageCode]!['editAccount']!;
   }
 
+  String get chooseTaskType {
+    return _localizedValues[locale.languageCode]!['chooseTaskType']!;
+  }
+
   String get chooseTheExecutionScope {
     return _localizedValues[locale.languageCode]!['chooseTheExecutionScope']!;
   }
@@ -184,5 +194,13 @@ class AppLocalizations {
 
   String get noAccountsNeedToLogInToday {
     return _localizedValues[locale.languageCode]!['noAccountsNeedToLogInToday']!;
+  }
+
+  String get checkInTask {
+    return _localizedValues[locale.languageCode]!['checkInTask']!;
+  }
+
+  String get logInTask {
+    return _localizedValues[locale.languageCode]!['logInTask']!;
   }
 }

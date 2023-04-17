@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:xyj_helper/account_selector_page.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
@@ -29,8 +30,9 @@ class _BrowserPageState extends State<BrowserPage> {
   bool _isAutoLoggingIn = false;
   bool _isManualStop = false;
   ExecuteScope? _taskScope = ExecuteScope.notLoggedInOnly;
-  ExecuteType _taskType = ExecuteType.auto;
-  List<Account> _accountsToExecute = List.empty(growable: true);
+  ExecuteType? _taskType = ExecuteType.checkIn;
+  final List<Account> _accountsToExecute = List.empty(growable: true);
+  Account? _accountToLogin;
 
   void _onPageFinished(String url) async {
     print("onPageFinished===$_currentAccountIndex");
@@ -40,16 +42,21 @@ class _BrowserPageState extends State<BrowserPage> {
         if (_processedAccountIndexes.contains(_currentAccountIndex)) {
           return; // if processed, ignore. Due to onPageFinished multi-callback
         }
-        _accountProvider.markAccountLoggedIn(_accountsToExecute[_currentAccountIndex]);
+        _accountProvider
+            .markAccountLoggedIn(_accountsToExecute[_currentAccountIndex]);
         _processedAccountIndexes.add(_currentAccountIndex);
         await Future.delayed(const Duration(seconds: 1));
-        await _logout();
-        await Future.delayed(const Duration(seconds: 1));
+        if (_taskType == ExecuteType.checkIn) {
+          await _logout();
+          await Future.delayed(const Duration(seconds: 1));
+        }
+
         _completers[_currentAccountIndex]!.complete();
         _accountProcessedController.add(null);
-        print("autoLogin continue via logged in===$_currentAccountIndex, continue");
+        print(
+            "autoTask continue via logged in===$_currentAccountIndex, continue");
       } else {
-        print("autoLogin ignore");
+        print("autoTask ignore");
       }
     } else {
       // normal loading
@@ -167,18 +174,25 @@ Page resource error:
       ''');
     }
 
-    Future<void> _startAutoLogin(ExecuteScope? scope) async {
-      // get accounts list to login by filtering out accounts based on scope
+    Future<void> _startAutoTask(ExecuteType? type, ExecuteScope? scope) async {
+      _accountsToExecute.clear();
 
-      if (scope == ExecuteScope.notLoggedInOnly) {
-        var notLoggedInAccounts = _accountProvider.accounts.where((a) => !isLoggedToday(a)).toList();
-        _accountsToExecute.addAll(notLoggedInAccounts);
+      if (type == ExecuteType.login && _accountToLogin != null) {
+        _accountsToExecute.add(_accountToLogin!);
       } else {
-        var allAccounts = _accountProvider.accounts;
-        _accountsToExecute.addAll(allAccounts);
+        if (scope == ExecuteScope.notLoggedInOnly) {
+          var notLoggedInAccounts = _accountProvider.accounts
+              .where((a) => !isLoggedToday(a))
+              .toList();
+          _accountsToExecute.addAll(notLoggedInAccounts);
+        } else {
+          var allAccounts = _accountProvider.accounts;
+          _accountsToExecute.addAll(allAccounts);
+        }
       }
+
       var length = _accountsToExecute.length;
-      print("autoLogin===$length===@$scope");
+      print("autoTask===$length===[$type]@$scope");
 
       if (length > 0) {
         setState(() {
@@ -186,16 +200,15 @@ Page resource error:
           _isManualStop = false;
         });
 
-
         _processedAccountIndexes.clear();
         _completers.clear();
 
         for (int i = 0; i < length && !_isManualStop; i++) {
           _currentAccountIndex = i;
-          print("autoLogin===$i===$_currentAccountIndex");
+          print("autoTask===$i===$_currentAccountIndex");
           await Future.delayed(const Duration(seconds: 3));
           await _loginWithAccount(_accountsToExecute[i]);
-          print("autoLogin waiting===$_currentAccountIndex");
+          print("autoTask waiting===$_currentAccountIndex");
           _completers[i] = Completer<void>();
           _waitForPageFinishedOrTimeout(i, const Duration(seconds: 10));
           await _accountProcessedController.stream.first;
@@ -205,8 +218,7 @@ Page resource error:
           _isAutoLoggingIn = false;
         });
       } else {
-        print("autoLogin === no account need to log in");
-
+        print("autoTask === no account need to process");
         Fluttertoast.showToast(
             msg: AppLocalizations.of(context).noAccountsNeedToLogInToday,
             toastLength: Toast.LENGTH_SHORT,
@@ -214,8 +226,7 @@ Page resource error:
             timeInSecForIosWeb: 2,
             backgroundColor: Colors.blue,
             textColor: Colors.white,
-            fontSize: 16.0
-        );
+            fontSize: 16.0);
       }
     }
 
@@ -231,38 +242,101 @@ Page resource error:
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Text(
-                      AppLocalizations.of(context).chooseTheExecutionScope,
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    Column(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context).chooseTaskType,
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        ListTile(
+                          title: Text(AppLocalizations.of(context).checkInTask),
+                          leading: Radio<ExecuteType>(
+                            value: ExecuteType.checkIn,
+                            groupValue: _taskType,
+                            onChanged: (ExecuteType? value) {
+                              setState(() {
+                                _taskType = value;
+                              });
+                            },
+                          ),
+                        ),
+                        ListTile(
+                          title: Text(AppLocalizations.of(context).logInTask),
+                          leading: Radio<ExecuteType>(
+                            value: ExecuteType.login,
+                            groupValue: _taskType,
+                            onChanged: (ExecuteType? value) {
+                              setState(() {
+                                _taskType = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                    ListTile(
-                      title: Text(AppLocalizations.of(context).accountsNotLoggedIn),
-                      leading: Radio<ExecuteScope>(
-                        value: ExecuteScope.notLoggedInOnly,
-                        groupValue: _taskScope,
-                        onChanged: (ExecuteScope? value) {
-                          setState(() {
-                            _taskScope = value;
-                          });
-                        },
-                      ),
-                    ),
-                    ListTile(
-                      title: Text(AppLocalizations.of(context).allAccounts),
-                      leading: Radio<ExecuteScope>(
-                        value: ExecuteScope.all,
-                        groupValue: _taskScope,
-                        onChanged: (ExecuteScope? value) {
-                          setState(() {
-                            _taskScope = value;
-                          });
-                        },
-                      ),
-                    ),
+                    _taskType == ExecuteType.login
+                        ? IconButton(
+                            icon: const Icon(Icons.add_circle_outline),
+                            onPressed: () async {
+                              Account selectedAccount = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        AccountSelectorPage()),
+                              );
+                              _accountToLogin = selectedAccount;
+                              Fluttertoast.showToast(
+                                  msg:
+                                      'selected: ${selectedAccount.phoneNumber}',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 2,
+                                  backgroundColor: Colors.blue,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            },
+                          )
+                        : Column(
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)
+                                    .chooseTheExecutionScope,
+                                style: const TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              ListTile(
+                                title: Text(AppLocalizations.of(context)
+                                    .accountsNotLoggedIn),
+                                leading: Radio<ExecuteScope>(
+                                  value: ExecuteScope.notLoggedInOnly,
+                                  groupValue: _taskScope,
+                                  onChanged: (ExecuteScope? value) {
+                                    setState(() {
+                                      _taskScope = value;
+                                    });
+                                  },
+                                ),
+                              ),
+                              ListTile(
+                                title: Text(
+                                    AppLocalizations.of(context).allAccounts),
+                                leading: Radio<ExecuteScope>(
+                                  value: ExecuteScope.all,
+                                  groupValue: _taskScope,
+                                  onChanged: (ExecuteScope? value) {
+                                    setState(() {
+                                      _taskScope = value;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        _startAutoLogin(_taskScope);
+                        _startAutoTask(_taskType, _taskScope);
                       },
                       child: Text(AppLocalizations.of(context).startToExecute),
                     ),
@@ -280,7 +354,7 @@ Page resource error:
         child: Stack(
           children: [
             WebViewWidget(controller: _webViewController),
-            if (_isAutoLoggingIn) _buildAutoLoginOverlay(),
+            if (_isAutoLoggingIn) _buildAutoTaskOverlay(),
           ],
         ),
       ),
@@ -296,18 +370,18 @@ Page resource error:
   Future<void> _waitForPageFinishedOrTimeout(int p, Duration timeout) async {
     Future.delayed(timeout).then((_) {
       if (!_completers[p]!.isCompleted) {
-        print("autoLogin timeout===$p");
+        print("autoTask timeout===$p");
         _accountProcessedController.add(null);
         _completers[p]!.complete();
       } else {
-        print("autoLogin page finished===$p");
+        print("autoTask page finished===$p");
       }
     });
 
     return _completers[p]!.future;
   }
 
-  Widget _buildAutoLoginOverlay() {
+  Widget _buildAutoTaskOverlay() {
     return Positioned.fill(
       child: Opacity(
         opacity: 0.5,
@@ -337,5 +411,4 @@ Page resource error:
       ),
     );
   }
-
 }
