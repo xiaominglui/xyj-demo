@@ -276,26 +276,37 @@ Page resource error:
                       ],
                     ),
                     _taskType == ExecuteType.login
-                        ? IconButton(
-                            icon: const Icon(Icons.add_circle_outline),
-                            onPressed: () async {
-                              Account selectedAccount = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        AccountSelectorPage()),
-                              );
-                              _accountToLogin = selectedAccount;
-                              Fluttertoast.showToast(
-                                  msg:
-                                      'selected: ${selectedAccount.phoneNumber}',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 2,
-                                  backgroundColor: Colors.blue,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
-                            },
+                        ? ListTile(
+                            title: _accountToLogin == null
+                                ? Text('')
+                                : Text(_accountToLogin!.phoneNumber),
+                            subtitle: _accountToLogin == null
+                                ? Text('')
+                                : Text(_accountToLogin!.alias),
+                            trailing: _accountToLogin == null
+                                ? IconButton(
+                                    icon: const Icon(Icons.add_circle),
+                                    onPressed: () async {
+                                      Account selectedAccount =
+                                          await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AccountSelectorPage()),
+                                      );
+                                      setState(() {
+                                        _accountToLogin = selectedAccount;
+                                      });
+                                    },
+                                  )
+                                : IconButton(
+                                    icon: const Icon(Icons.remove_circle),
+                                    onPressed: () {
+                                      setState(() {
+                                        _accountToLogin = null;
+                                      });
+                                    },
+                                  ),
                           )
                         : Column(
                             children: [
@@ -333,12 +344,15 @@ Page resource error:
                               ),
                             ],
                           ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        _startAutoTask(_taskType, _taskScope);
-                      },
-                      child: Text(AppLocalizations.of(context).startToExecute),
+                    Center(
+
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _startAutoTask(_taskType, _taskScope);
+                        },
+                        child: Text(AppLocalizations.of(context).startToExecute),
+                      ),
                     ),
                   ],
                 ),
