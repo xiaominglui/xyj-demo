@@ -77,7 +77,9 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: _saveAccount,
+                onPressed: (){
+                  _saveAccount(widget.account);
+                },
                 child: Text(widget.account == null ? AppLocalizations.of(context).add : AppLocalizations.of(context).update),
               ),
             ],
@@ -87,7 +89,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
     );
   }
 
-  void _saveAccount() {
+  void _saveAccount(Account? account) {
     if (_formKey.currentState!.validate()) {
       final accountProvider =
           Provider.of<AccountProvider>(context, listen: false);
@@ -106,6 +108,8 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
           password: _passwordController.text,
           alias: _aliasController.text,
           remark: _remarkController.text,
+          isLoggedIn: account!.isLoggedIn,
+          lastLoggedIn: account.lastLoggedIn,
         );
         accountProvider.updateAccount(updatedAccount);
       }

@@ -50,6 +50,8 @@ class AccountProvider with ChangeNotifier {
   Future<void> markAccountLoggedIn(Account account) async {
     final loggedInAccount = Account(
       id: account.id,
+      alias: account.alias,
+      remark: account.remark,
       phoneNumber: account.phoneNumber,
       password: account.password,
       isLoggedIn: true,
