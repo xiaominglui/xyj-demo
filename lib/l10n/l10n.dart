@@ -38,10 +38,11 @@ class AppLocalizations {
       'chooseTaskType': 'Choose task type',
       'accountsNotLoggedIn': 'Accounts not logged in',
       'allAccounts': 'All accounts',
-      'startToExecute': 'Start to execute',
+      'startToExecute': 'Start',
       'noAccountsNeedToLogInToday': 'No accounts need to log in today',
       'checkInTask': 'Check in',
       'logInTask': 'Login',
+      'chooseAnAccount': 'Choose an account',
     },
     'zh': {
       'hello': '你好世界',
@@ -71,10 +72,11 @@ class AppLocalizations {
       'chooseTaskType': '选择任务类型',
       'accountsNotLoggedIn': '未登录',
       'allAccounts': '全部',
-      'startToExecute': '开始登录',
+      'startToExecute': '开始',
       'noAccountsNeedToLogInToday': '👏🏻所有帐号今日已登录',
       'checkInTask': '签到',
       'logInTask': '登录',
+      'chooseAnAccount': '选择一个帐号',
     },
   };
 
@@ -202,5 +204,9 @@ class AppLocalizations {
 
   String get logInTask {
     return _localizedValues[locale.languageCode]!['logInTask']!;
+  }
+
+  String get chooseAnAccount {
+    return _localizedValues[locale.languageCode]!['chooseAnAccount']!;
   }
 }
