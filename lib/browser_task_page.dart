@@ -12,14 +12,14 @@ import 'account_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 
-class BrowserPage extends StatefulWidget {
-  const BrowserPage({super.key});
+class BrowserTaskPage extends StatefulWidget {
+  const BrowserTaskPage({super.key});
 
   @override
-  _BrowserPageState createState() => _BrowserPageState();
+  _BrowserTaskPageState createState() => _BrowserTaskPageState();
 }
 
-class _BrowserPageState extends State<BrowserPage> {
+class _BrowserTaskPageState extends State<BrowserTaskPage> {
   final _url = 'https://m.zmxyj.com/login/index';
   late final WebViewController _webViewController;
   late AccountProvider _accountProvider;

@@ -38,6 +38,8 @@ dependencies:
   webview_flutter_wkwebview: ^3.0.0
   sqflite: ^2.2.6
   path: ^1.8.2
+  path_provider: ^2.0.14
+  permission_handler: ^10.2.0
 
 
   # The following adds the Cupertino Icons font to your application.

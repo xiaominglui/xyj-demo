@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xyj_helper/account_list_page.dart';
-import 'package:xyj_helper/overview_page.dart';
-import 'browser_page.dart';
+import 'package:xyj_helper/settings_page.dart';
+import 'browser_task_page.dart';
 import 'l10n/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -40,8 +40,9 @@ class _MainPageState extends State<MainPage> {
 
   final List<Widget> _pages = [
     // const OverviewPage(),
-    const BrowserPage(),
+    const BrowserTaskPage(),
     const AccountListPage(),
+    const SettingsPage(),
     // const MyPage(),
   ];
 
@@ -68,8 +69,8 @@ class _MainPageState extends State<MainPage> {
               icon: const Icon(Icons.explore_rounded), label: AppLocalizations.of(context).autoTask),
           BottomNavigationBarItem(
               icon: const Icon(Icons.account_tree_rounded), label: AppLocalizations.of(context).accountManager),
-          // BottomNavigationBarItem(
-          //     icon: Icon(Icons.account_circle_rounded), label: AppLocalizations.of(context).my),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle_rounded), label: AppLocalizations.of(context).settings),
         ],
       ),
     );

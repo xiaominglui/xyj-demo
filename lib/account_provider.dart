@@ -46,6 +46,23 @@ class AccountProvider with ChangeNotifier {
     await _loadAccounts();
   }
 
+  Future<void> deleteAllAccounts() async {
+    final db = await AppDatabase.instance.database;
+    await db.delete('accounts');
+    await _loadAccounts();
+  }
+
+  Future<void> restoreAccounts(List<Account> newAccounts) async {
+    // 删除原有帐号
+    deleteAllAccounts();
+    // 添加新帐号
+    for (var account in newAccounts) {
+      await addAccount(account);
+    }
+    // 重新加载帐号列表
+    await _loadAccounts();
+  }
+
 
   Future<void> markAccountLoggedIn(Account account) async {
     final loggedInAccount = Account(
