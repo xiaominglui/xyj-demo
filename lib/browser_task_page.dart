@@ -13,10 +13,14 @@ import 'package:provider/provider.dart';
 import 'dart:async';
 
 class BrowserTaskPage extends StatefulWidget {
-  const BrowserTaskPage({super.key});
+  Account? accountParameter;
+
+  bool autoStart;
+
+  BrowserTaskPage({super.key, required this.accountParameter, required this.autoStart});
 
   @override
-  _BrowserTaskPageState createState() => _BrowserTaskPageState();
+  _BrowserTaskPageState createState() => _BrowserTaskPageState(accountToLogin: accountParameter, autoStart: autoStart);
 }
 
 class _BrowserTaskPageState extends State<BrowserTaskPage> {
@@ -32,7 +36,10 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
   ExecuteScope? _taskScope = ExecuteScope.notLoggedInOnly;
   ExecuteType? _taskType = ExecuteType.checkIn;
   final List<Account> _accountsToExecute = List.empty(growable: true);
-  Account? _accountToLogin;
+  Account? accountToLogin;
+  bool autoStart;
+
+  _BrowserTaskPageState({required this.accountToLogin, required this.autoStart});
 
   void _onPageFinished(String url) async {
     print("onPageFinished===$_currentAccountIndex");
@@ -78,6 +85,7 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
   @override
   void initState() {
     super.initState();
+    print("initState: $autoStart===${accountToLogin}");
     late final PlatformWebViewControllerCreationParams params;
     if (WebViewPlatform.instance is WebKitWebViewPlatform) {
       params = WebKitWebViewControllerCreationParams(
@@ -177,8 +185,8 @@ Page resource error:
     Future<void> _startAutoTask(ExecuteType? type, ExecuteScope? scope) async {
       _accountsToExecute.clear();
 
-      if (type == ExecuteType.login && _accountToLogin != null) {
-        _accountsToExecute.add(_accountToLogin!);
+      if (type == ExecuteType.login && accountToLogin != null) {
+        _accountsToExecute.add(accountToLogin!);
       } else {
         if (scope == ExecuteScope.notLoggedInOnly) {
           var notLoggedInAccounts = _accountProvider.accounts
@@ -277,13 +285,13 @@ Page resource error:
                     ),
                     _taskType == ExecuteType.login
                         ? ListTile(
-                            title: _accountToLogin == null
+                            title: accountToLogin == null
                                 ? Text('')
-                                : Text(_accountToLogin!.phoneNumber),
-                            subtitle: _accountToLogin == null
+                                : Text(accountToLogin!.phoneNumber),
+                            subtitle: accountToLogin == null
                                 ? Text('')
-                                : Text(_accountToLogin!.alias),
-                            trailing: _accountToLogin == null
+                                : Text(accountToLogin!.alias),
+                            trailing: accountToLogin == null
                                 ? IconButton(
                                     icon: const Icon(Icons.add_circle),
                                     onPressed: () async {
@@ -295,7 +303,7 @@ Page resource error:
                                                 AccountSelectorPage()),
                                       );
                                       setState(() {
-                                        _accountToLogin = selectedAccount;
+                                        accountToLogin = selectedAccount;
                                       });
                                     },
                                   )
@@ -303,7 +311,7 @@ Page resource error:
                                     icon: const Icon(Icons.remove_circle),
                                     onPressed: () {
                                       setState(() {
-                                        _accountToLogin = null;
+                                        accountToLogin = null;
                                       });
                                     },
                                   ),

@@ -47,11 +47,11 @@ class AppLocalizations {
     'zh': {
       'hello': '你好世界',
       'overall': '总览',
-      'autoTask': '自动任务',
+      'autoTask': '任务',
       'welcome': '欢迎',
       'signIn': '登录',
       'addAccount': '添加帐号',
-      'accountManager': '帐号管理',
+      'accountManager': '帐号',
       'mobile': '手机号',
       'password': '密码',
       'alias': '别名',
