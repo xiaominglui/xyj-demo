@@ -43,6 +43,7 @@ class AppLocalizations {
       'checkInTask': 'Check in',
       'logInTask': 'Login',
       'chooseAnAccount': 'Choose an account',
+      'tooManyAccountsToLogIn': 'Too many accounts to log in',
     },
     'zh': {
       'hello': '你好世界',
@@ -77,6 +78,7 @@ class AppLocalizations {
       'checkInTask': '签到',
       'logInTask': '登录',
       'chooseAnAccount': '选择一个帐号',
+      'tooManyAccountsToLogIn': '目前不能同时登录多个帐号',
     },
   };
 
@@ -208,5 +210,9 @@ class AppLocalizations {
 
   String get chooseAnAccount {
     return _localizedValues[locale.languageCode]!['chooseAnAccount']!;
+  }
+
+  String get tooManyAccountsToLogIn {
+    return _localizedValues[locale.languageCode]!['tooManyAccountsToLogIn']!;
   }
 }

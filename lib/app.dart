@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xyj_helper/account_list_page.dart';
 import 'package:xyj_helper/settings_page.dart';
+import 'package:xyj_helper/task_config.dart';
 import 'account.dart';
 import 'browser_task_page.dart';
 import 'l10n/l10n.dart';
@@ -39,6 +40,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
   Account? _accountParameter;
+  ExecuteType _executeType = ExecuteType.checkIn;
   bool _autoStart = false;
 
 
@@ -51,11 +53,15 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
-  void _navigateToTabWithAccountParameterAndStart(int index, Account? parameter) {
+  void _navigateToTaskTabWithAccountParameterAndStart(
+      int index, Account? parameter, ExecuteType executeType) {
+    print(
+        '_navigateToTabWithAccountParameterAndStart===$index===${parameter?.phoneNumber}===$executeType');
     setState(() {
       _autoStart = true;
       _currentIndex = index;
       _accountParameter = parameter;
+      _executeType = executeType;
     });
   }
 
@@ -65,12 +71,12 @@ class _MainPageState extends State<MainPage> {
     final List<Widget> pages = [
       // const OverviewPage(),
       AccountListPage(
-        onLongPressItem: (Account a) {
-          _navigateToTabWithAccountParameterAndStart(1, a);
-        },
-      ),
+          onOneAccountTaskRequest: (Account account, ExecuteType executeType) {
+            print('callback onOneAccountTaskRequest');
+        _navigateToTaskTabWithAccountParameterAndStart(1, account, executeType);
+      }),
       BrowserTaskPage(
-          accountParameter: _accountParameter, autoStart: _autoStart),
+          accountParameter: _accountParameter, autoStart: _autoStart, taskType: _executeType),
       const SettingsPage(),
       // const MyPage(),
     ];

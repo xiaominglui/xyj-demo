@@ -7,5 +7,5 @@ class TaskConfig {
   TaskConfig({this.scope = ExecuteScope.notLoggedInOnly, this.accounts});
 }
 
-enum ExecuteScope {all, notLoggedInOnly}
+enum ExecuteScope {all, notLoggedInOnly, one}
 enum ExecuteType {checkIn, login}

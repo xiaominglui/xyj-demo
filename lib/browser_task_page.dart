@@ -14,13 +14,13 @@ import 'dart:async';
 
 class BrowserTaskPage extends StatefulWidget {
   Account? accountParameter;
-
   bool autoStart;
+  ExecuteType? taskType;
 
-  BrowserTaskPage({super.key, required this.accountParameter, required this.autoStart});
+  BrowserTaskPage({super.key, required this.accountParameter, required this.autoStart, required this.taskType});
 
   @override
-  _BrowserTaskPageState createState() => _BrowserTaskPageState(accountToLogin: accountParameter, autoStart: autoStart);
+  _BrowserTaskPageState createState() => _BrowserTaskPageState();
 }
 
 class _BrowserTaskPageState extends State<BrowserTaskPage> {
@@ -31,15 +31,13 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
   final Set<int> _processedAccountIndexes = {};
   final _accountProcessedController = StreamController<void>.broadcast();
   final _completers = <int, Completer<void>>{};
-  bool _isAutoLoggingIn = false;
+  bool _isTaskRunning = false;
   bool _isManualStop = false;
   ExecuteScope? _taskScope = ExecuteScope.notLoggedInOnly;
-  ExecuteType? _taskType = ExecuteType.checkIn;
+  ExecuteType? _taskType;
   final List<Account> _accountsToExecute = List.empty(growable: true);
-  Account? accountToLogin;
-  bool autoStart;
 
-  _BrowserTaskPageState({required this.accountToLogin, required this.autoStart});
+  _BrowserTaskPageState();
 
   void _onPageFinished(String url) async {
     print("onPageFinished===$_currentAccountIndex");
@@ -68,6 +66,15 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
     } else {
       // normal loading
       print("normal loading");
+      if (widget.autoStart) {
+        print("handle one account task===${widget.taskType}");
+        if (widget.taskType != null && widget.accountParameter != null) {
+          _taskType = widget.taskType;
+          _taskScope = ExecuteScope.one;
+          startAutoTask(_taskType, _taskScope);
+        }
+        widget.autoStart = false;
+      }
     }
   }
 
@@ -85,7 +92,7 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
   @override
   void initState() {
     super.initState();
-    print("initState: $autoStart===${accountToLogin}");
+    print("initState: $widget.autoStart===${widget.accountParameter}===$_taskType===${widget.taskType}");
     late final PlatformWebViewControllerCreationParams params;
     if (WebViewPlatform.instance is WebKitWebViewPlatform) {
       params = WebKitWebViewControllerCreationParams(
@@ -161,50 +168,41 @@ Page resource error:
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    _accountProvider = Provider.of<AccountProvider>(context);
 
-    Future<void> _loginWithAccount(Account account) async {
-      String phoneNumber = account.phoneNumber;
-      String password = account.password;
+  Future<void> startAutoTask(ExecuteType? type, ExecuteScope? scope) async {
+    _accountsToExecute.clear();
 
-      await _webViewController.runJavaScript('''
-        (function() {
-          document.getElementById('phone').value = '$phoneNumber';
-          document.getElementById('password').value = '$password';
-          var arithmeticQuestion = document.getElementById('newCode').innerText.replace(/&nbsp;/g, '');
-          var result = eval(arithmeticQuestion.slice(0, -1));
-          document.getElementById('veryCode').value = result;
-          // alert("qestion: " + arithmeticQuestion + " result: " + result);
-          document.getElementById('login-btn').click();
-        })();
-      ''');
+    if (scope == ExecuteScope.one) {
+      if (widget.accountParameter != null) {
+        _accountsToExecute.add(widget.accountParameter!);
+      }
+    } else if (scope == ExecuteScope.notLoggedInOnly) {
+      var notLoggedInAccounts = _accountProvider.accounts
+          .where((a) => !isLoggedToday(a))
+          .toList();
+      _accountsToExecute.addAll(notLoggedInAccounts);
+    } else if (scope == ExecuteScope.all) {
+      var allAccounts = _accountProvider.accounts;
+      _accountsToExecute.addAll(allAccounts);
     }
 
-    Future<void> _startAutoTask(ExecuteType? type, ExecuteScope? scope) async {
-      _accountsToExecute.clear();
+    var length = _accountsToExecute.length;
+    print("autoTask===$length===[$type]@$scope");
 
-      if (type == ExecuteType.login && accountToLogin != null) {
-        _accountsToExecute.add(accountToLogin!);
+    if (length > 0) {
+      if (type == ExecuteType.login && length > 1) {
+        print("autoTask === multiple accounts can not login at the same time now");
+        Fluttertoast.showToast(
+            msg: AppLocalizations.of(context).tooManyAccountsToLogIn,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.blue,
+            textColor: Colors.white,
+            fontSize: 16.0);
       } else {
-        if (scope == ExecuteScope.notLoggedInOnly) {
-          var notLoggedInAccounts = _accountProvider.accounts
-              .where((a) => !isLoggedToday(a))
-              .toList();
-          _accountsToExecute.addAll(notLoggedInAccounts);
-        } else {
-          var allAccounts = _accountProvider.accounts;
-          _accountsToExecute.addAll(allAccounts);
-        }
-      }
-
-      var length = _accountsToExecute.length;
-      print("autoTask===$length===[$type]@$scope");
-
-      if (length > 0) {
         setState(() {
-          _isAutoLoggingIn = true;
+          _isTaskRunning = true;
           _isManualStop = false;
         });
 
@@ -223,20 +221,44 @@ Page resource error:
         }
 
         setState(() {
-          _isAutoLoggingIn = false;
+          _isTaskRunning = false;
         });
-      } else {
-        print("autoTask === no account need to process");
-        Fluttertoast.showToast(
-            msg: AppLocalizations.of(context).noAccountsNeedToLogInToday,
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.blue,
-            textColor: Colors.white,
-            fontSize: 16.0);
       }
+    } else {
+      print("autoTask === no account need to process");
+      Fluttertoast.showToast(
+          msg: AppLocalizations.of(context).noAccountsNeedToLogInToday,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.blue,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
+  }
+
+  Future<void> _loginWithAccount(Account account) async {
+    String phoneNumber = account.phoneNumber;
+    String password = account.password;
+
+    await _webViewController.runJavaScript('''
+        (function() {
+          document.getElementById('phone').value = '$phoneNumber';
+          document.getElementById('password').value = '$password';
+          var arithmeticQuestion = document.getElementById('newCode').innerText.replace(/&nbsp;/g, '');
+          var result = eval(arithmeticQuestion.slice(0, -1));
+          document.getElementById('veryCode').value = result;
+          // alert("qestion: " + arithmeticQuestion + " result: " + result);
+          document.getElementById('login-btn').click();
+        })();
+      ''');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _accountProvider = Provider.of<AccountProvider>(context);
+
+
 
     void _showBottomSheet() {
       showModalBottomSheet(
@@ -285,13 +307,13 @@ Page resource error:
                     ),
                     _taskType == ExecuteType.login
                         ? ListTile(
-                            title: accountToLogin == null
+                            title: widget.accountParameter == null
                                 ? Text('')
-                                : Text(accountToLogin!.phoneNumber),
-                            subtitle: accountToLogin == null
+                                : Text(widget.accountParameter!.phoneNumber),
+                            subtitle: widget.accountParameter == null
                                 ? Text('')
-                                : Text(accountToLogin!.alias),
-                            trailing: accountToLogin == null
+                                : Text(widget.accountParameter!.alias),
+                            trailing: widget.accountParameter == null
                                 ? IconButton(
                                     icon: const Icon(Icons.add_circle),
                                     onPressed: () async {
@@ -303,7 +325,7 @@ Page resource error:
                                                 AccountSelectorPage()),
                                       );
                                       setState(() {
-                                        accountToLogin = selectedAccount;
+                                        widget.accountParameter = selectedAccount;
                                       });
                                     },
                                   )
@@ -311,7 +333,7 @@ Page resource error:
                                     icon: const Icon(Icons.remove_circle),
                                     onPressed: () {
                                       setState(() {
-                                        accountToLogin = null;
+                                        widget.accountParameter = null;
                                       });
                                     },
                                   ),
@@ -357,7 +379,7 @@ Page resource error:
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);
-                          _startAutoTask(_taskType, _taskScope);
+                          startAutoTask(_taskType, _taskScope);
                         },
                         child: Text(AppLocalizations.of(context).startToExecute),
                       ),
@@ -376,7 +398,7 @@ Page resource error:
         child: Stack(
           children: [
             WebViewWidget(controller: _webViewController),
-            if (_isAutoLoggingIn) _buildAutoTaskOverlay(),
+            if (_isTaskRunning) _buildAutoTaskOverlay(),
           ],
         ),
       ),

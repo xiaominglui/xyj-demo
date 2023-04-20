@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
+import 'package:xyj_helper/task_config.dart';
 import 'package:xyj_helper/utils.dart';
 
 import 'account.dart';
@@ -8,9 +9,8 @@ import 'account_form_screen.dart';
 import 'account_provider.dart';
 
 class AccountListPage extends StatefulWidget {
-  final Function(Account) onLongPressItem;
-
-  AccountListPage({super.key, required this.onLongPressItem});
+  final Function(Account, ExecuteType) onOneAccountTaskRequest;
+  const AccountListPage({super.key, required this.onOneAccountTaskRequest});
 
   @override
   State<StatefulWidget> createState() => _AccountListPageState();
@@ -24,8 +24,7 @@ class _AccountListPageState extends State<AccountListPage> {
     final accountProvider = Provider.of<AccountProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).accountManager +
-            " (${accountProvider.accounts.length})"),
+        title: Text("${AppLocalizations.of(context).accountManager} (${accountProvider.accounts.length})"),
         actions: [
           IconButton(
             icon: const Icon(Icons.notes_rounded),
@@ -94,47 +93,55 @@ class _AccountListPageState extends State<AccountListPage> {
   Widget _buildAccountGridItem(Account account) {
     return Consumer<AccountProvider>(
       builder: (context, accountProvider, child) {
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(_retrieveDisplayName(accountProvider, account)),
-                Row(
-                  children: [
-                    isLoggedToday(account)
-                        ? const Icon(
-                            Icons.check_box,
-                            size: 16,
-                          )
-                        : const Icon(
-                            Icons.check_box_outline_blank,
-                            size: 16,
-                          ),
-                    SizedBox(
-                      width: 8.0,
-                    ),
-                    Text(account.remark ?? ""),
-                  ],
-                ),
-                SizedBox(
-                  height: 8.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(onPressed: () {}, icon: Icon(Icons.login)),
-                    SizedBox(width: 8.0),
-                    IconButton(
-                      onPressed: () {
-                        _showAccountOptions(account);
-                      },
-                      icon: Icon(Icons.more_vert),
-                    ),
-                  ],
-                )
-              ],
+        return GestureDetector(
+          onLongPress: () {
+            _showAccountOptions(account);
+          },
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(_retrieveDisplayName(accountProvider, account)),
+                  Row(
+                    children: [
+                      isLoggedToday(account)
+                          ? const Icon(
+                        Icons.check_box,
+                        size: 16,
+                      )
+                          : const Icon(
+                        Icons.check_box_outline_blank,
+                        size: 16,
+                      ),
+                      const SizedBox(
+                        width: 8.0,
+                      ),
+                      Text(account.remark),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 8.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(onPressed: () {
+                        print("onLoginIconButtonPressed");
+                        widget.onOneAccountTaskRequest(account, ExecuteType.login);
+                      }, icon: const Icon(Icons.login)),
+                      const SizedBox(width: 8.0),
+                      IconButton(
+                        onPressed: () {
+                          widget.onOneAccountTaskRequest(account, ExecuteType.checkIn);
+                        },
+                        icon: const Icon(Icons.check),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         );
@@ -147,7 +154,9 @@ class _AccountListPageState extends State<AccountListPage> {
       builder: (context, accountProvider, child) {
         return Card(
           child: ListTile(
-            onLongPress: () => widget.onLongPressItem(account),
+            onLongPress: (){
+              _showAccountOptions(account);
+            },
             title: Text(_retrieveDisplayName(accountProvider, account)),
             subtitle: Row(
               mainAxisSize: MainAxisSize.min,
@@ -161,25 +170,29 @@ class _AccountListPageState extends State<AccountListPage> {
                         Icons.check_box_outline_blank,
                         size: 16,
                       ),
-                SizedBox(
+                const SizedBox(
                   width: 8.0,
                 ),
-                Text(account.remark ?? ""),
+                Text(account.remark),
               ],
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 // ElevatedButton(onPressed: (){}, child: const Text("Edit")),
-                IconButton(onPressed: () {}, icon: Icon(Icons.login)),
-                SizedBox(
+                IconButton(onPressed: () {
+                  print("onLoginIconButtonPressed");
+                  widget.onOneAccountTaskRequest(account, ExecuteType.login);
+
+                }, icon: const Icon(Icons.login)),
+                const SizedBox(
                   width: 8.0,
                 ),
                 IconButton(
                   onPressed: () {
-                    _showAccountOptions(account);
+                    widget.onOneAccountTaskRequest(account, ExecuteType.checkIn);
                   },
-                  icon: Icon(Icons.more_vert),
+                  icon: const Icon(Icons.check),
                 )
               ],
             ),
@@ -195,18 +208,6 @@ class _AccountListPageState extends State<AccountListPage> {
       builder: (context) {
         return Wrap(
           children: [
-            ListTile(
-              leading: const Icon(Icons.check),
-              title: Text(AppLocalizations.of(context).checkInTask),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => AccountFormScreen(account: account),
-                  ),
-                );
-              },
-            ),
             ListTile(
               leading: const Icon(Icons.edit),
               title: Text(AppLocalizations.of(context).edit),
