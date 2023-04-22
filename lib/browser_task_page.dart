@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:xyj_helper/account_selector_page.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -161,6 +162,23 @@ Page resource error:
       AndroidWebViewController.enableDebugging(true);
       (controller.platform as AndroidWebViewController)
           .setMediaPlaybackRequiresUserGesture(false);
+      (controller.platform as AndroidWebViewController)
+          .setOnPlatformPermissionRequest((request) async {
+        debugPrint(
+          'requesting permissions for ${request.types.map((type) => type.name)}',
+        );
+
+        for (var type in request.types) {
+          if (type.name == 'camera') {
+            if (await Permission.camera.request().isGranted) {
+              // Either the permission was already granted before or the user just granted it.
+              request.grant();
+            } else {
+              request.deny();
+            }
+          }
+        }
+      });
     }
     // #enddocregion platform_features
 
