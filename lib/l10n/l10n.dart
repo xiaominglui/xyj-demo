@@ -15,7 +15,6 @@ class AppLocalizations {
       'overall': 'Overall',
       'autoTask': 'Auto Task',
       'welcome': 'Welcome',
-      'signIn': 'Sign In',
       'addAccount': 'Add Account',
       'accountManager': 'Account Manager',
       'mobile': 'Mobile',
@@ -44,13 +43,14 @@ class AppLocalizations {
       'logInTask': 'Login',
       'chooseAnAccount': 'Choose an account',
       'tooManyAccountsToLogIn': 'Too many accounts to log in',
+      'inProcessing': 'In processing',
+      'stopTask': 'Stop',
     },
     'zh': {
       'hello': '你好世界',
       'overall': '总览',
       'autoTask': '任务',
       'welcome': '欢迎',
-      'signIn': '登录',
       'addAccount': '添加帐号',
       'accountManager': '帐号',
       'mobile': '手机号',
@@ -79,6 +79,8 @@ class AppLocalizations {
       'logInTask': '登录',
       'chooseAnAccount': '选择一个帐号',
       'tooManyAccountsToLogIn': '目前不能同时登录多个帐号',
+      'inProcessing': '正在处理',
+      'stopTask': '停止',
     },
   };
 
@@ -98,10 +100,6 @@ class AppLocalizations {
 
   String get welcome {
     return _localizedValues[locale.languageCode]!['welcome']!;
-  }
-
-  String get signIn {
-    return _localizedValues[locale.languageCode]!['signIn']!;
   }
 
   String get addAccount {
@@ -214,5 +212,13 @@ class AppLocalizations {
 
   String get tooManyAccountsToLogIn {
     return _localizedValues[locale.languageCode]!['tooManyAccountsToLogIn']!;
+  }
+
+  String get inProcessing {
+    return _localizedValues[locale.languageCode]!['inProcessing']!;
+  }
+
+  String get stopTask {
+    return _localizedValues[locale.languageCode]!['stopTask']!;
   }
 }

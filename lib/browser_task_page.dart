@@ -17,7 +17,11 @@ class BrowserTaskPage extends StatefulWidget {
   bool autoStart;
   ExecuteType? taskType;
 
-  BrowserTaskPage({super.key, required this.accountParameter, required this.autoStart, required this.taskType});
+  BrowserTaskPage(
+      {super.key,
+      required this.accountParameter,
+      required this.autoStart,
+      required this.taskType});
 
   @override
   _BrowserTaskPageState createState() => _BrowserTaskPageState();
@@ -92,7 +96,8 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
   @override
   void initState() {
     super.initState();
-    print("initState: $widget.autoStart===${widget.accountParameter}===$_taskType===${widget.taskType}");
+    print(
+        "initState: $widget.autoStart===${widget.accountParameter}===$_taskType===${widget.taskType}");
     late final PlatformWebViewControllerCreationParams params;
     if (WebViewPlatform.instance is WebKitWebViewPlatform) {
       params = WebKitWebViewControllerCreationParams(
@@ -168,7 +173,6 @@ Page resource error:
     super.dispose();
   }
 
-
   Future<void> startAutoTask(ExecuteType? type, ExecuteScope? scope) async {
     _accountsToExecute.clear();
 
@@ -177,9 +181,8 @@ Page resource error:
         _accountsToExecute.add(widget.accountParameter!);
       }
     } else if (scope == ExecuteScope.notLoggedInOnly) {
-      var notLoggedInAccounts = _accountProvider.accounts
-          .where((a) => !isLoggedToday(a))
-          .toList();
+      var notLoggedInAccounts =
+          _accountProvider.accounts.where((a) => !isLoggedToday(a)).toList();
       _accountsToExecute.addAll(notLoggedInAccounts);
     } else if (scope == ExecuteScope.all) {
       var allAccounts = _accountProvider.accounts;
@@ -191,7 +194,8 @@ Page resource error:
 
     if (length > 0) {
       if (type == ExecuteType.login && length > 1) {
-        print("autoTask === multiple accounts can not login at the same time now");
+        print(
+            "autoTask === multiple accounts can not login at the same time now");
         Fluttertoast.showToast(
             msg: AppLocalizations.of(context).tooManyAccountsToLogIn,
             toastLength: Toast.LENGTH_SHORT,
@@ -257,143 +261,17 @@ Page resource error:
   @override
   Widget build(BuildContext context) {
     _accountProvider = Provider.of<AccountProvider>(context);
-
-
-
-    void _showBottomSheet() {
-      showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Container(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Column(
-                      children: [
-                        Text(
-                          AppLocalizations.of(context).chooseTaskType,
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        ListTile(
-                          title: Text(AppLocalizations.of(context).checkInTask),
-                          leading: Radio<ExecuteType>(
-                            value: ExecuteType.checkIn,
-                            groupValue: _taskType,
-                            onChanged: (ExecuteType? value) {
-                              setState(() {
-                                _taskType = value;
-                              });
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          title: Text(AppLocalizations.of(context).logInTask),
-                          leading: Radio<ExecuteType>(
-                            value: ExecuteType.login,
-                            groupValue: _taskType,
-                            onChanged: (ExecuteType? value) {
-                              setState(() {
-                                _taskType = value;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    _taskType == ExecuteType.login
-                        ? ListTile(
-                            title: widget.accountParameter == null
-                                ? Text('')
-                                : Text(widget.accountParameter!.phoneNumber),
-                            subtitle: widget.accountParameter == null
-                                ? Text('')
-                                : Text(widget.accountParameter!.alias),
-                            trailing: widget.accountParameter == null
-                                ? IconButton(
-                                    icon: const Icon(Icons.add_circle),
-                                    onPressed: () async {
-                                      Account selectedAccount =
-                                          await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                AccountSelectorPage()),
-                                      );
-                                      setState(() {
-                                        widget.accountParameter = selectedAccount;
-                                      });
-                                    },
-                                  )
-                                : IconButton(
-                                    icon: const Icon(Icons.remove_circle),
-                                    onPressed: () {
-                                      setState(() {
-                                        widget.accountParameter = null;
-                                      });
-                                    },
-                                  ),
-                          )
-                        : Column(
-                            children: [
-                              Text(
-                                AppLocalizations.of(context)
-                                    .chooseTheExecutionScope,
-                                style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                              ListTile(
-                                title: Text(AppLocalizations.of(context)
-                                    .accountsNotLoggedIn),
-                                leading: Radio<ExecuteScope>(
-                                  value: ExecuteScope.notLoggedInOnly,
-                                  groupValue: _taskScope,
-                                  onChanged: (ExecuteScope? value) {
-                                    setState(() {
-                                      _taskScope = value;
-                                    });
-                                  },
-                                ),
-                              ),
-                              ListTile(
-                                title: Text(
-                                    AppLocalizations.of(context).allAccounts),
-                                leading: Radio<ExecuteScope>(
-                                  value: ExecuteScope.all,
-                                  groupValue: _taskScope,
-                                  onChanged: (ExecuteScope? value) {
-                                    setState(() {
-                                      _taskScope = value;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                    Center(
-
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          startAutoTask(_taskType, _taskScope);
-                        },
-                        child: Text(AppLocalizations.of(context).startToExecute),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        },
-      );
-    }
-
     return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).autoTask),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.auto_mode),
+            onPressed: _showBottomSheet,
+            tooltip: AppLocalizations.of(context).composeAutoTask,
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Stack(
           children: [
@@ -402,12 +280,138 @@ Page resource error:
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        // onPressed: _beginCompose,
-        onPressed: _showBottomSheet,
-        tooltip: AppLocalizations.of(context).composeAutoTask,
-        child: const Icon(Icons.auto_mode),
-      ),
+    );
+  }
+
+  void _showBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Column(
+                    children: [
+                      Text(
+                        AppLocalizations.of(context).chooseTaskType,
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      ListTile(
+                        title: Text(AppLocalizations.of(context).checkInTask),
+                        leading: Radio<ExecuteType>(
+                          value: ExecuteType.checkIn,
+                          groupValue: _taskType,
+                          onChanged: (ExecuteType? value) {
+                            setState(() {
+                              _taskType = value;
+                            });
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(AppLocalizations.of(context).logInTask),
+                        leading: Radio<ExecuteType>(
+                          value: ExecuteType.login,
+                          groupValue: _taskType,
+                          onChanged: (ExecuteType? value) {
+                            setState(() {
+                              _taskType = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  _taskType == ExecuteType.login
+                      ? ListTile(
+                          title: widget.accountParameter == null
+                              ? Text('')
+                              : Text(widget.accountParameter!.phoneNumber),
+                          subtitle: widget.accountParameter == null
+                              ? Text('')
+                              : Text(widget.accountParameter!.alias),
+                          trailing: widget.accountParameter == null
+                              ? IconButton(
+                                  icon: const Icon(Icons.add_circle),
+                                  onPressed: () async {
+                                    Account selectedAccount =
+                                        await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              AccountSelectorPage()),
+                                    );
+                                    setState(() {
+                                      widget.accountParameter = selectedAccount;
+                                    });
+                                  },
+                                )
+                              : IconButton(
+                                  icon: const Icon(Icons.remove_circle),
+                                  onPressed: () {
+                                    setState(() {
+                                      widget.accountParameter = null;
+                                    });
+                                  },
+                                ),
+                        )
+                      : Column(
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)
+                                  .chooseTheExecutionScope,
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            ListTile(
+                              title: Text(AppLocalizations.of(context)
+                                  .accountsNotLoggedIn),
+                              leading: Radio<ExecuteScope>(
+                                value: ExecuteScope.notLoggedInOnly,
+                                groupValue: _taskScope,
+                                onChanged: (ExecuteScope? value) {
+                                  setState(() {
+                                    _taskScope = value;
+                                  });
+                                },
+                              ),
+                            ),
+                            ListTile(
+                              title: Text(
+                                  AppLocalizations.of(context).allAccounts),
+                              leading: Radio<ExecuteScope>(
+                                value: ExecuteScope.all,
+                                groupValue: _taskScope,
+                                onChanged: (ExecuteScope? value) {
+                                  setState(() {
+                                    _taskScope = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        startAutoTask(_taskType, _taskScope);
+                      },
+                      child: Text(AppLocalizations.of(context).startToExecute),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -428,25 +432,26 @@ Page resource error:
   Widget _buildAutoTaskOverlay() {
     return Positioned.fill(
       child: Opacity(
-        opacity: 0.5,
+        opacity: 0.8,
         child: Container(
           color: Colors.black,
-          child: Center(
+          child: Align(
+            alignment: Alignment.topCenter,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '正在登录：${_currentAccountIndex != -1 ? _accountsToExecute[_currentAccountIndex].phoneNumber : ''}',
+                  '${AppLocalizations.of(context).inProcessing}：${_currentAccountIndex != -1 ? _accountsToExecute[_currentAccountIndex].phoneNumber : ''}',
                   style: const TextStyle(color: Colors.white, fontSize: 20),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 500),
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
                       _isManualStop = true;
                     });
                   },
-                  child: const Text('停止自动登录'),
+                  child: Text(AppLocalizations.of(context).stopTask),
                 ),
               ],
             ),
