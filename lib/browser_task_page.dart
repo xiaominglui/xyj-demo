@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -137,6 +138,9 @@ Page resource error:
   isForMainFrame: ${error.isForMainFrame}
           ''');
           },
+          onUrlChange: (v) {
+            debugPrint('Page url changed to: ${v.url}');
+          },
           onNavigationRequest: (NavigationRequest request) {
             if (request.url.startsWith('https://www.youtube.com/')) {
               debugPrint('blocking navigation to ${request.url}');
@@ -162,6 +166,7 @@ Page resource error:
       AndroidWebViewController.enableDebugging(true);
       (controller.platform as AndroidWebViewController)
           .setMediaPlaybackRequiresUserGesture(false);
+      (controller.platform as AndroidWebViewController).setOnShowFileSelector((params) => _showFileSelector(params));
       (controller.platform as AndroidWebViewController)
           .setOnPlatformPermissionRequest((request) async {
         debugPrint(
@@ -477,5 +482,20 @@ Page resource error:
         ),
       ),
     );
+  }
+
+  Future<List<String>> _showFileSelector(FileSelectorParams params) async {
+    debugPrint("_showFileSelector");
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    List<String> res = List.empty(growable: true);
+    if (result != null) {
+      debugPrint("_showFileSelector: $result");
+      result.files.forEach((element) {
+        if (element.path != null) {
+          res.add(element.path!);
+        }
+      });
+    }
+    return res;
   }
 }
