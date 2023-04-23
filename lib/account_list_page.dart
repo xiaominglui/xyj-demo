@@ -10,6 +10,7 @@ import 'account_provider.dart';
 
 class AccountListPage extends StatefulWidget {
   final Function(Account, ExecuteType) onOneAccountTaskRequest;
+
   const AccountListPage({super.key, required this.onOneAccountTaskRequest});
 
   @override
@@ -24,7 +25,8 @@ class _AccountListPageState extends State<AccountListPage> {
     final accountProvider = Provider.of<AccountProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("${AppLocalizations.of(context).accountManager} (${accountProvider.accounts.length})"),
+        title: Text(
+            "${AppLocalizations.of(context).accountManager} (${accountProvider.accounts.length})"),
         actions: [
           IconButton(
             icon: const Icon(Icons.notes_rounded),
@@ -103,18 +105,26 @@ class _AccountListPageState extends State<AccountListPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(_retrieveDisplayName(accountProvider, account)),
+                  Row(
+                    children: [
+                      Text(account.id.toString()),
+                      const SizedBox(
+                        width: 16.0,
+                      ),
+                      Text(_retrieveDisplayName(accountProvider, account)),
+                    ],
+                  ),
                   Row(
                     children: [
                       isLoggedToday(account)
                           ? const Icon(
-                        Icons.check_box,
-                        size: 16,
-                      )
+                              Icons.check_box,
+                              size: 16,
+                            )
                           : const Icon(
-                        Icons.check_box_outline_blank,
-                        size: 16,
-                      ),
+                              Icons.check_box_outline_blank,
+                              size: 16,
+                            ),
                       const SizedBox(
                         width: 8.0,
                       ),
@@ -127,14 +137,18 @@ class _AccountListPageState extends State<AccountListPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      IconButton(onPressed: () {
-                        print("onLoginIconButtonPressed");
-                        widget.onOneAccountTaskRequest(account, ExecuteType.login);
-                      }, icon: const Icon(Icons.login)),
+                      IconButton(
+                          onPressed: () {
+                            print("onLoginIconButtonPressed");
+                            widget.onOneAccountTaskRequest(
+                                account, ExecuteType.login);
+                          },
+                          icon: const Icon(Icons.login)),
                       const SizedBox(width: 8.0),
                       IconButton(
                         onPressed: () {
-                          widget.onOneAccountTaskRequest(account, ExecuteType.checkIn);
+                          widget.onOneAccountTaskRequest(
+                              account, ExecuteType.checkIn);
                         },
                         icon: const Icon(Icons.check),
                       ),
@@ -154,9 +168,10 @@ class _AccountListPageState extends State<AccountListPage> {
       builder: (context, accountProvider, child) {
         return Card(
           child: ListTile(
-            onLongPress: (){
+            onLongPress: () {
               _showAccountOptions(account);
             },
+            leading: Text(account.id.toString()),
             title: Text(_retrieveDisplayName(accountProvider, account)),
             subtitle: Row(
               mainAxisSize: MainAxisSize.min,
@@ -180,17 +195,20 @@ class _AccountListPageState extends State<AccountListPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 // ElevatedButton(onPressed: (){}, child: const Text("Edit")),
-                IconButton(onPressed: () {
-                  print("onLoginIconButtonPressed");
-                  widget.onOneAccountTaskRequest(account, ExecuteType.login);
-
-                }, icon: const Icon(Icons.login)),
+                IconButton(
+                    onPressed: () {
+                      print("onLoginIconButtonPressed");
+                      widget.onOneAccountTaskRequest(
+                          account, ExecuteType.login);
+                    },
+                    icon: const Icon(Icons.login)),
                 const SizedBox(
                   width: 8.0,
                 ),
                 IconButton(
                   onPressed: () {
-                    widget.onOneAccountTaskRequest(account, ExecuteType.checkIn);
+                    widget.onOneAccountTaskRequest(
+                        account, ExecuteType.checkIn);
                   },
                   icon: const Icon(Icons.check),
                 )
