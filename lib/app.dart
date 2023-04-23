@@ -8,6 +8,7 @@ import 'l10n/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'l10n/l10n_utils.dart';
+import 'settings_page2.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -77,7 +78,7 @@ class _MainPageState extends State<MainPage> {
       }),
       BrowserTaskPage(
           accountParameter: _accountParameter, autoStart: _autoStart, taskType: _executeType),
-      const SettingsPage(),
+      const SettingsPage2(),
       // const MyPage(),
     ];
 
@@ -96,7 +97,7 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(
               icon: const Icon(Icons.explore_rounded), label: AppLocalizations.of(context).autoTask),
           BottomNavigationBarItem(
-              icon: const Icon(Icons.account_circle_rounded), label: AppLocalizations.of(context).settings),
+              icon: const Icon(Icons.settings), label: AppLocalizations.of(context).settings),
         ],
       ),
     );
