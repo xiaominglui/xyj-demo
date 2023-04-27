@@ -12,6 +12,9 @@ class SettingsPage2 extends StatelessWidget {
       ),
       body: ListView(
         children: [
+          SettingGroup(settings: [
+            AccountSettingItem(),
+          ]),
           SettingGroup(
             settings: [
               SettingItem(title: '开通VIP会员'),
@@ -31,7 +34,8 @@ class SettingsPage2 extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PrivacySettingsPage()),
+                    MaterialPageRoute(
+                        builder: (context) => PrivacySettingsPage()),
                   );
                 },
               ),
@@ -47,7 +51,7 @@ class SettingsPage2 extends StatelessWidget {
 }
 
 class SettingGroup extends StatelessWidget {
-  final List<SettingItem> settings;
+  final List<StatelessWidget> settings;
 
   SettingGroup({required this.settings});
 
@@ -72,6 +76,34 @@ class SettingItem extends StatelessWidget {
     return ListTile(
       title: Text(title),
       onTap: onTap,
+    );
+  }
+}
+
+class AccountSettingItem extends StatelessWidget {
+  final String username;
+  final VoidCallback? onTap;
+
+  AccountSettingItem({this.username = '未登录', this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 4.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Icon(
+              Icons.account_circle,
+              size: 96,
+              color: Colors.grey,
+            ),
+            Text('未登录', style: TextStyle(color: Colors.grey))
+          ],
+        ),
+      ),
     );
   }
 }
