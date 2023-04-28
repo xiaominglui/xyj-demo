@@ -44,6 +44,12 @@ class SettingsPage2 extends StatelessWidget {
               SettingItem(title: '联系我们'),
             ],
           ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text('version: 1.0.0 ', style: TextStyle(color: Colors.grey))
+            ],
+          ),
         ],
       ),
     );
