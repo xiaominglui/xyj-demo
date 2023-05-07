@@ -25,14 +25,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.10.0"
-  authing_sdk:
+  authing_sdk_v3:
     dependency: "direct main"
     description:
-      name: authing_sdk
-      sha256: "9da7b87ab687354d1b5d343dad8dbd6a186316357308f9b89d04c71a578fbde6"
+      name: authing_sdk_v3
+      sha256: ee8bb293978b20511ee1eaebbe92f8ed51a3a1ca8259734a30f106d71f58da6e
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.10"
+    version: "1.0.1"
   boolean_selector:
     dependency: transitive
     description:

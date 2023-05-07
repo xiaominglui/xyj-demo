@@ -10,13 +10,16 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/l10n_utils.dart';
 import 'settings_page2.dart';
 
+import 'package:authing_sdk_v3/authing.dart';
+
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context).hello,
+      onGenerateTitle: (context) => AppLocalizations.of(context).appName,
       localizationsDelegates: const [
         AppLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,

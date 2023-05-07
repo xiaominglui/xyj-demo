@@ -12,6 +12,7 @@ class AppLocalizations {
   static const _localizedValues = <String, Map<String, String>>{
     'en': {
       'hello': 'Hello World',
+      'appName': 'XYJ Helper',
       'overall': 'Overall',
       'autoTask': 'Auto Task',
       'welcome': 'Welcome',
@@ -48,6 +49,7 @@ class AppLocalizations {
     },
     'zh': {
       'hello': '你好世界',
+      'appName': '信友助手',
       'overall': '总览',
       'autoTask': '任务',
       'welcome': '欢迎',
@@ -88,6 +90,10 @@ class AppLocalizations {
 
   String get hello {
     return _localizedValues[locale.languageCode]!['hello']!;
+  }
+
+  String get appName {
+    return _localizedValues[locale.languageCode]!['appName']!;
   }
 
   String get overall {

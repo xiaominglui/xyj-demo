@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
 
+import 'user_pages.dart';
+
 class SettingsPage2 extends StatelessWidget {
   const SettingsPage2({super.key});
 
@@ -13,7 +15,15 @@ class SettingsPage2 extends StatelessWidget {
       body: ListView(
         children: [
           SettingGroup(settings: [
-            AccountSettingItem(),
+            AccountSettingItem(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const LoginPage()),
+                );
+              },
+            ),
           ]),
           SettingGroup(
             settings: [
@@ -59,7 +69,7 @@ class SettingsPage2 extends StatelessWidget {
 class SettingGroup extends StatelessWidget {
   final List<StatelessWidget> settings;
 
-  SettingGroup({required this.settings});
+  const SettingGroup({super.key, required this.settings});
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +85,7 @@ class SettingItem extends StatelessWidget {
   final String title;
   final VoidCallback? onTap;
 
-  SettingItem({required this.title, this.onTap});
+  const SettingItem({super.key, required this.title, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -90,12 +100,12 @@ class AccountSettingItem extends StatelessWidget {
   final String username;
   final VoidCallback? onTap;
 
-  AccountSettingItem({this.username = '未登录', this.onTap});
+  const AccountSettingItem({super.key, this.username = '未登录', this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 4.0),
         child: Column(
@@ -115,6 +125,8 @@ class AccountSettingItem extends StatelessWidget {
 }
 
 class PrivacySettingsPage extends StatelessWidget {
+  const PrivacySettingsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
