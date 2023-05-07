@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                   TextField(
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
-                      hintText: 'Enter your phone number or email',
+                      hintText: AppLocalizations.of(context).hintForAccount,
                       prefixIcon: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: _selectedCountryCode,
@@ -104,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                   TextField(
                     obscureText: _obscureText,
                     decoration: InputDecoration(
-                      hintText: 'Enter your password',
+                      hintText: AppLocalizations.of(context).enterPassword,
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscureText
@@ -192,15 +192,17 @@ class PasswordResetPage extends StatefulWidget {
 }
 
 class _PasswordResetPageState extends State<PasswordResetPage> {
-  TextEditingController _verificationCodeController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _passwordConfirmController = TextEditingController();
+  final TextEditingController _verificationCodeController =
+      TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordConfirmController =
+      TextEditingController();
 
   bool _obscureText1 = true;
   bool _obscureText2 = true;
 
   String _selectedCountryCode = 'CN +86';
-  List<String> _supportedCountryCodes = [
+  final List<String> _supportedCountryCodes = [
     'CN +86',
     'HK +852',
     'MO +853',
@@ -218,11 +220,13 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
   ];
 
   int counter = 60;
-  String _verificationButtonText = 'Get verification code';
+  bool counterIsRunning = false;
+  String _verificationButtonText = '';
 
   void _startCountdown() {
     setState(() {
       counter = 60;
+      counterIsRunning = true;
       _verificationButtonText = '$counter s';
     });
 
@@ -230,8 +234,10 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
       print('$counter s; t: ${timer.tick}');
       if (counter == 1) {
         timer.cancel();
+        counterIsRunning = false;
         setState(() {
-          _verificationButtonText = 'Get verification code';
+          _verificationButtonText =
+              AppLocalizations.of(context).getVerificationCode;
         });
       } else {
         setState(() {
@@ -258,7 +264,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('找回密码'),
+        title: Text(AppLocalizations.of(context).titlePasswordReset),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -270,7 +276,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
               TextField(
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
-                  hintText: 'Enter your phone number or email',
+                  hintText: AppLocalizations.of(context).hintForAccount,
                   prefixIcon: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       value: _selectedCountryCode,
@@ -290,24 +296,29 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                   ),
                 ),
               ),
+              const SizedBox(height: 16),
               TextField(
                 controller: _verificationCodeController,
                 decoration: InputDecoration(
-                  labelText: 'Please enter the verification code',
+                  labelText:
+                      AppLocalizations.of(context).hintForVerificationCode,
                   suffix: TextButton(
                     onPressed: () {
                       // Handle sending verification code and start the countdown
                       _startCountdown();
                     },
-                    child: Text(_verificationButtonText),
+                    child: Text(counterIsRunning
+                        ? _verificationButtonText
+                        : AppLocalizations.of(context).getVerificationCode),
                   ),
                 ),
               ),
+              const SizedBox(height: 16),
               TextField(
                 controller: _passwordController,
                 obscureText: _obscureText1,
                 decoration: InputDecoration(
-                  labelText: 'Please set the new password',
+                  labelText: AppLocalizations.of(context).setPassword,
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscureText1 ? Icons.visibility_off : Icons.visibility,
@@ -316,11 +327,12 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                   ),
                 ),
               ),
+              const SizedBox(height: 16),
               TextField(
                 controller: _passwordConfirmController,
                 obscureText: _obscureText2,
                 decoration: InputDecoration(
-                  labelText: 'Please confirm the new password',
+                  labelText: AppLocalizations.of(context).confirmPassword,
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscureText2 ? Icons.visibility_off : Icons.visibility,
@@ -334,9 +346,9 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                 onPressed: () {
                   // Handle password reset here
                 },
-                child: Text('Confirm'),
                 style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 48)),
+                child: Text(AppLocalizations.of(context).submit),
               ),
             ],
           ),
@@ -345,7 +357,6 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
     );
   }
 }
-
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -380,11 +391,13 @@ class _RegisterPageState extends State<RegisterPage> {
   ];
 
   int counter = 60;
+  bool counterIsRunning = false;
   String _verificationButtonText = 'Get verification code';
 
   void _startCountdown() {
     setState(() {
       counter = 60;
+      counterIsRunning = true;
       _verificationButtonText = '$counter s';
     });
 
@@ -393,6 +406,7 @@ class _RegisterPageState extends State<RegisterPage> {
       if (counter == 1) {
         timer.cancel();
         setState(() {
+          counterIsRunning = false;
           _verificationButtonText = 'Get verification code';
         });
       } else {
@@ -420,7 +434,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('注册帐号'),
+        title: Text(AppLocalizations.of(context).titleSignUp),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -432,13 +446,14 @@ class _RegisterPageState extends State<RegisterPage> {
                 TextField(
                   controller: _usernameController,
                   decoration: InputDecoration(
-                    labelText: 'Please enter your username',
+                    labelText: AppLocalizations.of(context).hintForUsername,
                   ),
                 ),
+                const SizedBox(height: 16),
                 TextField(
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
-                    hintText: 'Enter your phone number or email',
+                    hintText: AppLocalizations.of(context).hintForAccount,
                     prefixIcon: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         value: _selectedCountryCode,
@@ -458,24 +473,29 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 16),
                 TextField(
                   controller: _verificationCodeController,
                   decoration: InputDecoration(
-                    labelText: 'Please enter the verification code',
+                    labelText:
+                        AppLocalizations.of(context).hintForVerificationCode,
                     suffix: TextButton(
                       onPressed: () {
                         // Handle sending verification code and start the countdown
                         _startCountdown();
                       },
-                      child: Text(_verificationButtonText),
+                      child: Text(counterIsRunning
+                          ? _verificationButtonText
+                          : AppLocalizations.of(context).getVerificationCode),
                     ),
                   ),
                 ),
+                const SizedBox(height: 16),
                 TextField(
                   controller: _passwordController,
                   obscureText: _obscureText1,
                   decoration: InputDecoration(
-                    labelText: 'Please set the password',
+                    labelText: AppLocalizations.of(context).setPassword,
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureText1 ? Icons.visibility_off : Icons.visibility,
@@ -484,11 +504,12 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 16),
                 TextField(
                   controller: _passwordConfirmController,
                   obscureText: _obscureText2,
                   decoration: InputDecoration(
-                    labelText: 'Please confirm the password',
+                    labelText: AppLocalizations.of(context).confirmPassword,
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureText2 ? Icons.visibility_off : Icons.visibility,
@@ -497,13 +518,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     // Handle registration here
                   },
-                  child: Text('Register'),
-                  style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 48)),
+                  child: Text(AppLocalizations.of(context).submit),
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 48)),
                 ),
               ],
             ),

@@ -49,6 +49,16 @@ class AppLocalizations {
       'signUpNow': 'Sign up now',
       'passwordReset': 'Password forgot?',
       'login': 'Login',
+      'enterPassword': 'Enter password',
+      'hintForAccount': 'Enter Email or Phone number',
+      'hintForUserName': 'Enter Username',
+      'titlePasswordReset': 'Reset password',
+      'titleSignUp': 'Sign up',
+      'hintForVerificationCode': 'Enter verification code',
+      'getVerificationCode': 'Get verification code',
+      'setPassword': 'Set password',
+      'confirmPassword': 'Confirm password',
+      'submit': 'Submit',
     },
     'zh': {
       'hello': '你好世界',
@@ -89,6 +99,16 @@ class AppLocalizations {
       'signUpNow': '立即注册',
       'passwordReset': '忘记密码?',
       'login': '登录',
+      'enterPassword': '请输入密码',
+      'hintForAccount': '请输入邮箱或手机号',
+      'hintForUsername': '请输入用户名',
+      'titlePasswordReset': '忘记密码',
+      'titleSignUp': '注册帐号',
+      'hintForVerificationCode': '请输入验证码',
+      'getVerificationCode': '获取验证码',
+      'setPassword': '请设置密码',
+      'confirmPassword': '请再次确认密码',
+      'submit': '提交',
     },
   };
 
@@ -244,5 +264,44 @@ class AppLocalizations {
 
   String get login {
     return _localizedValues[locale.languageCode]!['login']!;
+  }
+
+  String get enterPassword {
+    return _localizedValues[locale.languageCode]!['enterPassword']!;
+  }
+
+  String get hintForAccount {
+    return _localizedValues[locale.languageCode]!['hintForAccount']!;
+  }
+
+  String get hintForUsername {
+    return _localizedValues[locale.languageCode]!['hintForUsername']!;
+  }
+
+  String get titlePasswordReset {
+    return _localizedValues[locale.languageCode]!['titlePasswordReset']!;
+  }
+
+  String get titleSignUp {
+    return _localizedValues[locale.languageCode]!['titleSignUp']!;
+  }
+  String get hintForVerificationCode {
+    return _localizedValues[locale.languageCode]!['hintForVerificationCode']!;
+  }
+
+  String get getVerificationCode {
+    return _localizedValues[locale.languageCode]!['getVerificationCode']!;
+  }
+
+  String get setPassword {
+    return _localizedValues[locale.languageCode]!['setPassword']!;
+  }
+
+  String get confirmPassword {
+    return _localizedValues[locale.languageCode]!['confirmPassword']!;
+  }
+
+  String get submit {
+    return _localizedValues[locale.languageCode]!['submit']!;
   }
 }
