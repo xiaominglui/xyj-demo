@@ -46,6 +46,9 @@ class AppLocalizations {
       'tooManyAccountsToLogIn': 'Too many accounts to log in',
       'inProcessing': 'In processing',
       'stopTask': 'Stop',
+      'signUpNow': 'Sign up now',
+      'passwordReset': 'Password forgot?',
+      'login': 'Login',
     },
     'zh': {
       'hello': '你好世界',
@@ -83,6 +86,9 @@ class AppLocalizations {
       'tooManyAccountsToLogIn': '目前不能同时登录多个帐号',
       'inProcessing': '正在处理',
       'stopTask': '停止',
+      'signUpNow': '立即注册',
+      'passwordReset': '忘记密码?',
+      'login': '登录',
     },
   };
 
@@ -226,5 +232,17 @@ class AppLocalizations {
 
   String get stopTask {
     return _localizedValues[locale.languageCode]!['stopTask']!;
+  }
+
+  String get signUpNow {
+    return _localizedValues[locale.languageCode]!['signUpNow']!;
+  }
+
+  String get passwordReset {
+    return _localizedValues[locale.languageCode]!['passwordReset']!;
+  }
+
+  String get login {
+    return _localizedValues[locale.languageCode]!['login']!;
   }
 }
