@@ -18,6 +18,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _obscureText = true;
   bool _isAgreementChecked = false;
+  bool _isLoginInfoValid = false;
+
+  late TextEditingController _accountController;
+  late TextEditingController _passwordController;
 
   String _selectedCountryCode = 'CN +86';
   final List<String> _supportedCountryCodes = [
@@ -37,6 +41,27 @@ class _LoginPageState extends State<LoginPage> {
     'NZ +64'
   ];
 
+  initState() {
+    super.initState();
+    _accountController = TextEditingController();
+    _accountController.addListener(_onTextFieldChanged);
+    _passwordController = TextEditingController();
+    _passwordController.addListener(_onTextFieldChanged);
+  }
+
+  dispose() {
+    _accountController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _onTextFieldChanged() {
+    setState(() {
+      _isLoginInfoValid = _accountController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty;
+    });
+  }
+
   _goToRegisterPage() {
     Navigator.push(
       context,
@@ -49,6 +74,18 @@ class _LoginPageState extends State<LoginPage> {
       context,
       MaterialPageRoute(builder: (context) => PasswordResetPage()),
     );
+  }
+
+  _loginByAccount() async {
+    print("_loginByAccount");
+    AuthResult result = await AuthClient.loginByAccount(
+        _accountController.text, _passwordController.text);
+
+    if (result.statusCode == 200) {
+      print("ok");
+    } else {
+      print("not ok, err: ${result.apiCode} === ${result.message}");
+    }
   }
 
   void _toggleObscureText() {
@@ -78,7 +115,8 @@ class _LoginPageState extends State<LoginPage> {
                   Image.network('https://via.placeholder.com/300', height: 200),
                   const SizedBox(height: 16),
                   TextField(
-                    keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.text,
+                    controller: _accountController,
                     decoration: InputDecoration(
                       hintText: AppLocalizations.of(context).hintForAccount,
                       prefixIcon: DropdownButtonHideUnderline(
@@ -103,6 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 16),
                   TextField(
                     obscureText: _obscureText,
+                    controller: _passwordController,
                     decoration: InputDecoration(
                       hintText: AppLocalizations.of(context).enterPassword,
                       suffixIcon: IconButton(
@@ -117,8 +156,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _isLoginInfoValid ? _loginByAccount : null,
                     style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            _isLoginInfoValid ? Colors.blue : Colors.grey,
                         minimumSize: const Size(double.infinity, 48)),
                     child: Text(AppLocalizations.of(context).login),
                   ),

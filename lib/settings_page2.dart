@@ -28,8 +28,8 @@ class SettingsPage2 extends StatelessWidget {
           SettingGroup(
             settings: [
               SettingItem(title: '开通VIP会员'),
-              SettingItem(title: '我的优惠券'),
-              SettingItem(title: '邀请与兑奖'),
+              //SettingItem(title: '我的优惠券'),
+              //SettingItem(title: '邀请与兑奖'),
             ],
           ),
           SettingGroup(

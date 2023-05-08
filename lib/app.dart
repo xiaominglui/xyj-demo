@@ -47,7 +47,12 @@ class _MainPageState extends State<MainPage> {
   ExecuteType _executeType = ExecuteType.checkIn;
   bool _autoStart = false;
 
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    Authing.init('644a98699d66f835f88d4bc8', '644a99927a5a5e9d1f42b4ad');
+    super.initState();
+  }
 
   void _onTap(int index) {
     setState(() {
