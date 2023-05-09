@@ -81,11 +81,18 @@ class _LoginPageState extends State<LoginPage> {
     AuthResult result = await AuthClient.loginByAccount(
         _accountController.text, _passwordController.text);
 
+    String msg = '';
     if (result.statusCode == 200) {
       print("ok");
+      msg = AppLocalizations.of(context).loginSuccess;
+      Navigator.pop(context);
     } else {
       print("not ok, err: ${result.apiCode} === ${result.message}");
+      msg = result.message;
     }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg)),
+    );
   }
 
   void _toggleObscureText() {
@@ -103,6 +110,13 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16),
@@ -158,8 +172,6 @@ class _LoginPageState extends State<LoginPage> {
                   ElevatedButton(
                     onPressed: _isLoginInfoValid ? _loginByAccount : null,
                     style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            _isLoginInfoValid ? Colors.blue : Colors.grey,
                         minimumSize: const Size(double.infinity, 48)),
                     child: Text(AppLocalizations.of(context).login),
                   ),
@@ -233,6 +245,7 @@ class PasswordResetPage extends StatefulWidget {
 }
 
 class _PasswordResetPageState extends State<PasswordResetPage> {
+  final TextEditingController _accountController = TextEditingController();
   final TextEditingController _verificationCodeController =
       TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -241,6 +254,9 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
 
   bool _obscureText1 = true;
   bool _obscureText2 = true;
+
+  bool _isResetInfoValid = false;
+  bool _isConfirmValid = false;
 
   String _selectedCountryCode = 'CN +86';
   final List<String> _supportedCountryCodes = [
@@ -263,6 +279,41 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
   int counter = 60;
   bool counterIsRunning = false;
   String _verificationButtonText = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _accountController.addListener(_onTextFieldChanged);
+    _verificationCodeController.addListener(_onTextFieldChanged);
+    _passwordController.addListener(_onTextFieldChanged);
+    _passwordConfirmController.addListener(_onTextFieldChanged);
+  }
+
+  @override
+  void dispose() {
+    _accountController.dispose();
+    _verificationCodeController.dispose();
+    _passwordController.dispose();
+    _passwordConfirmController.dispose();
+    super.dispose();
+  }
+
+  void _onTextFieldChanged() {
+    setState(() {
+      _isResetInfoValid = _accountController.text.isNotEmpty &&
+          _verificationCodeController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty &&
+          _passwordConfirmController.text.isNotEmpty;
+
+      if (_isResetInfoValid) {
+        if (_passwordController.text != _passwordConfirmController.text) {
+          _isConfirmValid = false;
+        } else {
+          _isConfirmValid = true;
+        }
+      }
+    });
+  }
 
   void _startCountdown() {
     setState(() {
@@ -301,6 +352,53 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
     });
   }
 
+  void _resetAccountPassword() async {
+    print("_resetAccountPassword");
+
+    if (isPhoneNumber(_accountController.text)) {
+      AuthResult result = await AuthClient.resetPasswordByPhone(
+          _accountController.text,
+          _verificationCodeController.text,
+          _passwordConfirmController.text);
+      String msg = '';
+      if (result.statusCode == 200) {
+        print("ok");
+        msg = AppLocalizations.of(context).passwordResetSuccess;
+      } else {
+        msg = result.message;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg)),
+      );
+    } else if (isEmail(_accountController.text)) {
+      AuthResult result = await AuthClient.resetPasswordByEmailCode(
+          _accountController.text,
+          _verificationCodeController.text,
+          _passwordConfirmController.text);
+      String msg = '';
+      if (result.statusCode == 200) {
+        print("ok");
+        msg = AppLocalizations.of(context).passwordResetSuccess;
+      } else {
+        msg = result.message;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg)),
+      );
+    }
+  }
+
+  bool isPhoneNumber(String input) {
+    RegExp phoneRegex = RegExp(r'^1[3-9]\d{9}$');
+    return phoneRegex.hasMatch(input);
+  }
+
+  bool isEmail(String input) {
+    RegExp emailRegex =
+        RegExp(r'^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$');
+    return emailRegex.hasMatch(input);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -315,7 +413,8 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextField(
-                keyboardType: TextInputType.phone,
+                keyboardType: TextInputType.text,
+                controller: _accountController,
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(context).hintForAccount,
                   prefixIcon: DropdownButtonHideUnderline(
@@ -344,8 +443,38 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                   labelText:
                       AppLocalizations.of(context).hintForVerificationCode,
                   suffix: TextButton(
-                    onPressed: () {
+                    onPressed: () async {
                       // Handle sending verification code and start the countdown
+
+                      if (isEmail(_accountController.text)) {
+                        AuthResult sendEmailResult = await AuthClient.sendEmail(
+                            _accountController.text, "CHANNEL_RESET_PASSWORD");
+                        String msg = "";
+                        if (sendEmailResult.statusCode == 200) {
+                          msg = "发送成功";
+                        } else {
+                          msg = sendEmailResult.message;
+                        }
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(msg)),
+                        );
+                      }
+                      if (isPhoneNumber(_accountController.text)) {
+                        AuthResult sendSmsResult = await AuthClient.sendSms(
+                            _accountController.text, "CHANNEL_RESET_PASSWORD");
+
+                        String msg = "";
+                        if (sendSmsResult.statusCode == 200) {
+                          msg = "发送成功";
+                        } else {
+                          msg = sendSmsResult.message;
+                        }
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(msg)),
+                        );
+                      }
                       _startCountdown();
                     },
                     child: Text(counterIsRunning
@@ -382,11 +511,14 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                   ),
                 ),
               ),
+              if (!_isConfirmValid && _isResetInfoValid)
+                Text(
+                  "password not same",
+                  style: TextStyle(color: Colors.red),
+                ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  // Handle password reset here
-                },
+                onPressed: _isResetInfoValid && _isConfirmValid ? _resetAccountPassword : null,
                 style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 48)),
                 child: Text(AppLocalizations.of(context).submit),

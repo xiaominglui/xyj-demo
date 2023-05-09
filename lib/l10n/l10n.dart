@@ -59,6 +59,8 @@ class AppLocalizations {
       'setPassword': 'Set password',
       'confirmPassword': 'Confirm password',
       'submit': 'Submit',
+      'loginSuccess': 'Login success',
+      'passwordResetSuccess': 'Password reset success',
     },
     'zh': {
       'hello': '你好世界',
@@ -109,6 +111,8 @@ class AppLocalizations {
       'setPassword': '请设置密码',
       'confirmPassword': '请再次确认密码',
       'submit': '提交',
+      'loginSuccess': '登录成功...',
+      'passwordResetSuccess': '密码重置成功...',
     },
   };
 
@@ -303,5 +307,13 @@ class AppLocalizations {
 
   String get submit {
     return _localizedValues[locale.languageCode]!['submit']!;
+  }
+
+  String get loginSuccess {
+    return _localizedValues[locale.languageCode]!['loginSuccess']!;
+  }
+
+  String get passwordResetSuccess {
+    return _localizedValues[locale.languageCode]!['passwordResetSuccess']!;
   }
 }
