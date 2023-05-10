@@ -388,17 +388,6 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
     }
   }
 
-  bool isPhoneNumber(String input) {
-    RegExp phoneRegex = RegExp(r'^1[3-9]\d{9}$');
-    return phoneRegex.hasMatch(input);
-  }
-
-  bool isEmail(String input) {
-    RegExp emailRegex =
-        RegExp(r'^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$');
-    return emailRegex.hasMatch(input);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -444,8 +433,6 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                       AppLocalizations.of(context).hintForVerificationCode,
                   suffix: TextButton(
                     onPressed: () async {
-                      // Handle sending verification code and start the countdown
-
                       if (isEmail(_accountController.text)) {
                         AuthResult sendEmailResult = await AuthClient.sendEmail(
                             _accountController.text, "CHANNEL_RESET_PASSWORD");
@@ -513,12 +500,14 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
               ),
               if (!_isConfirmValid && _isResetInfoValid)
                 Text(
-                  "password not same",
+                  AppLocalizations.of(context).twoPasswordsDoNotMatch,
                   style: TextStyle(color: Colors.red),
                 ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _isResetInfoValid && _isConfirmValid ? _resetAccountPassword : null,
+                onPressed: _isResetInfoValid && _isConfirmValid
+                    ? _resetAccountPassword
+                    : null,
                 style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 48)),
                 child: Text(AppLocalizations.of(context).submit),
@@ -538,12 +527,16 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   TextEditingController _usernameController = TextEditingController();
+  TextEditingController _accountController = TextEditingController();
   TextEditingController _verificationCodeController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _passwordConfirmController = TextEditingController();
 
   bool _obscureText1 = true;
   bool _obscureText2 = true;
+
+  bool _isRegisterInfoValid = false;
+  bool _isConfirmValid = false;
 
   String _selectedCountryCode = 'CN +86';
   List<String> _supportedCountryCodes = [
@@ -565,7 +558,31 @@ class _RegisterPageState extends State<RegisterPage> {
 
   int counter = 60;
   bool counterIsRunning = false;
-  String _verificationButtonText = 'Get verification code';
+  String _verificationButtonText = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _usernameController.addListener(_onTextFieldChanged);
+    _accountController.addListener(_onTextFieldChanged);
+    _verificationCodeController.addListener(_onTextFieldChanged);
+    _passwordController.addListener(_onTextFieldChanged);
+    _passwordConfirmController.addListener(_onTextFieldChanged);
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _accountController.dispose();
+    _verificationCodeController.dispose();
+    _passwordController.dispose();
+    _passwordConfirmController.dispose();
+    super.dispose();
+  }
+
+  void _onTextFieldChanged() {
+    // TODO
+  }
 
   void _startCountdown() {
     setState(() {
@@ -603,6 +620,11 @@ class _RegisterPageState extends State<RegisterPage> {
     });
   }
 
+  void _signup() async {
+    // TODO
+    print("_signup");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -624,7 +646,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 const SizedBox(height: 16),
                 TextField(
-                  keyboardType: TextInputType.phone,
+                  keyboardType: TextInputType.text,
+                  controller: _accountController,
                   decoration: InputDecoration(
                     hintText: AppLocalizations.of(context).hintForAccount,
                     prefixIcon: DropdownButtonHideUnderline(
@@ -653,8 +676,39 @@ class _RegisterPageState extends State<RegisterPage> {
                     labelText:
                         AppLocalizations.of(context).hintForVerificationCode,
                     suffix: TextButton(
-                      onPressed: () {
-                        // Handle sending verification code and start the countdown
+                      onPressed: () async {
+                        if (isEmail(_accountController.text)) {
+                          AuthResult sendEmailResult =
+                              await AuthClient.sendEmail(
+                                  _accountController.text,
+                                  "CHANNEL_RESET_PASSWORD");
+                          String msg = "";
+                          if (sendEmailResult.statusCode == 200) {
+                            msg = "发送成功";
+                          } else {
+                            msg = sendEmailResult.message;
+                          }
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(msg)),
+                          );
+                        }
+                        if (isPhoneNumber(_accountController.text)) {
+                          AuthResult sendSmsResult = await AuthClient.sendSms(
+                              _accountController.text,
+                              "CHANNEL_RESET_PASSWORD");
+
+                          String msg = "";
+                          if (sendSmsResult.statusCode == 200) {
+                            msg = "发送成功";
+                          } else {
+                            msg = sendSmsResult.message;
+                          }
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(msg)),
+                          );
+                        }
                         _startCountdown();
                       },
                       child: Text(counterIsRunning
@@ -691,11 +745,15 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                 ),
+                if (!_isConfirmValid && _isRegisterInfoValid)
+                  Text(
+                    AppLocalizations.of(context).twoPasswordsDoNotMatch,
+                    style: TextStyle(color: Colors.red),
+                  ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
-                    // Handle registration here
-                  },
+                  onPressed:
+                      _isRegisterInfoValid && _isConfirmValid ? _signup : null,
                   child: Text(AppLocalizations.of(context).submit),
                   style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 48)),
@@ -707,4 +765,14 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+}
+
+bool isPhoneNumber(String input) {
+  RegExp phoneRegex = RegExp(r'^1[3-9]\d{9}$');
+  return phoneRegex.hasMatch(input);
+}
+
+bool isEmail(String input) {
+  RegExp emailRegex = RegExp(r'^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$');
+  return emailRegex.hasMatch(input);
 }

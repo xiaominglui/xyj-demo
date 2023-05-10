@@ -61,6 +61,7 @@ class AppLocalizations {
       'submit': 'Submit',
       'loginSuccess': 'Login success',
       'passwordResetSuccess': 'Password reset success',
+      'twoPasswordsDoNotMatch': 'The two passwords entered do not match',
     },
     'zh': {
       'hello': '你好世界',
@@ -113,6 +114,7 @@ class AppLocalizations {
       'submit': '提交',
       'loginSuccess': '登录成功...',
       'passwordResetSuccess': '密码重置成功...',
+      'twoPasswordsDoNotMatch': '两次输入的密码不一致',
     },
   };
 
@@ -315,5 +317,9 @@ class AppLocalizations {
 
   String get passwordResetSuccess {
     return _localizedValues[locale.languageCode]!['passwordResetSuccess']!;
+  }
+
+  String get twoPasswordsDoNotMatch {
+    return _localizedValues[locale.languageCode]!['twoPasswordsDoNotMatch']!;
   }
 }
