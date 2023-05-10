@@ -49,9 +49,11 @@ class AppLocalizations {
       'signUpNow': 'Sign up now',
       'passwordReset': 'Password forgot?',
       'login': 'Login',
+      'loginOrSignup': 'Log In / Sign Up',
       'enterPassword': 'Enter password',
       'hintForAccount': 'Enter Email or Phone number',
       'hintForUserName': 'Enter Username',
+      'hintForPhoneNumber': 'Enter Phone number',
       'titlePasswordReset': 'Reset password',
       'titleSignUp': 'Sign up',
       'hintForVerificationCode': 'Enter verification code',
@@ -102,9 +104,11 @@ class AppLocalizations {
       'signUpNow': '立即注册',
       'passwordReset': '忘记密码?',
       'login': '登录',
+      'loginOrSignup': '登录/注册',
       'enterPassword': '请输入密码',
       'hintForAccount': '请输入邮箱或手机号',
       'hintForUsername': '请输入用户名',
+      'hintForPhoneNumber': '请输入手机号',
       'titlePasswordReset': '忘记密码',
       'titleSignUp': '注册帐号',
       'hintForVerificationCode': '请输入验证码',
@@ -272,6 +276,10 @@ class AppLocalizations {
     return _localizedValues[locale.languageCode]!['login']!;
   }
 
+  String get loginOrSignup {
+    return _localizedValues[locale.languageCode]!['loginOrSignup']!;
+  }
+
   String get enterPassword {
     return _localizedValues[locale.languageCode]!['enterPassword']!;
   }
@@ -282,6 +290,10 @@ class AppLocalizations {
 
   String get hintForUsername {
     return _localizedValues[locale.languageCode]!['hintForUsername']!;
+  }
+
+  String get hintForPhoneNumber {
+    return _localizedValues[locale.languageCode]!['hintForPhoneNumber']!;
   }
 
   String get titlePasswordReset {

@@ -8,6 +8,287 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
 
+
+class SimpleSMSLoginPage extends StatefulWidget {
+  const SimpleSMSLoginPage({super.key});
+
+  @override
+  _SimpleSMSLoginPageState createState() => _SimpleSMSLoginPageState();
+}
+
+class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
+  bool _isAgreementChecked = false;
+  bool _isLoginInfoValid = false;
+
+  late TextEditingController _accountController;
+  late TextEditingController _verifyCodeController;
+
+  String _selectedCountryCode = 'CN +86';
+  final List<String> _supportedCountryCodes = [
+    'CN +86',
+    'HK +852',
+    'MO +853',
+    'TW +886',
+    'JP +81',
+    'KR +82',
+    'IN +91',
+    'UK +44',
+    'US +1',
+    'DE +49',
+    'IT +39',
+    'FR +33',
+    'AU +61',
+    'NZ +64'
+  ];
+
+  int counter = 60;
+  bool counterIsRunning = false;
+  String _verificationButtonText = '';
+  Timer? _timer;
+
+  initState() {
+    super.initState();
+    _accountController = TextEditingController();
+    _accountController.addListener(_onTextFieldChanged);
+    _verifyCodeController = TextEditingController();
+    _verifyCodeController.addListener(_onTextFieldChanged);
+  }
+
+  dispose() {
+    _stopCountdown();
+    _accountController.dispose();
+    _verifyCodeController.dispose();
+    super.dispose();
+  }
+
+  void _onTextFieldChanged() {
+    setState(() {
+      _isLoginInfoValid = _accountController.text.isNotEmpty &&
+          _verifyCodeController.text.isNotEmpty;
+    });
+  }
+
+
+  _loginByCode() async {
+    print("_loginByAccount");
+    _stopCountdown();
+    AuthResult result = await AuthClient.loginByPhoneCode(
+        _accountController.text, _verifyCodeController.text);
+
+    String msg = '';
+    if (result.statusCode == 200) {
+      print("ok");
+      msg = AppLocalizations
+          .of(context)
+          .loginSuccess;
+      Navigator.pop(context);
+    } else {
+      print("not ok, err: ${result.apiCode} === ${result.message}");
+      msg = result.message;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg)),
+    );
+  }
+
+  void _stopCountdown() {
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+  }
+
+
+  void _startCountdown() {
+    setState(() {
+      counter = 60;
+      counterIsRunning = true;
+      _verificationButtonText = '$counter s';
+    });
+
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      print('$counter s; t: ${timer.tick}');
+      _timer = _timer;
+      if (counter == 1) {
+        timer.cancel();
+        counterIsRunning = false;
+        setState(() {
+          _verificationButtonText =
+              AppLocalizations
+                  .of(context)
+                  .getVerificationCode;
+        });
+      } else {
+        setState(() {
+          counter -= 1;
+          _verificationButtonText = '$counter s';
+        });
+      }
+    });
+  }
+
+  void _toggleAgreementChecked() {
+    setState(() {
+      _isAgreementChecked = !_isAgreementChecked;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: SafeArea(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Image.network('https://via.placeholder.com/300', height: 200),
+                  const SizedBox(height: 16),
+                  TextField(
+                    keyboardType: TextInputType.phone,
+                    controller: _accountController,
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations
+                          .of(context)
+                          .hintForPhoneNumber,
+                      prefixIcon: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          value: _selectedCountryCode,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _selectedCountryCode = newValue!;
+                            });
+                          },
+                          items: _supportedCountryCodes
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: _verifyCodeController,
+                    decoration: InputDecoration(
+                      labelText:
+                      AppLocalizations
+                          .of(context)
+                          .hintForVerificationCode,
+                      suffix: TextButton(
+                        onPressed: () async {
+                          if (isEmail(_accountController.text)) {
+                            AuthResult sendEmailResult = await AuthClient
+                                .sendEmail(
+                                _accountController.text,
+                                "CHANNEL_LOGIN");
+                            String msg = "";
+                            if (sendEmailResult.statusCode == 200) {
+                              msg = "发送成功";
+                            } else {
+                              msg = sendEmailResult.message;
+                            }
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(msg)),
+                            );
+                          }
+                          if (isPhoneNumber(_accountController.text)) {
+                            AuthResult sendSmsResult = await AuthClient.sendSms(
+                                _accountController.text,
+                                "CHANNEL_LOGIN");
+
+                            String msg = "";
+                            if (sendSmsResult.statusCode == 200) {
+                              msg = "发送成功";
+                            } else {
+                              msg = sendSmsResult.message;
+                            }
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(msg)),
+                            );
+                          }
+                          _startCountdown();
+                        },
+                        child: Text(counterIsRunning
+                            ? _verificationButtonText
+                            : AppLocalizations
+                            .of(context)
+                            .getVerificationCode),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _isLoginInfoValid ? _loginByCode : null,
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 48)),
+                    child: Text(AppLocalizations
+                        .of(context)
+                        .loginOrSignup),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Checkbox(
+                    value: _isAgreementChecked,
+                    onChanged: (bool? newValue) {
+                      _toggleAgreementChecked();
+                    },
+                  ),
+                  Expanded(
+                    child: Wrap(
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            text: "I've read and agree to the ",
+                            style: TextStyle(color: Colors.black54),
+                            children: [
+                              TextSpan(
+                                text: "User Agreement",
+                                style: TextStyle(color: Colors.blue),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () => print('Tap Here onTap'),
+                              ),
+                              TextSpan(text: " and "),
+                              TextSpan(
+                                text: "Privacy Policy",
+                                style: TextStyle(color: Colors.blue),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () => print('Tap Here onTap'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
