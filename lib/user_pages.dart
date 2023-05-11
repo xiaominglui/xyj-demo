@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:authing_sdk_v3/authing.dart';
-import 'package:authing_sdk_v3/client.dart';
-import 'package:authing_sdk_v3/result.dart';
-import 'package:authing_sdk_v3/user.dart';
+import 'package:authing_sdk/client.dart';
+import 'package:authing_sdk/result.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
@@ -78,14 +76,14 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
         _accountController.text, _verifyCodeController.text);
 
     String msg = '';
-    if (result.statusCode == 200) {
+    if (result.code == 200) {
       print("ok");
       msg = AppLocalizations
           .of(context)
           .loginSuccess;
       Navigator.pop(context);
     } else {
-      print("not ok, err: ${result.apiCode} === ${result.message}");
+      print("not ok, err: ${result.code} === ${result.message}");
       msg = result.message;
     }
     ScaffoldMessenger.of(context).showSnackBar(
@@ -200,7 +198,7 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
                                 _accountController.text,
                                 "CHANNEL_LOGIN");
                             String msg = "";
-                            if (sendEmailResult.statusCode == 200) {
+                            if (sendEmailResult.code == 200) {
                               msg = "发送成功";
                             } else {
                               msg = sendEmailResult.message;
@@ -213,10 +211,10 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
                           if (isPhoneNumber(_accountController.text)) {
                             AuthResult sendSmsResult = await AuthClient.sendSms(
                                 _accountController.text,
-                                "CHANNEL_LOGIN");
+                                "+86");
 
                             String msg = "";
-                            if (sendSmsResult.statusCode == 200) {
+                            if (sendSmsResult.code == 200) {
                               msg = "发送成功";
                             } else {
                               msg = sendSmsResult.message;
@@ -368,12 +366,12 @@ class _LoginPageState extends State<LoginPage> {
         _accountController.text, _passwordController.text);
 
     String msg = '';
-    if (result.statusCode == 200) {
+    if (result.code == 200) {
       print("ok");
       msg = AppLocalizations.of(context).loginSuccess;
       Navigator.pop(context);
     } else {
-      print("not ok, err: ${result.apiCode} === ${result.message}");
+      print("not ok, err: ${result.code} === ${result.message}");
       msg = result.message;
     }
     ScaffoldMessenger.of(context).showSnackBar(
@@ -642,12 +640,12 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
     print("_resetAccountPassword");
 
     if (isPhoneNumber(_accountController.text)) {
-      AuthResult result = await AuthClient.resetPasswordByPhone(
+      AuthResult result = await AuthClient.resetPasswordByPhoneCode(
           _accountController.text,
           _verificationCodeController.text,
           _passwordConfirmController.text);
       String msg = '';
-      if (result.statusCode == 200) {
+      if (result.code == 200) {
         print("ok");
         msg = AppLocalizations.of(context).passwordResetSuccess;
       } else {
@@ -662,7 +660,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
           _verificationCodeController.text,
           _passwordConfirmController.text);
       String msg = '';
-      if (result.statusCode == 200) {
+      if (result.code == 200) {
         print("ok");
         msg = AppLocalizations.of(context).passwordResetSuccess;
       } else {
@@ -723,7 +721,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                         AuthResult sendEmailResult = await AuthClient.sendEmail(
                             _accountController.text, "CHANNEL_RESET_PASSWORD");
                         String msg = "";
-                        if (sendEmailResult.statusCode == 200) {
+                        if (sendEmailResult.code == 200) {
                           msg = "发送成功";
                         } else {
                           msg = sendEmailResult.message;
@@ -738,7 +736,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                             _accountController.text, "CHANNEL_RESET_PASSWORD");
 
                         String msg = "";
-                        if (sendSmsResult.statusCode == 200) {
+                        if (sendSmsResult.code == 200) {
                           msg = "发送成功";
                         } else {
                           msg = sendSmsResult.message;
@@ -969,7 +967,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   _accountController.text,
                                   "CHANNEL_RESET_PASSWORD");
                           String msg = "";
-                          if (sendEmailResult.statusCode == 200) {
+                          if (sendEmailResult.code == 200) {
                             msg = "发送成功";
                           } else {
                             msg = sendEmailResult.message;
@@ -985,7 +983,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               "CHANNEL_RESET_PASSWORD");
 
                           String msg = "";
-                          if (sendSmsResult.statusCode == 200) {
+                          if (sendSmsResult.code == 200) {
                             msg = "发送成功";
                           } else {
                             msg = sendSmsResult.message;

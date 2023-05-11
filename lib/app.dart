@@ -1,3 +1,4 @@
+import 'package:authing_sdk/authing.dart';
 import 'package:flutter/material.dart';
 import 'package:xyj_helper/account_list_page.dart';
 import 'package:xyj_helper/settings_page.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/l10n_utils.dart';
 import 'settings_page2.dart';
 
-import 'package:authing_sdk_v3/authing.dart';
 
 
 class MyApp extends StatelessWidget {
@@ -49,7 +49,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     Authing.init('644a98699d66f835f88d4bc8', '644a99927a5a5e9d1f42b4ad');
     super.initState();
   }

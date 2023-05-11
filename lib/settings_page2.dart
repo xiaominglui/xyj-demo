@@ -1,6 +1,6 @@
-import 'package:authing_sdk_v3/client.dart';
-import 'package:authing_sdk_v3/result.dart';
-import 'package:authing_sdk_v3/user.dart';
+import 'package:authing_sdk/client.dart';
+import 'package:authing_sdk/result.dart';
+import 'package:authing_sdk/user.dart';
 import 'package:flutter/material.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
 
@@ -23,7 +23,7 @@ class _SettingsPageState extends State<SettingsPage2> {
 
   _getCurrentUser() async {
     AuthResult result = await AuthClient.getCurrentUser();
-    if (result.statusCode == 200) {
+    if (result.code == 200) {
       if (result.user != null) {
         print("_getCurrentUser: ok");
         setState(() {
@@ -47,10 +47,14 @@ class _SettingsPageState extends State<SettingsPage2> {
             AccountSettingItem(
               currentUser: _currentUser,
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SimpleSMSLoginPage()),
-                );
+                if (_currentUser != null) {
+                  print("logged in");
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SimpleSMSLoginPage()),
+                  );
+                }
               },
             ),
           ]),
