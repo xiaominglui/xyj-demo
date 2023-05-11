@@ -45,6 +45,7 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
   bool counterIsRunning = false;
   String _verificationButtonText = '';
   Timer? _timer;
+  bool _disposed = false;
 
   initState() {
     super.initState();
@@ -55,6 +56,7 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
   }
 
   dispose() {
+    _disposed = true;
     _stopCountdown();
     _accountController.dispose();
     _verifyCodeController.dispose();
@@ -70,7 +72,7 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
 
 
   _loginByCode() async {
-    print("_loginByAccount");
+    print("_loginByCode");
     _stopCountdown();
     AuthResult result = await AuthClient.loginByPhoneCode(
         _accountController.text, _verifyCodeController.text);
@@ -92,9 +94,7 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
   }
 
   void _stopCountdown() {
-    if (_timer != null) {
-      _timer!.cancel();
-    }
+    counter = 1;
   }
 
 
@@ -111,17 +111,22 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
       if (counter == 1) {
         timer.cancel();
         counterIsRunning = false;
-        setState(() {
-          _verificationButtonText =
-              AppLocalizations
-                  .of(context)
-                  .getVerificationCode;
-        });
+
+        if (!_disposed) {
+          setState(() {
+            _verificationButtonText =
+                AppLocalizations
+                    .of(context)
+                    .getVerificationCode;
+          });
+        }
       } else {
-        setState(() {
-          counter -= 1;
-          _verificationButtonText = '$counter s';
-        });
+        if (!_disposed) {
+          setState(() {
+            counter -= 1;
+            _verificationButtonText = '$counter s';
+          });
+        }
       }
     });
   }
