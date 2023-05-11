@@ -4,6 +4,7 @@ import 'package:authing_sdk/user.dart';
 import 'package:flutter/material.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
 
+import 'user_info_page.dart';
 import 'user_pages.dart';
 
 class SettingsPage2 extends StatefulWidget {
@@ -49,6 +50,10 @@ class _SettingsPageState extends State<SettingsPage2> {
               onTap: () {
                 if (_currentUser != null) {
                   print("logged in");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => UserInfoPage()),
+                  );
                 } else {
                   Navigator.push(
                     context,
@@ -135,11 +140,17 @@ class AccountSettingItem extends StatelessWidget {
 
   const AccountSettingItem({super.key, this.onTap, required this.currentUser});
 
+  String obscurePhoneNumber(String str) {
+    var start = str.length ~/ 2 - 2;
+    var end = start + 4;
+    return str.substring(0, start) + '****' + str.substring(end);
+  }
+
   @override
   Widget build(BuildContext context) {
     String displayName = AppLocalizations.of(context).accountsNotLoggedIn;
     if (currentUser != null) {
-      displayName = currentUser!.phone;
+      displayName = obscurePhoneNumber(currentUser!.phone);
     }
     return GestureDetector(
       onTap: onTap,
