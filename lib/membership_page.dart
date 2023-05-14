@@ -1,0 +1,196 @@
+import 'package:flutter/material.dart';
+
+class MembershipPage extends StatefulWidget {
+  const MembershipPage({super.key});
+
+  @override
+  _MembershipPageState createState() => _MembershipPageState();
+}
+
+class _MembershipPageState extends State<MembershipPage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  final List<String> vipBenefits = [
+    'Ad-free',
+    'Auto-checkin',
+    'Auto-login',
+    'VIP Customer Service'
+  ];
+  final List<String> svipBenefits = [
+    'Ad-free',
+    'Auto-checkin',
+    'Auto-login',
+    'VIP Customer Service',
+    'Priority access to new features'
+  ];
+  final List<String> vipPaymentOptions = ['年付', '季付', '半年付', '月付'];
+  final List<String> svipPaymentOptions = ['年付', '半年付'];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = new TabController(vsync: this, length: 2);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Membership'),
+      ),
+      body: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.all(20.0),
+            child: Row(
+              children: [
+                Icon(Icons.person, size: 50.0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Username', style: TextStyle(fontSize: 20.0)),
+                    Text('Renewal Date: 2023-12-31',
+                        style: TextStyle(fontSize: 16.0)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          MemberCard(),
+          TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(
+                text: 'VIP',
+                icon: Icon(Icons.star),
+              ),
+              Tab(
+                text: 'SVIP',
+                icon: Icon(Icons.ac_unit),
+              ),
+            ],
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                MembershipTab(
+                    benefits: vipBenefits, paymentOptions: vipPaymentOptions),
+                MembershipTab(
+                    benefits: svipBenefits, paymentOptions: svipPaymentOptions),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MembershipTab extends StatelessWidget {
+  final List<String> benefits;
+  final List<String> paymentOptions;
+
+  MembershipTab({required this.benefits, required this.paymentOptions});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        BenefitsList(benefits: benefits),
+        PaymentOptionsList(paymentOptions: paymentOptions),
+      ],
+    );
+  }
+}
+
+class BenefitsList extends StatelessWidget {
+  final List<String> benefits;
+
+  BenefitsList({required this.benefits});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 100.0,
+      margin: EdgeInsets.only(bottom: 50),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: benefits.length,
+        itemBuilder: (context, index) {
+          return Container(
+            margin: EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                Icon(Icons.star, size: 50.0),
+                Text(benefits[index], style: TextStyle(fontSize: 16.0)),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class PaymentOptionsList extends StatelessWidget {
+  final List<String> paymentOptions;
+
+  PaymentOptionsList({required this.paymentOptions});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50.0,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: paymentOptions.length,
+        itemBuilder: (context, index) {
+          return Container(
+            margin: EdgeInsets.all(10.0),
+            child: Center(
+              child:
+                  Text(paymentOptions[index], style: TextStyle(fontSize: 16.0)),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class MemberCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Card(
+      child: new Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: new Row(
+          children: <Widget>[
+            new CircleAvatar(
+              radius: 50.0,
+              backgroundImage:
+                  new NetworkImage('https://picsum.photos/id/45/200/200'),
+            ),
+            new SizedBox(width: 16.0),
+            new Expanded(
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  new Text('John Doe'),
+                  new Text('Member since March 8, 2023'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

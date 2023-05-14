@@ -3,6 +3,7 @@ import 'package:authing_sdk/result.dart';
 import 'package:authing_sdk/user.dart';
 import 'package:flutter/material.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
+import 'package:xyj_helper/membership_page.dart';
 
 import 'user_info_page.dart';
 import 'user_pages.dart';
@@ -20,6 +21,7 @@ class _SettingsPageState extends State<SettingsPage2> {
   initState() {
     super.initState();
     _getCurrentUser();
+    _getCurrentUserRes();
   }
 
   _getCurrentUser() async {
@@ -30,10 +32,16 @@ class _SettingsPageState extends State<SettingsPage2> {
         setState(() {
           _currentUser = result.user;
         });
+        var customData = _currentUser?.customData;
       }
     } else {
       print("_getCurrentUser: ${result.message}");
     }
+  }
+
+  _getCurrentUserRes() async {
+    Map result = await AuthClient.listAuthorizedResources("xyj_helper");
+    print(result);
   }
 
   @override
@@ -65,7 +73,14 @@ class _SettingsPageState extends State<SettingsPage2> {
           ]),
           SettingGroup(
             settings: [
-              SettingItem(title: '开通VIP会员'),
+              SettingItem(title: '开通VIP会员',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MembershipPage()),
+                    );
+                  }),
               //SettingItem(title: '我的优惠券'),
               //SettingItem(title: '邀请与兑奖'),
             ],

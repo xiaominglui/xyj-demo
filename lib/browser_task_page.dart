@@ -131,7 +131,7 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
           },
           onWebResourceError: (WebResourceError error) {
             debugPrint('''
-Page resource error:
+  Page resource error:
   code: ${error.errorCode}
   description: ${error.description}
   errorType: ${error.errorType}
@@ -166,7 +166,8 @@ Page resource error:
       AndroidWebViewController.enableDebugging(true);
       (controller.platform as AndroidWebViewController)
           .setMediaPlaybackRequiresUserGesture(false);
-      (controller.platform as AndroidWebViewController).setOnShowFileSelector((params) => _showFileSelector(params));
+      (controller.platform as AndroidWebViewController)
+          .setOnShowFileSelector((params) => _showFileSelector(params));
       (controller.platform as AndroidWebViewController)
           .setOnPlatformPermissionRequest((request) async {
         debugPrint(
