@@ -101,7 +101,7 @@ class MembershipTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return Column(
       children: [
         BenefitsList(benefits: benefits),
         PaymentOptionsList(paymentOptions: paymentOptions),
@@ -142,21 +142,68 @@ class BenefitsList extends StatelessWidget {
 class PaymentOptionsList extends StatelessWidget {
   final List<String> paymentOptions;
 
-  PaymentOptionsList({required this.paymentOptions});
+  const PaymentOptionsList({super.key, required this.paymentOptions});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50.0,
+      height: 150.0,
+      margin: EdgeInsets.only(bottom: 20.0),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: paymentOptions.length,
         itemBuilder: (context, index) {
-          return Container(
-            margin: EdgeInsets.all(10.0),
-            child: Center(
-              child:
-                  Text(paymentOptions[index], style: TextStyle(fontSize: 16.0)),
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              child: Container(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '包年',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '低至3.9折',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(
+                      '¥66',
+                      style: TextStyle(
+                        color: Colors.yellow,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      '¥168',
+                      style: TextStyle(
+                        fontSize: 12,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      color: Colors.red,
+                      alignment: Alignment.center,
+                      child: Text(
+                        '仅需¥0.16/天',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
           );
         },
@@ -165,7 +212,36 @@ class PaymentOptionsList extends StatelessWidget {
   }
 }
 
+class PaymentOptionCard extends StatelessWidget {
+  final int currentPrice;
+
+  PaymentOptionCard(this.currentPrice);
+
+  @override
+  Widget build(BuildContext context) {
+    return new Card(
+      child: new Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: new Column(children: <Widget>[
+          new Text('Option title',
+              style: TextStyle(fontSize: 20.0, color: Colors.blue)),
+          new SizedBox(height: 16.0),
+          new Text('Option hint'),
+          new SizedBox(height: 16.0),
+          new Text('￥ $currentPrice'),
+          new SizedBox(height: 16.0),
+          new Text('Origin price'),
+          new SizedBox(height: 16.0),
+          new Text('Due date'),
+        ]),
+      ),
+    );
+  }
+}
+
 class MemberCard extends StatelessWidget {
+  const MemberCard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return new Card(

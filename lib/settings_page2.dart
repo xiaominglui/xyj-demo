@@ -32,7 +32,11 @@ class _SettingsPageState extends State<SettingsPage2> {
         setState(() {
           _currentUser = result.user;
         });
-        var customData = _currentUser?.customData;
+
+        AuthResult r = await AuthClient.getCustomData(_currentUser!.id);
+        var value = AuthClient.currentUser?.customData[0]["key"];
+        print("customData===${AuthClient.currentUser?.customData}");
+        print("object==$value");
       }
     } else {
       print("_getCurrentUser: ${result.message}");
