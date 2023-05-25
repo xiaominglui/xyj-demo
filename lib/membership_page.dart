@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xyj_helper/l10n/l10n.dart';
 
 class MembershipPage extends StatefulWidget {
   const MembershipPage({super.key});
@@ -42,7 +43,7 @@ class _MembershipPageState extends State<MembershipPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Membership'),
+        title: Text(AppLocalizations.of(context).joinVIP),
       ),
       body: Column(
         children: [
@@ -65,14 +66,30 @@ class _MembershipPageState extends State<MembershipPage>
           MemberCard(),
           TabBar(
             controller: _tabController,
-            tabs: const [
+            tabs: [
               Tab(
-                text: 'VIP',
-                icon: Icon(Icons.star),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(
+                      Icons.star,
+                      color: Colors.blue,
+                    ),
+                    Text("VIP", style: TextStyle(color: Colors.black54)),
+                  ],
+                ),
               ),
               Tab(
-                text: 'SVIP',
-                icon: Icon(Icons.ac_unit),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(
+                      Icons.star,
+                      color: Colors.blue,
+                    ),
+                    Text("SVIP", style: TextStyle(color: Colors.black54)),
+                  ],
+                ),
               ),
             ],
           ),
@@ -119,7 +136,7 @@ class BenefitsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 100.0,
-      margin: EdgeInsets.only(bottom: 50),
+      margin: EdgeInsets.only(bottom: 8.0),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: benefits.length,
@@ -250,7 +267,7 @@ class MemberCard extends StatelessWidget {
         child: new Row(
           children: <Widget>[
             new CircleAvatar(
-              radius: 50.0,
+              radius: 25.0,
               backgroundImage:
                   new NetworkImage('https://picsum.photos/id/45/200/200'),
             ),

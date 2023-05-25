@@ -77,12 +77,12 @@ class _SettingsPageState extends State<SettingsPage2> {
           ]),
           SettingGroup(
             settings: [
-              SettingItem(title: '开通VIP会员',
+              SettingItem(title: AppLocalizations.of(context).joinVIP,
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => MembershipPage()),
+                          builder: (context) => const MembershipPage()),
                     );
                   }),
               //SettingItem(title: '我的优惠券'),
