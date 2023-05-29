@@ -65,6 +65,8 @@ class AppLocalizations {
       'passwordResetSuccess': 'Password reset success',
       'twoPasswordsDoNotMatch': 'The two passwords entered do not match',
       'joinVIP': 'Join VIP',
+      'renewalDate': 'Renewal Date: ',
+      'titleNotLoggedIn': 'Not logged in',
     },
     'zh': {
       'hello': '你好世界',
@@ -121,6 +123,8 @@ class AppLocalizations {
       'passwordResetSuccess': '密码重置成功...',
       'twoPasswordsDoNotMatch': '两次输入的密码不一致',
       'joinVIP': '开通VIP会员',
+      'renewalDate': '会员有效期： ',
+      'titleNotLoggedIn': '未登录',
     },
   };
 
@@ -339,5 +343,13 @@ class AppLocalizations {
 
   String get joinVIP {
     return _localizedValues[locale.languageCode]!['joinVIP']!;
+  }
+
+  String get renewalDate {
+    return _localizedValues[locale.languageCode]!['renewalDate']!;
+  }
+
+  String get titleNotLoggedIn {
+    return _localizedValues[locale.languageCode]!['titleNotLoggedIn']!;
   }
 }

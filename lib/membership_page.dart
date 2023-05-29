@@ -41,6 +41,9 @@ class _MembershipPageState extends State<MembershipPage>
 
   @override
   Widget build(BuildContext context) {
+    var renewalDateString = "-";
+    var userName = "张三";
+    var isLoggedIn = false;
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).joinVIP),
@@ -51,19 +54,19 @@ class _MembershipPageState extends State<MembershipPage>
             margin: EdgeInsets.all(20.0),
             child: Row(
               children: [
-                Icon(Icons.person, size: 50.0),
+                const Icon(Icons.account_circle_rounded, size: 50.0, color: Colors.black45,),
+                SizedBox(width: 16.0,),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Username', style: TextStyle(fontSize: 20.0)),
-                    Text('Renewal Date: 2023-12-31',
+                    Text(isLoggedIn ? userName : AppLocalizations.of(context).titleNotLoggedIn, style: TextStyle(fontSize: 20.0)),
+                    Text(AppLocalizations.of(context).renewalDate + renewalDateString,
                         style: TextStyle(fontSize: 16.0)),
                   ],
                 ),
               ],
             ),
           ),
-          MemberCard(),
           TabBar(
             controller: _tabController,
             tabs: [
@@ -256,34 +259,3 @@ class PaymentOptionCard extends StatelessWidget {
   }
 }
 
-class MemberCard extends StatelessWidget {
-  const MemberCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return new Card(
-      child: new Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: new Row(
-          children: <Widget>[
-            new CircleAvatar(
-              radius: 25.0,
-              backgroundImage:
-                  new NetworkImage('https://picsum.photos/id/45/200/200'),
-            ),
-            new SizedBox(width: 16.0),
-            new Expanded(
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  new Text('John Doe'),
-                  new Text('Member since March 8, 2023'),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
