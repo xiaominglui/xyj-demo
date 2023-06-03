@@ -67,6 +67,11 @@ class AppLocalizations {
       'joinVIP': 'Join VIP',
       'renewalDate': 'Renewal Date: ',
       'titleNotLoggedIn': 'Not logged in',
+      'titlePrivacySettings': 'Privacy Settings',
+      'titleHelpAndFeedback': 'Help and Feedback',
+      'titleContactUs': 'Contact Us',
+      'titleShare': 'Share',
+      'titleBackupAndRestore': 'Backup and Restore',
     },
     'zh': {
       'hello': '你好世界',
@@ -125,10 +130,15 @@ class AppLocalizations {
       'joinVIP': '开通VIP会员',
       'renewalDate': '会员有效期： ',
       'titleNotLoggedIn': '未登录',
+      'titlePrivacySettings': '隐私设置',
+      'titleHelpAndFeedback': '帮助与反馈',
+      'titleContactUs': '联系我们',
+      'titleShare': '分享给朋友',
+      'titleBackupAndRestore': '备份与恢复',
     },
   };
 
-  static List<String> languages ()=> _localizedValues.keys.toList();
+  static List<String> languages() => _localizedValues.keys.toList();
 
   String get hello {
     return _localizedValues[locale.languageCode]!['hello']!;
@@ -243,7 +253,8 @@ class AppLocalizations {
   }
 
   String get noAccountsNeedToLogInToday {
-    return _localizedValues[locale.languageCode]!['noAccountsNeedToLogInToday']!;
+    return _localizedValues[locale.languageCode]![
+        'noAccountsNeedToLogInToday']!;
   }
 
   String get checkInTask {
@@ -309,6 +320,7 @@ class AppLocalizations {
   String get titleSignUp {
     return _localizedValues[locale.languageCode]!['titleSignUp']!;
   }
+
   String get hintForVerificationCode {
     return _localizedValues[locale.languageCode]!['hintForVerificationCode']!;
   }
@@ -351,5 +363,25 @@ class AppLocalizations {
 
   String get titleNotLoggedIn {
     return _localizedValues[locale.languageCode]!['titleNotLoggedIn']!;
+  }
+
+  String get titlePrivacySettings {
+    return _localizedValues[locale.languageCode]!['titlePrivacySettings']!;
+  }
+
+  String get titleHelpAndFeedback {
+    return _localizedValues[locale.languageCode]!['titleHelpAndFeedback']!;
+  }
+
+  String get titleContactUs {
+    return _localizedValues[locale.languageCode]!['titleContactUs']!;
+  }
+
+  String get titleShare {
+    return _localizedValues[locale.languageCode]!['titleShare']!;
+  }
+
+  String get titleBackupAndRestore {
+    return _localizedValues[locale.languageCode]!['titleBackupAndRestore']!;
   }
 }

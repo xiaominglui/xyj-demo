@@ -91,13 +91,13 @@ class _SettingsPageState extends State<SettingsPage2> {
           ),
           SettingGroup(
             settings: [
-              SettingItem(title: '帐号导出与导入'),
+              SettingItem(title: AppLocalizations.of(context).titleBackupAndRestore),
             ],
           ),
           SettingGroup(
             settings: [
               SettingItem(
-                title: '隐私设置',
+                title: AppLocalizations.of(context).titlePrivacySettings,
                 onTap: () {
                   Navigator.push(
                     context,
@@ -106,15 +106,17 @@ class _SettingsPageState extends State<SettingsPage2> {
                   );
                 },
               ),
-              SettingItem(title: '帮助与反馈'),
-              SettingItem(title: '分享给朋友'),
-              SettingItem(title: '联系我们'),
+              SettingItem(title: AppLocalizations.of(context).titleHelpAndFeedback),
+              SettingItem(title: AppLocalizations.of(context).titleShare),
+              SettingItem(title: AppLocalizations.of(context).titleContactUs),
             ],
           ),
+          SizedBox(height: 16.0,),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
-              Text('version: 1.0.0 ', style: TextStyle(color: Colors.grey))
+              Text('version: 1.0.0 ', style: TextStyle(color: Colors.grey)),
+              Text('made with ❤️️ by jeff', style: TextStyle(color: Colors.grey)),
             ],
           ),
         ],
@@ -174,7 +176,7 @@ class AccountSettingItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -198,7 +200,7 @@ class PrivacySettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('隐私设置'),
+        title: Text(AppLocalizations.of(context).titlePrivacySettings),
       ),
       body: ListView(
         children: [
