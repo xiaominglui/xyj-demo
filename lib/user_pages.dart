@@ -6,7 +6,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
 
-
 class SimpleSMSLoginPage extends StatefulWidget {
   const SimpleSMSLoginPage({super.key});
 
@@ -68,7 +67,6 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
     });
   }
 
-
   _loginByCode() async {
     print("_loginByCode");
     _stopCountdown();
@@ -78,9 +76,7 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
     String msg = '';
     if (result.code == 200) {
       print("ok");
-      msg = AppLocalizations
-          .of(context)
-          .loginSuccess;
+      msg = AppLocalizations.of(context).loginSuccess;
       Navigator.pop(context);
     } else {
       print("not ok, err: ${result.code} === ${result.message}");
@@ -94,7 +90,6 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
   void _stopCountdown() {
     counter = 1;
   }
-
 
   void _startCountdown() {
     setState(() {
@@ -113,9 +108,7 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
         if (!_disposed) {
           setState(() {
             _verificationButtonText =
-                AppLocalizations
-                    .of(context)
-                    .getVerificationCode;
+                AppLocalizations.of(context).getVerificationCode;
           });
         }
       } else {
@@ -147,7 +140,7 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
       ),
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -160,9 +153,7 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
                     keyboardType: TextInputType.phone,
                     controller: _accountController,
                     decoration: InputDecoration(
-                      hintText: AppLocalizations
-                          .of(context)
-                          .hintForPhoneNumber,
+                      hintText: AppLocalizations.of(context).hintForPhoneNumber,
                       prefixIcon: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: _selectedCountryCode,
@@ -187,16 +178,13 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
                     controller: _verifyCodeController,
                     decoration: InputDecoration(
                       labelText:
-                      AppLocalizations
-                          .of(context)
-                          .hintForVerificationCode,
+                          AppLocalizations.of(context).hintForVerificationCode,
                       suffix: TextButton(
                         onPressed: () async {
                           if (isEmail(_accountController.text)) {
-                            AuthResult sendEmailResult = await AuthClient
-                                .sendEmail(
-                                _accountController.text,
-                                "CHANNEL_LOGIN");
+                            AuthResult sendEmailResult =
+                                await AuthClient.sendEmail(
+                                    _accountController.text, "CHANNEL_LOGIN");
                             String msg = "";
                             if (sendEmailResult.code == 200) {
                               msg = "发送成功";
@@ -210,8 +198,7 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
                           }
                           if (isPhoneNumber(_accountController.text)) {
                             AuthResult sendSmsResult = await AuthClient.sendSms(
-                                _accountController.text,
-                                "+86");
+                                _accountController.text, "+86");
 
                             String msg = "";
                             if (sendSmsResult.code == 200) {
@@ -228,9 +215,7 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
                         },
                         child: Text(counterIsRunning
                             ? _verificationButtonText
-                            : AppLocalizations
-                            .of(context)
-                            .getVerificationCode),
+                            : AppLocalizations.of(context).getVerificationCode),
                       ),
                     ),
                   ),
@@ -239,9 +224,7 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
                     onPressed: _isLoginInfoValid ? _loginByCode : null,
                     style: ElevatedButton.styleFrom(
                         minimumSize: const Size(double.infinity, 48)),
-                    child: Text(AppLocalizations
-                        .of(context)
-                        .loginOrSignup),
+                    child: Text(AppLocalizations.of(context).loginOrSignup),
                   ),
                   const SizedBox(height: 16),
                 ],

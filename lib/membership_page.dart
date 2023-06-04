@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
 
 class MembershipPage extends StatefulWidget {
@@ -69,14 +70,23 @@ class _MembershipPageState extends State<MembershipPage>
           ),
           TabBar(
             controller: _tabController,
+            indicator: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.yellow, Colors.yellowAccent],
+                end: Alignment.centerLeft,
+                begin: Alignment.centerRight,
+              ),
+            ),
             tabs: [
               Tab(
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Icon(
-                      Icons.star,
-                      color: Colors.blue,
+                    SvgPicture.asset(
+                      'assets/icons/crown.svg',
+                      height: 36,
+                      width: 36,
+                      color: Colors.black45,
                     ),
                     Text("VIP", style: TextStyle(color: Colors.black54)),
                   ],
@@ -86,9 +96,11 @@ class _MembershipPageState extends State<MembershipPage>
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Icon(
-                      Icons.star,
-                      color: Colors.blue,
+                    SvgPicture.asset(
+                      'assets/icons/crown.svg',
+                      height: 36,
+                      width: 36,
+                      color: Colors.black45,
                     ),
                     Text("SVIP", style: TextStyle(color: Colors.black54)),
                   ],
