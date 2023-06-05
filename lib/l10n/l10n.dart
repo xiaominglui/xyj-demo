@@ -72,6 +72,11 @@ class AppLocalizations {
       'titleContactUs': 'Contact Us',
       'titleShare': 'Share',
       'titleBackupAndRestore': 'Backup and Restore',
+      'adFree': 'Ad-free',
+      'autoCheckin': 'Auto-checkin',
+      'autoLogin': 'Auto-login',
+      'vipCustomerService': 'VIP Customer Service',
+      'priorityAccess': 'Priority access to new features',
     },
     'zh': {
       'hello': '你好世界',
@@ -135,6 +140,11 @@ class AppLocalizations {
       'titleContactUs': '联系我们',
       'titleShare': '分享给朋友',
       'titleBackupAndRestore': '备份与恢复',
+      'adFree': '免除广告',
+      'autoCheckin': '签到助手',
+      'autoLogin': '登录助手',
+      'vipCustomerService': 'VIP客服',
+      'priorityAccess': '抢先体验',
     },
   };
 
@@ -383,5 +393,25 @@ class AppLocalizations {
 
   String get titleBackupAndRestore {
     return _localizedValues[locale.languageCode]!['titleBackupAndRestore']!;
+  }
+
+  String get adFree {
+    return _localizedValues[locale.languageCode]!['adFree']!;
+  }
+
+  String get autoCheckin {
+    return _localizedValues[locale.languageCode]!['autoCheckin']!;
+  }
+
+  String get autoLogin {
+    return _localizedValues[locale.languageCode]!['autoLogin']!;
+  }
+
+  String get vipCustomerService {
+    return _localizedValues[locale.languageCode]!['vipCustomerService']!;
+  }
+
+  String get priorityAccess {
+    return _localizedValues[locale.languageCode]!['priorityAccess']!;
   }
 }

@@ -12,19 +12,7 @@ class MembershipPage extends StatefulWidget {
 class _MembershipPageState extends State<MembershipPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final List<String> vipBenefits = [
-    'Ad-free',
-    'Auto-checkin',
-    'Auto-login',
-    'VIP Customer Service'
-  ];
-  final List<String> svipBenefits = [
-    'Ad-free',
-    'Auto-checkin',
-    'Auto-login',
-    'VIP Customer Service',
-    'Priority access to new features'
-  ];
+
   final List<String> vipPaymentOptions = ['年付', '季付', '半年付', '月付'];
   final List<String> svipPaymentOptions = ['年付', '半年付'];
 
@@ -42,6 +30,21 @@ class _MembershipPageState extends State<MembershipPage>
 
   @override
   Widget build(BuildContext context) {
+    final List<String> vipBenefits = [
+      AppLocalizations.of(context).adFree,
+      AppLocalizations.of(context).autoCheckin,
+      AppLocalizations.of(context).autoLogin,
+      AppLocalizations.of(context).vipCustomerService,
+    ];
+
+    final List<String> svipBenefits = [
+      AppLocalizations.of(context).adFree,
+      AppLocalizations.of(context).autoCheckin,
+      AppLocalizations.of(context).autoLogin,
+      AppLocalizations.of(context).vipCustomerService,
+      AppLocalizations.of(context).priorityAccess,
+    ];
+    
     var renewalDateString = "-";
     var userName = "张三";
     var isLoggedIn = false;
@@ -55,13 +58,25 @@ class _MembershipPageState extends State<MembershipPage>
             margin: EdgeInsets.all(20.0),
             child: Row(
               children: [
-                const Icon(Icons.account_circle_rounded, size: 50.0, color: Colors.black45,),
-                SizedBox(width: 16.0,),
+                const Icon(
+                  Icons.account_circle_rounded,
+                  size: 50.0,
+                  color: Colors.black45,
+                ),
+                SizedBox(
+                  width: 16.0,
+                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(isLoggedIn ? userName : AppLocalizations.of(context).titleNotLoggedIn, style: TextStyle(fontSize: 20.0)),
-                    Text(AppLocalizations.of(context).renewalDate + renewalDateString,
+                    Text(
+                        isLoggedIn
+                            ? userName
+                            : AppLocalizations.of(context).titleNotLoggedIn,
+                        style: TextStyle(fontSize: 20.0)),
+                    Text(
+                        AppLocalizations.of(context).renewalDate +
+                            renewalDateString,
                         style: TextStyle(fontSize: 16.0)),
                   ],
                 ),
@@ -270,4 +285,3 @@ class PaymentOptionCard extends StatelessWidget {
     );
   }
 }
-
