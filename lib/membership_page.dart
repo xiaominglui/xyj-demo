@@ -44,7 +44,7 @@ class _MembershipPageState extends State<MembershipPage>
       AppLocalizations.of(context).vipCustomerService,
       AppLocalizations.of(context).priorityAccess,
     ];
-    
+
     var renewalDateString = "-";
     var userName = "张三";
     var isLoggedIn = false;
@@ -165,7 +165,7 @@ class BenefitsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100.0,
+      height: 150.0,
       margin: EdgeInsets.only(bottom: 8.0),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -175,8 +175,29 @@ class BenefitsList extends StatelessWidget {
             margin: EdgeInsets.all(10.0),
             child: Column(
               children: [
-                Icon(Icons.star, size: 50.0),
-                Text(benefits[index], style: TextStyle(fontSize: 16.0)),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: const Offset(0, 3),
+                        )
+                      ]),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      // Add your child widgets here
+                      children: [
+                        Icon(Icons.card_giftcard, size: 50.0, color: Colors.orange,),
+                        Text(benefits[index], style: TextStyle(fontSize: 16.0)),
+                      ],
+                    ),
+                  ),
+                )
               ],
             ),
           );
