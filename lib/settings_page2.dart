@@ -69,7 +69,8 @@ class _SettingsPageState extends State<SettingsPage2> {
                 } else {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SimpleSMSLoginPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const SimpleSMSLoginPage()),
                   );
                 }
               },
@@ -77,7 +78,8 @@ class _SettingsPageState extends State<SettingsPage2> {
           ]),
           SettingGroup(
             settings: [
-              SettingItem(title: AppLocalizations.of(context).joinVIP,
+              SettingItem(
+                  title: AppLocalizations.of(context).joinVIP,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -91,7 +93,8 @@ class _SettingsPageState extends State<SettingsPage2> {
           ),
           SettingGroup(
             settings: [
-              SettingItem(title: AppLocalizations.of(context).titleBackupAndRestore),
+              SettingItem(
+                  title: AppLocalizations.of(context).titleBackupAndRestore),
             ],
           ),
           SettingGroup(
@@ -106,17 +109,24 @@ class _SettingsPageState extends State<SettingsPage2> {
                   );
                 },
               ),
-              SettingItem(title: AppLocalizations.of(context).titleHelpAndFeedback),
+              SettingItem(
+                  title: AppLocalizations.of(context).titleHelpAndFeedback),
               SettingItem(title: AppLocalizations.of(context).titleShare),
               SettingItem(title: AppLocalizations.of(context).titleContactUs),
             ],
           ),
-          SizedBox(height: 16.0,),
+          SizedBox(
+            height: 16.0,
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
               Text('version: 1.0.0 ', style: TextStyle(color: Colors.grey)),
-              Text('made with ❤️️ by jeff', style: TextStyle(color: Colors.grey)),
+              SizedBox(
+                height: 16.0,
+              ),
+              Text('made with ❤️️ by jeff',
+                  style: TextStyle(color: Colors.grey)),
             ],
           ),
         ],

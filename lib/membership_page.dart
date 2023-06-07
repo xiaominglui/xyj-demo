@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class MembershipPage extends StatefulWidget {
   const MembershipPage({super.key});
@@ -274,6 +276,30 @@ class PaymentOptionsList extends StatelessWidget {
               child: InkWell(
                 onTap: () {
                   print('Card tapped!');
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("👑请添加客服微信充值或咨询👑"),
+                          content: Text(" 🙋客服微信: aaaabbbccc"),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text('我再想想'),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                Fluttertoast.showToast(
+                                  msg: "客服微信号已复制",
+                                );
+                                await Clipboard.setData(
+                                    const ClipboardData(text: 'aaaabbbccc'));
+                              },
+                              child: Text('点我复制'),
+                            ),
+                          ],
+                        );
+                      });
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(
@@ -314,7 +340,8 @@ class PaymentOptionsList extends StatelessWidget {
                         height: 8.0,
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                         color: Colors.red,
                         alignment: Alignment.center,
                         child: Text(
