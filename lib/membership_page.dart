@@ -13,8 +13,52 @@ class _MembershipPageState extends State<MembershipPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  final List<String> vipPaymentOptions = ['年付', '季付', '半年付', '月付'];
-  final List<String> svipPaymentOptions = ['年付', '半年付'];
+  final List<Map<String, String>> vipPaymentOptions = [
+    {
+      'name': '包月',
+      'description': '限时早鸟优惠',
+      'promotionalPrice': '¥28.9',
+      'price': '￥39.9',
+      'discount': '仅需￥0.96/天'
+    },
+    {
+      'name': '包半年',
+      'description': '限时早鸟优惠',
+      'promotionalPrice': '¥158',
+      'price': '¥239.4',
+      'discount': '仅需￥0.87/天',
+    },
+    {
+      'name': '包年',
+      'description': '限时早鸟优惠',
+      'promotionalPrice': '¥299',
+      'price': '¥499',
+      'discount': '仅需￥0.82/天',
+    },
+  ];
+  final List<Map<String, String>> svipPaymentOptions = [
+    {
+      'name': '包半年',
+      'description': '低至3.9折',
+      'promotionalPrice': '¥155',
+      'price': '¥399',
+      'discount': '仅需￥0.85/天',
+    },
+    {
+      'name': '包年',
+      'description': '低至3.3折',
+      'promotionalPrice': '¥199',
+      'price': '¥599',
+      'discount': '仅需￥0.55/天',
+    },
+    {
+      'name': '一次性买断',
+      'description': '终身免费更新、享用所有特权',
+      'promotionalPrice': '¥699',
+      'price': '¥899',
+      'discount': '限时开放',
+    }
+  ];
 
   @override
   void initState() {
@@ -142,7 +186,7 @@ class _MembershipPageState extends State<MembershipPage>
 
 class MembershipTab extends StatelessWidget {
   final List<String> benefits;
-  final List<String> paymentOptions;
+  final List<Map<String, String>> paymentOptions;
 
   MembershipTab({required this.benefits, required this.paymentOptions});
 
@@ -166,7 +210,6 @@ class BenefitsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 150.0,
-      margin: EdgeInsets.only(bottom: 8.0),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: benefits.length,
@@ -192,7 +235,11 @@ class BenefitsList extends StatelessWidget {
                     child: Column(
                       // Add your child widgets here
                       children: [
-                        Icon(Icons.card_giftcard, size: 50.0, color: Colors.orange,),
+                        Icon(
+                          Icons.card_giftcard,
+                          size: 50.0,
+                          color: Colors.orange,
+                        ),
                         Text(benefits[index], style: TextStyle(fontSize: 16.0)),
                       ],
                     ),
@@ -208,15 +255,14 @@ class BenefitsList extends StatelessWidget {
 }
 
 class PaymentOptionsList extends StatelessWidget {
-  final List<String> paymentOptions;
+  final List<Map<String, String>> paymentOptions;
 
-  const PaymentOptionsList({super.key, required this.paymentOptions});
+  PaymentOptionsList({super.key, required this.paymentOptions});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 150.0,
-      margin: EdgeInsets.only(bottom: 20.0),
+      height: 220.0,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: paymentOptions.length,
@@ -224,52 +270,63 @@ class PaymentOptionsList extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Card(
-              child: Container(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      '包年',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      '低至3.9折',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 12,
-                      ),
-                    ),
-                    Text(
-                      '¥66',
-                      style: TextStyle(
-                        color: Colors.yellow,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text(
-                      '¥168',
-                      style: TextStyle(
-                        fontSize: 12,
-                        decoration: TextDecoration.lineThrough,
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      color: Colors.red,
-                      alignment: Alignment.center,
-                      child: Text(
-                        '仅需¥0.16/天',
+              elevation: 5.5,
+              child: InkWell(
+                onTap: () {
+                  print('Card tapped!');
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        paymentOptions[index]['name']!,
                         style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    )
-                  ],
+                      Text(
+                        paymentOptions[index]['description']!,
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        paymentOptions[index]['promotionalPrice']!,
+                        style: TextStyle(
+                          color: Colors.deepOrange,
+                          fontSize: 32,
+                        ),
+                      ),
+                      Text(
+                        paymentOptions[index]['price']!,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black26,
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8.0,
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                        color: Colors.red,
+                        alignment: Alignment.center,
+                        child: Text(
+                          paymentOptions[index]['discount']!,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
