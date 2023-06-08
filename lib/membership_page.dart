@@ -281,7 +281,7 @@ class PaymentOptionsList extends StatelessWidget {
                       builder: (context) {
                         return AlertDialog(
                           title: Text("👑请添加客服微信充值或咨询👑"),
-                          content: Text(" 🙋客服微信: aaaabbbccc"),
+                          content: Text(" 🙋客服微信: jeff-studio"),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () => Navigator.pop(context),
@@ -293,7 +293,7 @@ class PaymentOptionsList extends StatelessWidget {
                                   msg: "客服微信号已复制",
                                 );
                                 await Clipboard.setData(
-                                    const ClipboardData(text: 'aaaabbbccc'));
+                                    const ClipboardData(text: 'jeff-studio'));
                               },
                               child: Text('点我复制'),
                             ),
