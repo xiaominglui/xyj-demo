@@ -147,7 +147,7 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Image.network('https://via.placeholder.com/300', height: 200),
+                  Image.network('https://via.placeholder.com/100', height: 100),
                   const SizedBox(height: 16),
                   TextField(
                     keyboardType: TextInputType.phone,
