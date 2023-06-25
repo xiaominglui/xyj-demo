@@ -1,3 +1,6 @@
+import 'package:authing_sdk/client.dart';
+import 'package:authing_sdk/result.dart';
+import 'package:authing_sdk/user.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -42,6 +45,8 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
   ExecuteScope? _taskScope = ExecuteScope.notLoggedInOnly;
   ExecuteType? _taskType;
   final List<Account> _accountsToExecute = List.empty(growable: true);
+
+  User? _currentUser;
 
   _BrowserTaskPageState();
 
@@ -95,9 +100,30 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
       ''');
   }
 
-  @override
+  _getCurrentUser() async {
+    AuthResult result = await AuthClient.getCurrentUser();
+    if (result.code == 200) {
+      if (result.user != null) {
+        print("_getCurrentUser: ok");
+        setState(() {
+          _currentUser = result.user;
+        });
+
+        AuthResult r = await AuthClient.getCustomData(_currentUser!.id);
+        var value = AuthClient.currentUser?.customData[0]["key"];
+        print("customData===${AuthClient.currentUser?.customData}");
+        print("object==$value");
+      }
+    } else {
+      print("_getCurrentUser: ${result.message}");
+    }
+  }
+
+
+    @override
   void initState() {
     super.initState();
+    _getCurrentUser();
     print(
         "initState: $widget.autoStart===${widget.accountParameter}===$_taskType===${widget.taskType}");
     late final PlatformWebViewControllerCreationParams params;
@@ -199,7 +225,6 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
 
   Future<void> startAutoTask(ExecuteType? type, ExecuteScope? scope) async {
     _accountsToExecute.clear();
-
     if (scope == ExecuteScope.one) {
       if (widget.accountParameter != null) {
         _accountsToExecute.add(widget.accountParameter!);

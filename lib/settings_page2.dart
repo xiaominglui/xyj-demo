@@ -4,6 +4,7 @@ import 'package:authing_sdk/user.dart';
 import 'package:flutter/material.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
 import 'package:xyj_helper/membership_page.dart';
+import 'package:xyj_helper/utils.dart';
 
 import 'user_info_page.dart';
 import 'user_pages.dart';
@@ -34,9 +35,11 @@ class _SettingsPageState extends State<SettingsPage2> {
         });
 
         AuthResult r = await AuthClient.getCustomData(_currentUser!.id);
-        var value = AuthClient.currentUser?.customData[0]["key"];
-        print("customData===${AuthClient.currentUser?.customData}");
-        print("object==$value");
+        if (r.code == 200) {
+          print("_getCustomData: ok");
+        } else {
+          print("_getCustomData: ${r.message}");
+        }
       }
     } else {
       print("_getCurrentUser: ${result.message}");
@@ -84,7 +87,7 @@ class _SettingsPageState extends State<SettingsPage2> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const MembershipPage()),
+                          builder: (context) => MembershipPage()),
                     );
                   }),
               //SettingItem(title: '我的优惠券'),
@@ -105,7 +108,7 @@ class _SettingsPageState extends State<SettingsPage2> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => PrivacySettingsPage()),
+                        builder: (context) => const PrivacySettingsPage()),
                   );
                 },
               ),
@@ -125,7 +128,7 @@ class _SettingsPageState extends State<SettingsPage2> {
               SizedBox(
                 height: 16.0,
               ),
-              Text('made with ❤️️ by jeff',
+              Text('made with ❤️️ by jeff-studio',
                   style: TextStyle(color: Colors.grey)),
             ],
           ),
@@ -171,12 +174,6 @@ class AccountSettingItem extends StatelessWidget {
 
   const AccountSettingItem({super.key, this.onTap, required this.currentUser});
 
-  String obscurePhoneNumber(String str) {
-    var start = str.length ~/ 2 - 2;
-    var end = start + 4;
-    return str.substring(0, start) + '****' + str.substring(end);
-  }
-
   @override
   Widget build(BuildContext context) {
     String displayName = AppLocalizations.of(context).accountsNotLoggedIn;
@@ -213,7 +210,7 @@ class PrivacySettingsPage extends StatelessWidget {
         title: Text(AppLocalizations.of(context).titlePrivacySettings),
       ),
       body: ListView(
-        children: [
+        children: const [
           SettingItem(title: '系统权限管理'),
           SettingItem(title: '隐私政策'),
           SettingItem(title: '第三方信息共享清单'),

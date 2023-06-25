@@ -1,8 +1,12 @@
+import 'package:authing_sdk/client.dart';
+import 'package:authing_sdk/result.dart';
+import 'package:authing_sdk/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:xyj_helper/utils.dart';
 
 class MembershipPage extends StatefulWidget {
   const MembershipPage({super.key});
@@ -14,6 +18,8 @@ class MembershipPage extends StatefulWidget {
 class _MembershipPageState extends State<MembershipPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  User? _currentUser;
+  List<dynamic>? _customData;
 
   final List<Map<String, String>> vipPaymentOptions = [
     {
@@ -62,10 +68,35 @@ class _MembershipPageState extends State<MembershipPage>
     }
   ];
 
+  _getCurrentUser() async {
+    AuthResult result = await AuthClient.getCurrentUser();
+    if (result.code == 200) {
+      if (result.user != null) {
+        print("_getCurrentUser: ok");
+        setState(() {
+          _currentUser = result.user;
+        });
+
+        AuthResult r = await AuthClient.getCustomData(_currentUser!.id);
+        if (r.code == 200) {
+          print("_getCustomData: ok");
+          setState(() {
+            _customData = _currentUser?.customData;
+          });
+        } else {
+          print("_getCustomData: ${r.message}");
+        }
+      }
+    } else {
+      print("_getCurrentUser: ${result.message}");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(vsync: this, length: 2);
+    _getCurrentUser();
+    _tabController = TabController(vsync: this, length: 2);
   }
 
   @override
@@ -76,6 +107,7 @@ class _MembershipPageState extends State<MembershipPage>
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("=====build=====");
     final List<String> vipBenefits = [
       AppLocalizations.of(context).adFree,
       AppLocalizations.of(context).autoCheckin,
@@ -91,9 +123,15 @@ class _MembershipPageState extends State<MembershipPage>
       AppLocalizations.of(context).priorityAccess,
     ];
 
-    var renewalDateString = "-";
-    var userName = "张三";
-    var isLoggedIn = false;
+    var renewalDateString =
+        getNextRenewalTimeString(_customData) ?? "-";
+    var renewalDate = getNextRenewalTime(_customData) ?? 0;
+    var userName = _currentUser != null
+        ? obscurePhoneNumber(_currentUser!.phone)
+        : AppLocalizations.of(context).accountsNotLoggedIn;
+    var isLoggedIn = _currentUser != null;
+    var vipExpired = isVipExpired(renewalDate);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).joinVIP),
@@ -101,7 +139,7 @@ class _MembershipPageState extends State<MembershipPage>
       body: Column(
         children: [
           Container(
-            margin: EdgeInsets.all(20.0),
+            margin: const EdgeInsets.all(20.0),
             child: Row(
               children: [
                 const Icon(
@@ -123,7 +161,9 @@ class _MembershipPageState extends State<MembershipPage>
                     Text(
                         AppLocalizations.of(context).renewalDate +
                             renewalDateString,
-                        style: TextStyle(fontSize: 16.0)),
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            color: vipExpired ? Colors.red : Colors.black45)),
                   ],
                 ),
               ],
