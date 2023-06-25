@@ -47,6 +47,7 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
   final List<Account> _accountsToExecute = List.empty(growable: true);
 
   User? _currentUser;
+  List<dynamic>? _customData;
 
   _BrowserTaskPageState();
 
@@ -110,9 +111,14 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
         });
 
         AuthResult r = await AuthClient.getCustomData(_currentUser!.id);
-        var value = AuthClient.currentUser?.customData[0]["key"];
-        print("customData===${AuthClient.currentUser?.customData}");
-        print("object==$value");
+        if (r.code == 200) {
+          print("_getCustomData: ok");
+          setState(() {
+            _customData = _currentUser?.customData;
+          });
+        } else {
+          print("_getCustomData: ${r.message}");
+        }
       }
     } else {
       print("_getCurrentUser: ${result.message}");
@@ -224,6 +230,16 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
   }
 
   Future<void> startAutoTask(ExecuteType? type, ExecuteScope? scope) async {
+
+    var renewalDate = getNextRenewalTime(_customData) ?? 0;
+    var vipExpired = isVipExpired(renewalDate);
+    if (vipExpired) {
+      Fluttertoast.showToast(
+          msg: AppLocalizations.of(context).vipExpired,
+      );
+      return;
+    }
+
     _accountsToExecute.clear();
     if (scope == ExecuteScope.one) {
       if (widget.accountParameter != null) {

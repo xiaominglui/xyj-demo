@@ -77,6 +77,7 @@ class AppLocalizations {
       'autoLogin': 'Auto-login',
       'vipCustomerService': 'VIP Customer Service',
       'priorityAccess': 'Priority access to new features',
+      'vipExpired': 'VIP expired，profession features has been disabled',
     },
     'zh': {
       'hello': '你好世界',
@@ -145,6 +146,7 @@ class AppLocalizations {
       'autoLogin': ' 登录助手',
       'vipCustomerService': 'VIP客服',
       'priorityAccess': '抢先体验',
+      'vipExpired': '会员已过期，高级功能暂停使用',
     },
   };
 
@@ -413,5 +415,9 @@ class AppLocalizations {
 
   String get priorityAccess {
     return _localizedValues[locale.languageCode]!['priorityAccess']!;
+  }
+
+  String get vipExpired {
+    return _localizedValues[locale.languageCode]!['vipExpired']!;
   }
 }
