@@ -6,6 +6,7 @@ import 'package:xyj_helper/l10n/l10n.dart';
 import 'package:xyj_helper/membership_page.dart';
 import 'package:xyj_helper/utils.dart';
 
+import 'appcenter_test.dart';
 import 'user_info_page.dart';
 import 'user_pages.dart';
 
@@ -86,8 +87,7 @@ class _SettingsPageState extends State<SettingsPage2> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => MembershipPage()),
+                      MaterialPageRoute(builder: (context) => MembershipPage()),
                     );
                   }),
               //SettingItem(title: '我的优惠券'),
@@ -115,7 +115,16 @@ class _SettingsPageState extends State<SettingsPage2> {
               SettingItem(
                   title: AppLocalizations.of(context).titleHelpAndFeedback),
               SettingItem(title: AppLocalizations.of(context).titleShare),
-              SettingItem(title: AppLocalizations.of(context).titleContactUs),
+              SettingItem(
+                title: AppLocalizations.of(context).titleContactUs,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>  AppCenterTest()),
+                  );
+                },
+              ),
             ],
           ),
           SizedBox(
