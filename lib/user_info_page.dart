@@ -1,3 +1,5 @@
+import 'package:authing_sdk/client.dart';
+import 'package:authing_sdk/result.dart';
 import 'package:flutter/material.dart';
 
 class UserInfoPage extends StatefulWidget {
@@ -57,11 +59,36 @@ class _UserInfoPageState extends State<UserInfoPage> {
             trailing: Text(phoneNumber),
           ),
           TextButton(
-              style: TextButton.styleFrom(
-                  textStyle: TextStyle(
-                color: Colors.red,
-              )),
-              onPressed: () {},
+              style: TextButton.styleFrom(textStyle: TextStyle()),
+              onPressed: () async {
+                // show a dialog with cancel and confirm button
+
+                await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('确认退出？'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('取消'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                          TextButton(
+                            child: Text('确定'),
+                            onPressed: () async {
+                              AuthResult result = await AuthClient.logout();
+                              var code = result.code;
+                              print("logout: $code");
+                              Navigator.pop(context);
+                              setState(() {});
+                            },
+                          )
+                        ],
+                      );
+                    });
+              },
               child: Text('退出登录'))
         ],
       ),
