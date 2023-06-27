@@ -2,9 +2,11 @@ import 'package:authing_sdk/client.dart';
 import 'package:authing_sdk/result.dart';
 import 'package:authing_sdk/user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_appcenter_bundle_updated_to_null_safety/flutter_appcenter_bundle_updated_to_null_safety.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
 import 'package:xyj_helper/membership_page.dart';
 import 'package:xyj_helper/utils.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'appcenter_test.dart';
 import 'user_info_page.dart';
@@ -120,8 +122,7 @@ class _SettingsPageState extends State<SettingsPage2> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) =>  AppCenterTest()),
+                    MaterialPageRoute(builder: (context) => AppCenterTest()),
                   );
                 },
               ),
@@ -130,16 +131,34 @@ class _SettingsPageState extends State<SettingsPage2> {
           SizedBox(
             height: 16.0,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text('version: 1.0.0 ', style: TextStyle(color: Colors.grey)),
-              SizedBox(
-                height: 16.0,
-              ),
-              Text('made with ❤️️ by jeff-studio',
-                  style: TextStyle(color: Colors.grey)),
-            ],
+          FutureBuilder(
+            future: PackageInfo.fromPlatform(),
+            builder: (_, AsyncSnapshot<PackageInfo> snapshot) {
+              if (snapshot.hasData) {
+                final packageInfo = snapshot.data!;
+
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        print('manual update checking...');
+                        await AppCenter.checkForUpdateAsync();
+                      },
+                      child: Text('version: ${packageInfo.version}',
+                          style: TextStyle(color: Colors.grey)),
+                    ),
+                    SizedBox(
+                      height: 16.0,
+                    ),
+                    Text('made with ❤️️ by jeff-studio',
+                        style: TextStyle(color: Colors.grey)),
+                  ],
+                );
+              }
+
+              return const CircularProgressIndicator.adaptive();
+            },
           ),
         ],
       ),
