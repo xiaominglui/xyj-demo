@@ -82,7 +82,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                               var code = result.code;
                               print("logout: $code");
                               Navigator.pop(context);
-                              setState(() {});
+                              Navigator.pop(context);
                             },
                           )
                         ],

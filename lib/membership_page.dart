@@ -85,10 +85,20 @@ class _MembershipPageState extends State<MembershipPage>
           });
         } else {
           print("_getCustomData: ${r.message}");
+          setState(() {
+            _customData = null;
+          });
         }
+      } else {
+        setState(() {
+          _currentUser = null;
+        });
       }
     } else {
       print("_getCurrentUser: ${result.message}");
+      setState(() {
+        _currentUser = null;
+      });
     }
   }
 

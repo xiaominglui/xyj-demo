@@ -64,7 +64,7 @@ class AppLocalizations {
       'loginSuccess': 'Login success',
       'passwordResetSuccess': 'Password reset success',
       'twoPasswordsDoNotMatch': 'The two passwords entered do not match',
-      'joinVIP': 'Join VIP',
+      'joinVIP': 'Join VIP, free 7 days for newbies',
       'renewalDate': 'Renewal Date: ',
       'titleNotLoggedIn': 'Not logged in',
       'titlePrivacySettings': 'Privacy Settings',
@@ -78,6 +78,7 @@ class AppLocalizations {
       'vipCustomerService': 'VIP Customer Service',
       'priorityAccess': 'Priority access to new features',
       'vipExpired': 'VIP expired，profession features has been disabled',
+      'errorOccurred': 'Error occurred, retry later',
     },
     'zh': {
       'hello': '你好世界',
@@ -133,7 +134,7 @@ class AppLocalizations {
       'loginSuccess': '登录成功...',
       'passwordResetSuccess': '密码重置成功...',
       'twoPasswordsDoNotMatch': '两次输入的密码不一致',
-      'joinVIP': '开通VIP会员',
+      'joinVIP': '开通VIP会员，新用户免费体验7天',
       'renewalDate': '会员有效期： ',
       'titleNotLoggedIn': '未登录',
       'titlePrivacySettings': '隐私设置',
@@ -147,6 +148,7 @@ class AppLocalizations {
       'vipCustomerService': 'VIP客服',
       'priorityAccess': '抢先体验',
       'vipExpired': '会员已过期，高级功能暂停使用',
+      'errorOccurred': '未登录或网络错误',
     },
   };
 
@@ -419,5 +421,9 @@ class AppLocalizations {
 
   String get vipExpired {
     return _localizedValues[locale.languageCode]!['vipExpired']!;
+  }
+
+  String get errorOccurred {
+    return _localizedValues[locale.languageCode]!['errorOccurred']!;
   }
 }

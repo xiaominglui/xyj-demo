@@ -3,6 +3,7 @@ import 'package:authing_sdk/result.dart';
 import 'package:authing_sdk/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_appcenter_bundle_updated_to_null_safety/flutter_appcenter_bundle_updated_to_null_safety.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
 import 'package:xyj_helper/membership_page.dart';
 import 'package:xyj_helper/utils.dart';
@@ -25,7 +26,6 @@ class _SettingsPageState extends State<SettingsPage2> {
   initState() {
     super.initState();
     _getCurrentUser();
-    _getCurrentUserRes();
   }
 
   _getCurrentUser() async {
@@ -46,121 +46,131 @@ class _SettingsPageState extends State<SettingsPage2> {
       }
     } else {
       print("_getCurrentUser: ${result.message}");
+      setState(() {
+        _currentUser = null;
+      });
     }
-  }
-
-  _getCurrentUserRes() async {
-    Map result = await AuthClient.listAuthorizedResources("xyj_helper");
-    print(result);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).settings),
-      ),
-      body: ListView(
-        children: [
-          SettingGroup(settings: [
-            AccountSettingItem(
-              currentUser: _currentUser,
-              onTap: () {
-                if (_currentUser != null) {
-                  print("logged in");
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => UserInfoPage()),
-                  );
-                } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SimpleSMSLoginPage()),
-                  );
-                }
-              },
+    return VisibilityDetector(
+      key: Key('settings'),
+      onVisibilityChanged: (visibilityInfo) {
+        if (visibilityInfo.visibleFraction == 1.0) {
+          print('settings Visible');
+          _getCurrentUser();
+        } else {
+          print('settings Invisible');
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context).settings),
+        ),
+        body: ListView(
+          children: [
+            SettingGroup(settings: [
+              AccountSettingItem(
+                currentUser: _currentUser,
+                onTap: () {
+                  if (_currentUser != null) {
+                    print("logged in");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => UserInfoPage()),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SimpleSMSLoginPage()),
+                    );
+                  }
+                },
+              ),
+            ]),
+            SettingGroup(
+              settings: [
+                SettingItem(
+                    title: AppLocalizations.of(context).joinVIP,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MembershipPage()),
+                      );
+                    }),
+                //SettingItem(title: '我的优惠券'),
+                //SettingItem(title: '邀请与兑奖'),
+              ],
             ),
-          ]),
-          SettingGroup(
-            settings: [
-              SettingItem(
-                  title: AppLocalizations.of(context).joinVIP,
+            SettingGroup(
+              settings: [
+                SettingItem(
+                    title: AppLocalizations.of(context).titleBackupAndRestore),
+              ],
+            ),
+            SettingGroup(
+              settings: [
+                SettingItem(
+                  title: AppLocalizations.of(context).titlePrivacySettings,
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MembershipPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const PrivacySettingsPage()),
                     );
-                  }),
-              //SettingItem(title: '我的优惠券'),
-              //SettingItem(title: '邀请与兑奖'),
-            ],
-          ),
-          SettingGroup(
-            settings: [
-              SettingItem(
-                  title: AppLocalizations.of(context).titleBackupAndRestore),
-            ],
-          ),
-          SettingGroup(
-            settings: [
-              SettingItem(
-                title: AppLocalizations.of(context).titlePrivacySettings,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const PrivacySettingsPage()),
-                  );
-                },
-              ),
-              SettingItem(
-                  title: AppLocalizations.of(context).titleHelpAndFeedback),
-              SettingItem(title: AppLocalizations.of(context).titleShare),
-              SettingItem(
-                title: AppLocalizations.of(context).titleContactUs,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AppCenterTest()),
-                  );
-                },
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 16.0,
-          ),
-          FutureBuilder(
-            future: PackageInfo.fromPlatform(),
-            builder: (_, AsyncSnapshot<PackageInfo> snapshot) {
-              if (snapshot.hasData) {
-                final packageInfo = snapshot.data!;
+                  },
+                ),
+                SettingItem(
+                    title: AppLocalizations.of(context).titleHelpAndFeedback),
+                SettingItem(title: AppLocalizations.of(context).titleShare),
+                SettingItem(
+                  title: AppLocalizations.of(context).titleContactUs,
+                  // onTap: () {
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(builder: (context) => AppCenterTest()),
+                  //   );
+                  // },
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 16.0,
+            ),
+            FutureBuilder(
+              future: PackageInfo.fromPlatform(),
+              builder: (_, AsyncSnapshot<PackageInfo> snapshot) {
+                if (snapshot.hasData) {
+                  final packageInfo = snapshot.data!;
 
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () async {
-                        print('manual update checking...');
-                        await AppCenter.checkForUpdateAsync();
-                      },
-                      child: Text('version: ${packageInfo.version}',
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          print('manual update checking...');
+                          await AppCenter.checkForUpdateAsync();
+                        },
+                        child: Text('version: ${packageInfo.version}',
+                            style: TextStyle(color: Colors.grey)),
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      const Text('made with ❤️️ by jeff-studio',
                           style: TextStyle(color: Colors.grey)),
-                    ),
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    Text('made with ❤️️ by jeff-studio',
-                        style: TextStyle(color: Colors.grey)),
-                  ],
-                );
-              }
+                    ],
+                  );
+                }
 
-              return const CircularProgressIndicator.adaptive();
-            },
-          ),
-        ],
+                return const CircularProgressIndicator.adaptive();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

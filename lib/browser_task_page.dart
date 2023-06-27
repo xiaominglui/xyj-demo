@@ -3,8 +3,10 @@ import 'package:authing_sdk/result.dart';
 import 'package:authing_sdk/user.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_appcenter_bundle_updated_to_null_safety/flutter_appcenter_bundle_updated_to_null_safety.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 import 'package:xyj_helper/account_selector_page.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -45,9 +47,6 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
   ExecuteScope? _taskScope = ExecuteScope.notLoggedInOnly;
   ExecuteType? _taskType;
   final List<Account> _accountsToExecute = List.empty(growable: true);
-
-  User? _currentUser;
-  List<dynamic>? _customData;
 
   _BrowserTaskPageState();
 
@@ -101,35 +100,9 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
       ''');
   }
 
-  _getCurrentUser() async {
-    AuthResult result = await AuthClient.getCurrentUser();
-    if (result.code == 200) {
-      if (result.user != null) {
-        print("_getCurrentUser: ok");
-        setState(() {
-          _currentUser = result.user;
-        });
-
-        AuthResult r = await AuthClient.getCustomData(_currentUser!.id);
-        if (r.code == 200) {
-          print("_getCustomData: ok");
-          setState(() {
-            _customData = _currentUser?.customData;
-          });
-        } else {
-          print("_getCustomData: ${r.message}");
-        }
-      }
-    } else {
-      print("_getCurrentUser: ${result.message}");
-    }
-  }
-
-
-    @override
+  @override
   void initState() {
     super.initState();
-    _getCurrentUser();
     print(
         "initState: $widget.autoStart===${widget.accountParameter}===$_taskType===${widget.taskType}");
     late final PlatformWebViewControllerCreationParams params;
@@ -230,80 +203,113 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
   }
 
   Future<void> startAutoTask(ExecuteType? type, ExecuteScope? scope) async {
+    AuthResult result = await AuthClient.getCurrentUser();
+    if (result.code == 200) {
+      if (result.user != null) {
+        AuthResult r = await AuthClient.getCustomData(result.user!.id);
+        if (r.code == 200) {
+          List<dynamic>? customData = result.user?.customData;
+          var renewalDate = getNextRenewalTime(customData) ?? 0;
+          var renewalDateString = getNextRenewalTimeString(customData) ?? "-";
+          print(
+              "startAutoTask, logged: ${result.user != null ? "yes" : "no"}, $renewalDateString, ${customData != null ? "yes" : "no"}");
+          var vipExpired = isVipExpired(renewalDate);
+          AppCenter.trackEventAsync('startAutoTask', <String, String>{
+            'renewalDate': 'v[$renewalDateString]',
+            'userId': result.user?.id ?? '-1',
+          });
+          if (vipExpired) {
+            Fluttertoast.showToast(
+              msg: AppLocalizations.of(context).vipExpired,
+            );
+            return;
+          }
 
-    var renewalDate = getNextRenewalTime(_customData) ?? 0;
-    var vipExpired = isVipExpired(renewalDate);
-    if (vipExpired) {
-      Fluttertoast.showToast(
-          msg: AppLocalizations.of(context).vipExpired,
-      );
-      return;
-    }
+          _accountsToExecute.clear();
+          if (scope == ExecuteScope.one) {
+            if (widget.accountParameter != null) {
+              _accountsToExecute.add(widget.accountParameter!);
+            }
+          } else if (scope == ExecuteScope.notLoggedInOnly) {
+            var notLoggedInAccounts = _accountProvider.accounts
+                .where((a) => !isLoggedToday(a))
+                .toList();
+            _accountsToExecute.addAll(notLoggedInAccounts);
+          } else if (scope == ExecuteScope.all) {
+            var allAccounts = _accountProvider.accounts;
+            _accountsToExecute.addAll(allAccounts);
+          }
 
-    _accountsToExecute.clear();
-    if (scope == ExecuteScope.one) {
-      if (widget.accountParameter != null) {
-        _accountsToExecute.add(widget.accountParameter!);
-      }
-    } else if (scope == ExecuteScope.notLoggedInOnly) {
-      var notLoggedInAccounts =
-          _accountProvider.accounts.where((a) => !isLoggedToday(a)).toList();
-      _accountsToExecute.addAll(notLoggedInAccounts);
-    } else if (scope == ExecuteScope.all) {
-      var allAccounts = _accountProvider.accounts;
-      _accountsToExecute.addAll(allAccounts);
-    }
+          var length = _accountsToExecute.length;
+          print("autoTask===$length===[$type]@$scope");
 
-    var length = _accountsToExecute.length;
-    print("autoTask===$length===[$type]@$scope");
+          if (length > 0) {
+            if (type == ExecuteType.login && length > 1) {
+              print(
+                  "autoTask === multiple accounts can not login at the same time now");
+              Fluttertoast.showToast(
+                  msg: AppLocalizations.of(context).tooManyAccountsToLogIn,
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 2,
+                  backgroundColor: Colors.blue,
+                  textColor: Colors.white,
+                  fontSize: 16.0);
+            } else {
+              setState(() {
+                _isTaskRunning = true;
+                _isManualStop = false;
+              });
 
-    if (length > 0) {
-      if (type == ExecuteType.login && length > 1) {
-        print(
-            "autoTask === multiple accounts can not login at the same time now");
-        Fluttertoast.showToast(
-            msg: AppLocalizations.of(context).tooManyAccountsToLogIn,
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.blue,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      } else {
-        setState(() {
-          _isTaskRunning = true;
-          _isManualStop = false;
-        });
+              _processedAccountIndexes.clear();
+              _completers.clear();
 
-        _processedAccountIndexes.clear();
-        _completers.clear();
+              for (int i = 0; i < length && !_isManualStop; i++) {
+                _currentAccountIndex = i;
+                print("autoTask===$i===$_currentAccountIndex");
+                await Future.delayed(const Duration(seconds: 3));
+                await _loginWithAccount(_accountsToExecute[i]);
+                print("autoTask waiting===$_currentAccountIndex");
+                _completers[i] = Completer<void>();
+                _waitForPageFinishedOrTimeout(i, const Duration(seconds: 10));
+                await _accountProcessedController.stream.first;
+              }
 
-        for (int i = 0; i < length && !_isManualStop; i++) {
-          _currentAccountIndex = i;
-          print("autoTask===$i===$_currentAccountIndex");
-          await Future.delayed(const Duration(seconds: 3));
-          await _loginWithAccount(_accountsToExecute[i]);
-          print("autoTask waiting===$_currentAccountIndex");
-          _completers[i] = Completer<void>();
-          _waitForPageFinishedOrTimeout(i, const Duration(seconds: 10));
-          await _accountProcessedController.stream.first;
+              setState(() {
+                _isTaskRunning = false;
+              });
+            }
+          } else {
+            print("autoTask === no account need to process");
+            Fluttertoast.showToast(
+                msg: AppLocalizations.of(context).noAccountsNeedToLogInToday,
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 2,
+                backgroundColor: Colors.blue,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          }
+        } else {
+          _toastRetry();
         }
-
-        setState(() {
-          _isTaskRunning = false;
-        });
+      } else {
+        _toastRetry();
       }
     } else {
-      print("autoTask === no account need to process");
-      Fluttertoast.showToast(
-          msg: AppLocalizations.of(context).noAccountsNeedToLogInToday,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.blue,
-          textColor: Colors.white,
-          fontSize: 16.0);
+      _toastRetry();
     }
+  }
+
+  void _toastRetry() {
+    Fluttertoast.showToast(
+        msg: AppLocalizations.of(context).errorOccurred,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: Colors.blue,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 
   Future<void> _loginWithAccount(Account account) async {
@@ -326,26 +332,35 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
   @override
   Widget build(BuildContext context) {
     _accountProvider = Provider.of<AccountProvider>(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).autoTask),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.auto_mode),
-            onPressed: _showBottomSheet,
-            tooltip: AppLocalizations.of(context).composeAutoTask,
+    return VisibilityDetector(
+        key: Key('browser_task'),
+        onVisibilityChanged: (visibilityInfo) {
+          if (visibilityInfo.visibleFraction == 1.0) {
+            print('browser_task Visible');
+          } else {
+            print('browser_task Invisible');
+          }
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(AppLocalizations.of(context).autoTask),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.auto_mode),
+                onPressed: _showBottomSheet,
+                tooltip: AppLocalizations.of(context).composeAutoTask,
+              ),
+            ],
           ),
-        ],
-      ),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            WebViewWidget(controller: _webViewController),
-            if (_isTaskRunning) _buildAutoTaskOverlay(),
-          ],
-        ),
-      ),
-    );
+          body: SafeArea(
+            child: Stack(
+              children: [
+                WebViewWidget(controller: _webViewController),
+                if (_isTaskRunning) _buildAutoTaskOverlay(),
+              ],
+            ),
+          ),
+        ));
   }
 
   void _showBottomSheet() {
