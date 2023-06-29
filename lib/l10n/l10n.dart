@@ -79,6 +79,11 @@ class AppLocalizations {
       'priorityAccess': 'Priority access to new features',
       'vipExpired': 'VIP expired，profession features has been disabled',
       'errorOccurred': 'Error occurred, retry later',
+      'privacyPolicy': 'Privacy Policy',
+      'andString': 'and',
+      'userAgreement': 'User Agreement',
+      'privacyPolicyPrefix': "I've read and agree to the",
+      'privacyPolicySuffix': '. An unregistered mobile number that has passed verification will automatically register and create an account',
     },
     'zh': {
       'hello': '你好世界',
@@ -149,6 +154,12 @@ class AppLocalizations {
       'priorityAccess': '抢先体验',
       'vipExpired': '会员已过期，高级功能暂停使用',
       'errorOccurred': '未登录或网络错误',
+      'privacyPolicy': '《隐私政策》',
+      'andString': '及',
+      'userAgreement': '《用户协议》',
+      'privacyPolicyPrefix': '我已阅读并同意',
+      'privacyPolicySuffix': '，未注册的手机号验证成功后将自动注册创建帐号',
+
     },
   };
 
@@ -425,5 +436,25 @@ class AppLocalizations {
 
   String get errorOccurred {
     return _localizedValues[locale.languageCode]!['errorOccurred']!;
+  }
+
+  String get privacyPolicy {
+    return _localizedValues[locale.languageCode]!['privacyPolicy']!;
+  }
+
+  String get andString {
+    return _localizedValues[locale.languageCode]!['andString']!;
+  }
+
+  String get userAgreement {
+    return _localizedValues[locale.languageCode]!['userAgreement']!;
+  }
+
+  String get privacyPolicyPrefix {
+    return _localizedValues[locale.languageCode]!['privacyPolicyPrefix']!;
+  }
+
+  String get privacyPolicySuffix {
+    return _localizedValues[locale.languageCode]!['privacyPolicySuffix']!;
   }
 }

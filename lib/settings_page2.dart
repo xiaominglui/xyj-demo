@@ -9,7 +9,6 @@ import 'package:xyj_helper/membership_page.dart';
 import 'package:xyj_helper/utils.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import 'appcenter_test.dart';
 import 'user_info_page.dart';
 import 'user_pages.dart';
 
@@ -225,6 +224,7 @@ class AccountSettingItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            currentUser != null ? Image.network(currentUser!.photo, height: 96) :
             const Icon(
               Icons.account_circle,
               size: 96,

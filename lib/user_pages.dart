@@ -243,22 +243,23 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
                       children: [
                         RichText(
                           text: TextSpan(
-                            text: "I've read and agree to the ",
+                            text: AppLocalizations.of(context).privacyPolicyPrefix,
                             style: TextStyle(color: Colors.black54),
                             children: [
                               TextSpan(
-                                text: "User Agreement",
+                                text: AppLocalizations.of(context).userAgreement,
                                 style: TextStyle(color: Colors.blue),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () => print('Tap Here onTap'),
                               ),
-                              TextSpan(text: " and "),
+                              TextSpan(text: AppLocalizations.of(context).andString),
                               TextSpan(
-                                text: "Privacy Policy",
+                                text: AppLocalizations.of(context).privacyPolicy,
                                 style: TextStyle(color: Colors.blue),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () => print('Tap Here onTap'),
                               ),
+                              TextSpan(text: AppLocalizations.of(context).privacyPolicySuffix),
                             ],
                           ),
                         ),
