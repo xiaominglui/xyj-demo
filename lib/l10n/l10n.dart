@@ -84,6 +84,7 @@ class AppLocalizations {
       'userAgreement': 'User Agreement',
       'privacyPolicyPrefix': "I've read and agree to the",
       'privacyPolicySuffix': '. An unregistered mobile number that has passed verification will automatically register and create an account',
+      'feedbackToast': 'Please contact the customer service "jeff-studio" on Wechat to provide feedback or for consultations',
     },
     'zh': {
       'hello': '你好世界',
@@ -159,7 +160,7 @@ class AppLocalizations {
       'userAgreement': '《用户协议》',
       'privacyPolicyPrefix': '我已阅读并同意',
       'privacyPolicySuffix': '，未注册的手机号验证成功后将自动注册创建帐号',
-
+      'feedbackToast': '请微信联系客服"jeff-studio"反馈或咨询',
     },
   };
 
@@ -456,5 +457,9 @@ class AppLocalizations {
 
   String get privacyPolicySuffix {
     return _localizedValues[locale.languageCode]!['privacyPolicySuffix']!;
+  }
+
+  String get feedbackToast {
+    return _localizedValues[locale.languageCode]!['feedbackToast']!;
   }
 }

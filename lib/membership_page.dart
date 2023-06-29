@@ -24,23 +24,23 @@ class _MembershipPageState extends State<MembershipPage>
   final List<Map<String, String>> vipPaymentOptions = [
     {
       'name': '包月',
-      'description': '限时早鸟优惠',
+      'description': '限时内测优惠',
       'promotionalPrice': '¥28.9',
-      'price': '￥39.9',
+      'price': '￥59.9',
       'discount': '仅需￥0.96/天'
     },
     {
       'name': '包半年',
       'description': '限时早鸟优惠',
       'promotionalPrice': '¥158',
-      'price': '¥239.4',
+      'price': '¥299.9',
       'discount': '仅需￥0.87/天',
     },
     {
       'name': '包年',
       'description': '限时早鸟优惠',
       'promotionalPrice': '¥299',
-      'price': '¥499',
+      'price': '¥599.9',
       'discount': '仅需￥0.82/天',
     },
   ];
@@ -48,22 +48,22 @@ class _MembershipPageState extends State<MembershipPage>
     {
       'name': '包半年',
       'description': '低至3.9折',
-      'promotionalPrice': '¥155',
-      'price': '¥399',
-      'discount': '仅需￥0.85/天',
+      'promotionalPrice': '¥258',
+      'price': '¥399.9',
+      'discount': '仅需￥1.43/天',
     },
     {
       'name': '包年',
       'description': '低至3.3折',
-      'promotionalPrice': '¥199',
-      'price': '¥599',
-      'discount': '仅需￥0.55/天',
+      'promotionalPrice': '¥399',
+      'price': '¥699',
+      'discount': '仅需￥1.09/天',
     },
     {
       'name': '一次性买断',
       'description': '终身免费更新、享用所有特权',
-      'promotionalPrice': '¥699',
-      'price': '¥899',
+      'promotionalPrice': '¥799',
+      'price': '¥999',
       'discount': '限时开放',
     }
   ];

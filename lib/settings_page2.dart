@@ -3,6 +3,7 @@ import 'package:authing_sdk/result.dart';
 import 'package:authing_sdk/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_appcenter_bundle_updated_to_null_safety/flutter_appcenter_bundle_updated_to_null_safety.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
 import 'package:xyj_helper/membership_page.dart';
@@ -75,10 +76,33 @@ class _SettingsPageState extends State<SettingsPage2> {
                 onTap: () {
                   if (_currentUser != null) {
                     print("logged in");
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => UserInfoPage()),
-                    );
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text('确认退出？'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('取消'),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              TextButton(
+                                child: Text('确定'),
+                                onPressed: () async {
+                                  AuthResult result = await AuthClient.logout();
+                                  var code = result.code;
+                                  print("logout: $code");
+                                  Navigator.pop(context);
+                                  setState(() {
+                                    _currentUser = null;
+                                  });
+                                },
+                              )
+                            ],
+                          );
+                        });
                   } else {
                     Navigator.push(
                       context,
@@ -104,12 +128,12 @@ class _SettingsPageState extends State<SettingsPage2> {
                 //SettingItem(title: '邀请与兑奖'),
               ],
             ),
-            SettingGroup(
-              settings: [
-                SettingItem(
-                    title: AppLocalizations.of(context).titleBackupAndRestore),
-              ],
-            ),
+            // SettingGroup(
+            //   settings: [
+            //     SettingItem(
+            //         title: AppLocalizations.of(context).titleBackupAndRestore),
+            //   ],
+            // ),
             SettingGroup(
               settings: [
                 SettingItem(
@@ -123,16 +147,21 @@ class _SettingsPageState extends State<SettingsPage2> {
                   },
                 ),
                 SettingItem(
-                    title: AppLocalizations.of(context).titleHelpAndFeedback),
+                  title: AppLocalizations.of(context).titleHelpAndFeedback,
+                  onTap: () {
+                    Fluttertoast.showToast(
+                      msg: AppLocalizations.of(context).feedbackToast,
+                    );
+                  },
+                ),
                 SettingItem(title: AppLocalizations.of(context).titleShare),
                 SettingItem(
                   title: AppLocalizations.of(context).titleContactUs,
-                  // onTap: () {
-                  //   Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(builder: (context) => AppCenterTest()),
-                  //   );
-                  // },
+                  onTap: () {
+                    Fluttertoast.showToast(
+                      msg: AppLocalizations.of(context).feedbackToast,
+                    );
+                  },
                 ),
               ],
             ),
@@ -224,12 +253,13 @@ class AccountSettingItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            currentUser != null ? Image.network(currentUser!.photo, height: 96) :
-            const Icon(
-              Icons.account_circle,
-              size: 96,
-              color: Colors.grey,
-            ),
+            currentUser != null
+                ? Image.network(currentUser!.photo, height: 96)
+                : const Icon(
+                    Icons.account_circle,
+                    size: 96,
+                    color: Colors.grey,
+                  ),
             Text(displayName, style: const TextStyle(color: Colors.grey))
           ],
         ),
