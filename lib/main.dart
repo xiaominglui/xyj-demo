@@ -1,5 +1,5 @@
+import 'package:appcenter_bundle/appcenter_bundle.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_appcenter_bundle_updated_to_null_safety/flutter_appcenter_bundle_updated_to_null_safety.dart';
 import 'package:provider/provider.dart';
 import 'account_provider.dart';
 import 'app.dart';

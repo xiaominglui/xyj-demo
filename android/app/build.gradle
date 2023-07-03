@@ -65,10 +65,6 @@ android {
         appCenter {
             dimension "distribute"
         }
-
-        googlePlay {
-            dimension "distribute"
-        }
     }
 
     // This is likely needed, see https://github.com/flutter/flutter/issues/58247

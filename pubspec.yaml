@@ -50,7 +50,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   fluttertoast: ^8.2.1
   flutter_svg: ^2.0.5
-  flutter_appcenter_bundle_updated_to_null_safety: ^1.0.6
+  #flutter_appcenter_bundle_updated_to_null_safety: ^1.0.6
+  appcenter_bundle: ^1.0.3
+  package_info_plus: ^4.0.2
 
 dev_dependencies:
   flutter_test:
