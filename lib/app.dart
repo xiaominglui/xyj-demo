@@ -1,4 +1,5 @@
 import 'package:authing_sdk/authing.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -71,15 +72,36 @@ class _MainPageState extends State<MainPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Privacy Policy"),
-            content: Text("TBD"),
+            title: Text(AppLocalizations.of(context).welcomeDialogTitle),
+            content: RichText(
+              text: TextSpan(
+                text: AppLocalizations.of(context).welcomeDialogPrefix,
+                style: TextStyle(color: Colors.black54),
+                children: [
+                  TextSpan(
+                    text: AppLocalizations.of(context).userAgreement,
+                    style: TextStyle(color: Colors.blue),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => print('Tap Here onTap'),
+                  ),
+                  TextSpan(text: AppLocalizations.of(context).andString),
+                  TextSpan(
+                    text: AppLocalizations.of(context).privacyPolicy,
+                    style: TextStyle(color: Colors.blue),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => print('Tap Here onTap'),
+                  ),
+                  TextSpan(text: AppLocalizations.of(context).welcomeDialogSuffix),
+                ],
+              ),
+            ),
             actions: <Widget>[
               TextButton(
-                child: Text("取消"),
-                onPressed: () => _exitAppIfNeeded(),
+                child: Text(AppLocalizations.of(context).welcomeDialogNegativeButton),
+                onPressed: () => _exitAppIfNeeded(true),
               ),
               TextButton(
-                child: Text("同意"),
+                child: Text(AppLocalizations.of(context).welcomeDialogPositiveButton),
                 onPressed: () async {
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   await prefs.setBool('policy_confirmed', true);
@@ -92,8 +114,8 @@ class _MainPageState extends State<MainPage> {
         });
   }
 
-  void _exitAppIfNeeded() {
-    if (Navigator.canPop(context)) {
+  void _exitAppIfNeeded(bool forceExit) {
+    if (!forceExit && Navigator.canPop(context)) {
       Navigator.pop(context);
     } else {
       Future.delayed(Duration.zero, () {

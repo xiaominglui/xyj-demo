@@ -84,6 +84,11 @@ class AppLocalizations {
       'userAgreement': 'User Agreement',
       'privacyPolicyPrefix': "I've read and agree to the",
       'privacyPolicySuffix': '. An unregistered mobile number that has passed verification will automatically register and create an account',
+      'welcomeDialogPrefix': '欢迎使用信友助手\n我们将根据《信友助手用户使用协议》及《信友助手隐私政策》来帮助您了解我们在收集、使用、存储和共享您个人信息的情况以及您享受的相关权利。\n您可通过阅读完整的',
+      'welcomeDialogSuffix': '来了解详细信息。',
+      'welcomeDialogTitle': '用户协议与隐私政策提示',
+      'welcomeDialogNegativeButton': '不同意',
+      'welcomeDialogPositiveButton': '同意',
       'feedbackToast': 'Please contact the customer service "jeff-studio" on Wechat to provide feedback or for consultations',
     },
     'zh': {
@@ -160,6 +165,11 @@ class AppLocalizations {
       'userAgreement': '《用户协议》',
       'privacyPolicyPrefix': '我已阅读并同意',
       'privacyPolicySuffix': '，未注册的手机号验证成功后将自动注册创建帐号',
+      'welcomeDialogPrefix': '欢迎使用信友助手\n我们将根据《信友助手用户使用协议》及《信友助手隐私政策》来帮助您了解我们在收集、使用、存储和共享您个人信息的情况以及您享受的相关权利。\n您可通过阅读完整的',
+      'welcomeDialogSuffix': '来了解详细信息。',
+      'welcomeDialogTitle': '用户协议与隐私政策提示',
+      'welcomeDialogNegativeButton': '不同意',
+      'welcomeDialogPositiveButton': '同意并继续',
       'feedbackToast': '请微信联系客服"jeff-studio"反馈或咨询',
     },
   };
@@ -461,5 +471,25 @@ class AppLocalizations {
 
   String get feedbackToast {
     return _localizedValues[locale.languageCode]!['feedbackToast']!;
+  }
+
+  String get welcomeDialogPrefix {
+    return _localizedValues[locale.languageCode]!['welcomeDialogPrefix']!;
+  }
+
+  String get welcomeDialogSuffix {
+    return _localizedValues[locale.languageCode]!['welcomeDialogSuffix']!;
+  }
+
+  String get welcomeDialogTitle {
+    return _localizedValues[locale.languageCode]!['welcomeDialogTitle']!;
+  }
+
+  String get welcomeDialogNegativeButton {
+    return _localizedValues[locale.languageCode]!['welcomeDialogNegativeButton']!;
+  }
+
+  String get welcomeDialogPositiveButton {
+    return _localizedValues[locale.languageCode]!['welcomeDialogPositiveButton']!;
   }
 }
