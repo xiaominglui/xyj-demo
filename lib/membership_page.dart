@@ -133,8 +133,7 @@ class _MembershipPageState extends State<MembershipPage>
       AppLocalizations.of(context).priorityAccess,
     ];
 
-    var renewalDateString =
-        getNextRenewalTimeString(_customData) ?? "-";
+    var renewalDateString = getNextRenewalTimeString(_customData) ?? "-";
     var renewalDate = getNextRenewalTime(_customData) ?? 0;
     var userName = _currentUser != null
         ? obscurePhoneNumber(_currentUser!.phone)
@@ -247,6 +246,29 @@ class MembershipTab extends StatelessWidget {
     return Column(
       children: [
         BenefitsList(benefits: benefits),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(children: [
+            Icon(
+              Icons.support_agent_rounded,
+              color: Colors.blue,
+              size: 32.0,
+            ),
+            SizedBox(
+              width: 8.0,
+            ),
+            Column(children: [
+              Text(
+                "新注册用户免费体验7天ViP会员服务",
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                "会员随时退，无忧退。",
+                textAlign: TextAlign.center,
+              ),
+            ])
+          ]),
+        ),
         PaymentOptionsList(paymentOptions: paymentOptions),
       ],
     );
@@ -314,7 +336,7 @@ class PaymentOptionsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 220.0,
+      height: 260.0,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: paymentOptions.length,

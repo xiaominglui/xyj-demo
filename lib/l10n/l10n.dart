@@ -145,7 +145,7 @@ class AppLocalizations {
       'loginSuccess': '登录成功...',
       'passwordResetSuccess': '密码重置成功...',
       'twoPasswordsDoNotMatch': '两次输入的密码不一致',
-      'joinVIP': '开通VIP会员，新用户免费体验7天',
+      'joinVIP': '开通会员',
       'renewalDate': '会员有效期： ',
       'titleNotLoggedIn': '未登录',
       'titlePrivacySettings': '隐私设置',
