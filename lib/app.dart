@@ -1,7 +1,8 @@
 import 'package:authing_sdk/authing.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xyj_helper/account_list_page.dart';
-import 'package:xyj_helper/settings_page.dart';
 import 'package:xyj_helper/task_config.dart';
 import 'account.dart';
 import 'browser_task_page.dart';
@@ -34,6 +35,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
+
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -51,6 +54,52 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     Authing.init('644a98699d66f835f88d4bc8', '644a99927a5a5e9d1f42b4ad');
     super.initState();
+    _checkPolicyConfirmed();
+  }
+
+  Future<void> _checkPolicyConfirmed() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool _confirmed = (prefs.getBool('policy_confirmed') ?? false);
+
+    if (!_confirmed) {
+      _showPolicyDialog();
+    }
+  }
+
+  void _showPolicyDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Privacy Policy"),
+            content: Text("TBD"),
+            actions: <Widget>[
+              TextButton(
+                child: Text("取消"),
+                onPressed: () => _exitAppIfNeeded(),
+              ),
+              TextButton(
+                child: Text("同意"),
+                onPressed: () async {
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  await prefs.setBool('policy_confirmed', true);
+                  Navigator.of(context).pop();
+                  // Do something when user accepts
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void _exitAppIfNeeded() {
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    } else {
+      Future.delayed(Duration.zero, () {
+        SystemNavigator.pop();
+      });
+    }
   }
 
   void _onTap(int index) {
