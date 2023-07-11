@@ -1,9 +1,9 @@
-import 'package:appcenter_bundle/appcenter_bundle.dart';
 import 'package:authing_sdk/client.dart';
 import 'package:authing_sdk/result.dart';
 import 'package:authing_sdk/user.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_appcenter_bundle_updated_to_null_safety/flutter_appcenter_bundle_updated_to_null_safety.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:visibility_detector/visibility_detector.dart';
