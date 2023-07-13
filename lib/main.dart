@@ -12,6 +12,7 @@ void main() async {
     enableDistribute: true,
   );
   await AppCenter.configureDistributeDebugAsync(enabled: true);
+  await AppCenter.checkForUpdateAsync();
   runApp(
     ChangeNotifierProvider(
       create: (context) => AccountProvider(),
