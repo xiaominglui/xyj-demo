@@ -40,7 +40,8 @@ dependencies:
   sqflite: ^2.2.6
   path: ^1.8.2
   path_provider: ^2.0.14
-  file_picker: ^5.2.10
+  image_picker: ^1.0.1
+  image: ^4.0.17
   permission_handler: ^10.2.0
   authing_sdk: ^1.1.10
 
@@ -50,9 +51,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   fluttertoast: ^8.2.1
   flutter_svg: ^2.0.5
-  flutter_appcenter_bundle_updated_to_null_safety: ^1.0.6
-  #appcenter_bundle: ^1.0.3
-  package_info_plus: ^3.0.3
+  flutter_appcenter_bundle_updated_to_null_safety: ^1.0.8
+  package_info_plus: ^4.0.2
   shared_preferences: ^2.2.0
 
 dev_dependencies:

@@ -1,10 +1,13 @@
+import 'dart:io';
+
 import 'package:authing_sdk/client.dart';
 import 'package:authing_sdk/result.dart';
-import 'package:authing_sdk/user.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart' as image_picker;
+import 'package:image/image.dart' as image;
 import 'package:flutter/material.dart';
 import 'package:flutter_appcenter_bundle_updated_to_null_safety/flutter_appcenter_bundle_updated_to_null_safety.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:xyj_helper/account_selector_page.dart';
@@ -172,7 +175,7 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
       (controller.platform as AndroidWebViewController)
           .setMediaPlaybackRequiresUserGesture(false);
       (controller.platform as AndroidWebViewController)
-          .setOnShowFileSelector((params) => _showFileSelector(params));
+          .setOnShowFileSelector(_androidFilePicker);
       (controller.platform as AndroidWebViewController)
           .setOnPlatformPermissionRequest((request) async {
         debugPrint(
@@ -541,18 +544,29 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
     );
   }
 
-  Future<List<String>> _showFileSelector(FileSelectorParams params) async {
-    debugPrint("_showFileSelector");
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-    List<String> res = List.empty(growable: true);
-    if (result != null) {
-      debugPrint("_showFileSelector: $result");
-      result.files.forEach((element) {
-        if (element.path != null) {
-          res.add(element.path!);
-        }
-      });
+  Future<List<String>> _androidFilePicker(FileSelectorParams params) async {
+    if (params.acceptTypes.any((type) => true)) {
+      final picker = image_picker.ImagePicker();
+      final photo = await picker.pickImage(source: image_picker.ImageSource.gallery);
+
+      if (photo == null) {
+        return [];
+      }
+
+      final imageData = await photo.readAsBytes();
+      final decodedImage = image.decodeImage(imageData)!;
+      final scaledImage = image.copyResize(decodedImage, width: 500);
+      final jpg = image.encodeJpg(scaledImage, quality: 90);
+
+      final filePath = (await getTemporaryDirectory()).uri.resolve(
+        './image_${DateTime.now().microsecondsSinceEpoch}.jpg',
+      );
+      final file = await File.fromUri(filePath).create(recursive: true);
+      await file.writeAsBytes(jpg, flush: true);
+
+      return [file.uri.toString()];
     }
-    return res;
+
+    return [];
   }
 }
