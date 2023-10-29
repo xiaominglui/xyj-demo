@@ -47,6 +47,7 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
   final _completers = <int, Completer<void>>{};
   bool _isTaskRunning = false;
   bool _isManualStop = false;
+  bool _enableMembership = false;
   ExecuteScope? _taskScope = ExecuteScope.notLoggedInOnly;
   ExecuteType? _taskType;
   final List<Account> _accountsToExecute = List.empty(growable: true);
@@ -207,10 +208,10 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
 
   Future<void> startAutoTask(ExecuteType? type, ExecuteScope? scope) async {
     AuthResult result = await AuthClient.getCurrentUser();
-    if (result.code == 200) {
-      if (result.user != null) {
-        AuthResult r = await AuthClient.getCustomData(result.user!.id);
-        if (r.code == 200) {
+    if (!_enableMembership || result.code == 200) {
+      if (!_enableMembership || result.user != null) {
+        AuthResult r = await AuthClient.getCustomData(result.user?.id ?? '-1');
+        if (!_enableMembership || r.code == 200) {
           List<dynamic>? customData = result.user?.customData;
           var renewalDate = getNextRenewalTime(customData) ?? 0;
           var renewalDateString = getNextRenewalTimeString(customData) ?? "-";
@@ -221,7 +222,7 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
             'renewalDate': 'v[$renewalDateString]',
             'userId': result.user?.id ?? '-1',
           });
-          if (vipExpired) {
+          if (_enableMembership && vipExpired) {
             Fluttertoast.showToast(
               msg: AppLocalizations.of(context).vipExpired,
             );
@@ -321,13 +322,23 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
 
     await _webViewController.runJavaScript('''
         (function() {
-          document.getElementById('phone').value = '$phoneNumber';
-          document.getElementById('password').value = '$password';
+          //document.getElementById('phone').value = '$phoneNumber';
+          \$('#phone').val('$phoneNumber');
+          var rsa = new RSAKey();
+          rsa.setPublic(public_key, public_length);
+          var password = rsa.encrypt('$password');
+          if(password) {
+            \$('#password').val(password);
+          }
+          //document.getElementById('password').value = '$password';
           var arithmeticQuestion = document.getElementById('newCode').innerText.replace(/&nbsp;/g, '');
           var result = eval(arithmeticQuestion.slice(0, -1));
           document.getElementById('veryCode').value = result;
-          // alert("qestion: " + arithmeticQuestion + " result: " + result);
-          document.getElementById('login-btn').click();
+          // alert("question: " + arithmeticQuestion + " result: " + result);
+          // alert("password: " + document.getElementById('password').value);
+          setTimeout(function() {
+            document.getElementById('login-btn').click();
+          }, 500);
         })();
       ''');
   }
