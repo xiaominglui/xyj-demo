@@ -156,7 +156,7 @@ class _MainPageState extends State<MainPage> {
       }),
       BrowserTaskPage(
           accountParameter: _accountParameter, autoStart: _autoStart, taskType: _executeType),
-      const SettingsPage2(),
+      // const SettingsPage2(),
       // const MyPage(),
     ];
 
@@ -174,8 +174,8 @@ class _MainPageState extends State<MainPage> {
               icon: const Icon(Icons.account_tree_rounded), label: AppLocalizations.of(context).accountManager),
           BottomNavigationBarItem(
               icon: const Icon(Icons.explore_rounded), label: AppLocalizations.of(context).autoTask),
-          BottomNavigationBarItem(
-              icon: const Icon(Icons.settings), label: AppLocalizations.of(context).settings),
+          // BottomNavigationBarItem(
+          //     icon: const Icon(Icons.settings), label: AppLocalizations.of(context).settings),
         ],
       ),
     );

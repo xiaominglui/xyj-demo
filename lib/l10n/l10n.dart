@@ -90,6 +90,7 @@ class AppLocalizations {
       'welcomeDialogNegativeButton': '不同意',
       'welcomeDialogPositiveButton': '同意',
       'feedbackToast': 'Please contact the customer service "jeff-studio" on Wechat to provide feedback or for consultations',
+      'buyMeCoffee': 'Donate',
     },
     'zh': {
       'hello': '你好世界',
@@ -171,6 +172,7 @@ class AppLocalizations {
       'welcomeDialogNegativeButton': '不同意',
       'welcomeDialogPositiveButton': '同意并继续',
       'feedbackToast': '请微信联系客服"jeff-studio"反馈或咨询',
+      'buyMeCoffee': '打赏',
     },
   };
 
@@ -491,5 +493,9 @@ class AppLocalizations {
 
   String get welcomeDialogPositiveButton {
     return _localizedValues[locale.languageCode]!['welcomeDialogPositiveButton']!;
+  }
+
+  String get buyMeCoffee {
+    return _localizedValues[locale.languageCode]!['buyMeCoffee']!;
   }
 }

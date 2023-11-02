@@ -364,6 +364,11 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
                 onPressed: _showBottomSheet,
                 tooltip: AppLocalizations.of(context).composeAutoTask,
               ),
+              // IconButton(
+              //   icon: const Icon(Icons.coffee),
+              //   onPressed: _showBuyMeCoffee,
+              //   tooltip: AppLocalizations.of(context).buyMeCoffee,
+              // )
             ],
           ),
           body: SafeArea(
@@ -375,6 +380,138 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
             ),
           ),
         ));
+  }
+
+  void _showBuyMeCoffee() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Column(
+                    children: [
+                      Text(
+                        AppLocalizations.of(context).chooseTaskType,
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      ListTile(
+                        title: Text(AppLocalizations.of(context).checkInTask),
+                        leading: Radio<ExecuteType>(
+                          value: ExecuteType.checkIn,
+                          groupValue: _taskType,
+                          onChanged: (ExecuteType? value) {
+                            setState(() {
+                              _taskType = value;
+                            });
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(AppLocalizations.of(context).logInTask),
+                        leading: Radio<ExecuteType>(
+                          value: ExecuteType.login,
+                          groupValue: _taskType,
+                          onChanged: (ExecuteType? value) {
+                            setState(() {
+                              _taskType = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  _taskType == ExecuteType.login
+                      ? ListTile(
+                    title: widget.accountParameter == null
+                        ? Text('')
+                        : Text(widget.accountParameter!.phoneNumber),
+                    subtitle: widget.accountParameter == null
+                        ? Text('')
+                        : Text(widget.accountParameter!.alias),
+                    trailing: widget.accountParameter == null
+                        ? IconButton(
+                      icon: const Icon(Icons.add_circle),
+                      onPressed: () async {
+                        Account selectedAccount =
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  AccountSelectorPage()),
+                        );
+                        setState(() {
+                          widget.accountParameter = selectedAccount;
+                        });
+                      },
+                    )
+                        : IconButton(
+                      icon: const Icon(Icons.remove_circle),
+                      onPressed: () {
+                        setState(() {
+                          widget.accountParameter = null;
+                        });
+                      },
+                    ),
+                  )
+                      : Column(
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)
+                            .chooseTheExecutionScope,
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      ListTile(
+                        title: Text(AppLocalizations.of(context)
+                            .accountsNotLoggedIn),
+                        leading: Radio<ExecuteScope>(
+                          value: ExecuteScope.notLoggedInOnly,
+                          groupValue: _taskScope,
+                          onChanged: (ExecuteScope? value) {
+                            setState(() {
+                              _taskScope = value;
+                            });
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(
+                            AppLocalizations.of(context).allAccounts),
+                        leading: Radio<ExecuteScope>(
+                          value: ExecuteScope.all,
+                          groupValue: _taskScope,
+                          onChanged: (ExecuteScope? value) {
+                            setState(() {
+                              _taskScope = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        startAutoTask(_taskType, _taskScope);
+                      },
+                      child: Text(AppLocalizations.of(context).startToExecute),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      }
+    );
   }
 
   void _showBottomSheet() {
