@@ -47,7 +47,7 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
   final _completers = <int, Completer<void>>{};
   bool _isTaskRunning = false;
   bool _isManualStop = false;
-  bool _enableMembership = false;
+  final bool _enableMembership = false;
   ExecuteScope? _taskScope = ExecuteScope.notLoggedInOnly;
   ExecuteType? _taskType;
   final List<Account> _accountsToExecute = List.empty(growable: true);
@@ -347,7 +347,7 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
   Widget build(BuildContext context) {
     _accountProvider = Provider.of<AccountProvider>(context);
     return VisibilityDetector(
-        key: Key('browser_task'),
+        key: const Key('browser_task'),
         onVisibilityChanged: (visibilityInfo) {
           if (visibilityInfo.visibleFraction == 1.0) {
             print('browser_task Visible');
@@ -430,10 +430,10 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
                   _taskType == ExecuteType.login
                       ? ListTile(
                     title: widget.accountParameter == null
-                        ? Text('')
+                        ? const Text('')
                         : Text(widget.accountParameter!.phoneNumber),
                     subtitle: widget.accountParameter == null
-                        ? Text('')
+                        ? const Text('')
                         : Text(widget.accountParameter!.alias),
                     trailing: widget.accountParameter == null
                         ? IconButton(
@@ -444,7 +444,7 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  AccountSelectorPage()),
+                                  const AccountSelectorPage()),
                         );
                         setState(() {
                           widget.accountParameter = selectedAccount;
@@ -562,10 +562,10 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
                   _taskType == ExecuteType.login
                       ? ListTile(
                           title: widget.accountParameter == null
-                              ? Text('')
+                              ? const Text('')
                               : Text(widget.accountParameter!.phoneNumber),
                           subtitle: widget.accountParameter == null
-                              ? Text('')
+                              ? const Text('')
                               : Text(widget.accountParameter!.alias),
                           trailing: widget.accountParameter == null
                               ? IconButton(
@@ -576,7 +576,7 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              AccountSelectorPage()),
+                                              const AccountSelectorPage()),
                                     );
                                     setState(() {
                                       widget.accountParameter = selectedAccount;

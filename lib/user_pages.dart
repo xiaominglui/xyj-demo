@@ -44,6 +44,7 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
   Timer? _timer;
   bool _disposed = false;
 
+  @override
   initState() {
     super.initState();
     _accountController = TextEditingController();
@@ -52,6 +53,7 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
     _verifyCodeController.addListener(_onTextFieldChanged);
   }
 
+  @override
   dispose() {
     _disposed = true;
     _stopCountdown();
@@ -140,7 +142,7 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
       ),
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -244,18 +246,18 @@ class _SimpleSMSLoginPageState extends State<SimpleSMSLoginPage> {
                         RichText(
                           text: TextSpan(
                             text: AppLocalizations.of(context).privacyPolicyPrefix,
-                            style: TextStyle(color: Colors.black54),
+                            style: const TextStyle(color: Colors.black54),
                             children: [
                               TextSpan(
                                 text: AppLocalizations.of(context).userAgreement,
-                                style: TextStyle(color: Colors.blue),
+                                style: const TextStyle(color: Colors.blue),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () => print('Tap Here onTap'),
                               ),
                               TextSpan(text: AppLocalizations.of(context).andString),
                               TextSpan(
                                 text: AppLocalizations.of(context).privacyPolicy,
-                                style: TextStyle(color: Colors.blue),
+                                style: const TextStyle(color: Colors.blue),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () => print('Tap Here onTap'),
                               ),
@@ -309,6 +311,7 @@ class _LoginPageState extends State<LoginPage> {
     'NZ +64'
   ];
 
+  @override
   initState() {
     super.initState();
     _accountController = TextEditingController();
@@ -317,6 +320,7 @@ class _LoginPageState extends State<LoginPage> {
     _passwordController.addListener(_onTextFieldChanged);
   }
 
+  @override
   dispose() {
     _accountController.dispose();
     _passwordController.dispose();
@@ -333,14 +337,14 @@ class _LoginPageState extends State<LoginPage> {
   _goToRegisterPage() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => RegisterPage()),
+      MaterialPageRoute(builder: (context) => const RegisterPage()),
     );
   }
 
   _goToPasswordResetPage() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => PasswordResetPage()),
+      MaterialPageRoute(builder: (context) => const PasswordResetPage()),
     );
   }
 
@@ -387,7 +391,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -474,18 +478,18 @@ class _LoginPageState extends State<LoginPage> {
                         RichText(
                           text: TextSpan(
                             text: "I've read and agree to the ",
-                            style: TextStyle(color: Colors.black54),
+                            style: const TextStyle(color: Colors.black54),
                             children: [
                               TextSpan(
                                 text: "User Agreement",
-                                style: TextStyle(color: Colors.blue),
+                                style: const TextStyle(color: Colors.blue),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () => print('Tap Here onTap'),
                               ),
-                              TextSpan(text: " and "),
+                              const TextSpan(text: " and "),
                               TextSpan(
                                 text: "Privacy Policy",
-                                style: TextStyle(color: Colors.blue),
+                                style: const TextStyle(color: Colors.blue),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () => print('Tap Here onTap'),
                               ),
@@ -665,7 +669,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
       body: SafeArea(
         child: SingleChildScrollView(
             child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -769,15 +773,15 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
               if (!_isConfirmValid && _isResetInfoValid)
                 Text(
                   AppLocalizations.of(context).twoPasswordsDoNotMatch,
-                  style: TextStyle(color: Colors.red),
+                  style: const TextStyle(color: Colors.red),
                 ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _isResetInfoValid && _isConfirmValid
                     ? _resetAccountPassword
                     : null,
                 style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 48)),
+                    minimumSize: const Size(double.infinity, 48)),
                 child: Text(AppLocalizations.of(context).submit),
               ),
             ],
@@ -789,25 +793,27 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
 }
 
 class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
+
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _accountController = TextEditingController();
-  TextEditingController _verificationCodeController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _passwordConfirmController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _accountController = TextEditingController();
+  final TextEditingController _verificationCodeController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordConfirmController = TextEditingController();
 
   bool _obscureText1 = true;
   bool _obscureText2 = true;
 
-  bool _isRegisterInfoValid = false;
-  bool _isConfirmValid = false;
+  final bool _isRegisterInfoValid = false;
+  final bool _isConfirmValid = false;
 
   String _selectedCountryCode = 'CN +86';
-  List<String> _supportedCountryCodes = [
+  final List<String> _supportedCountryCodes = [
     'CN +86',
     'HK +852',
     'MO +853',
@@ -902,7 +908,7 @@ class _RegisterPageState extends State<RegisterPage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -1016,15 +1022,15 @@ class _RegisterPageState extends State<RegisterPage> {
                 if (!_isConfirmValid && _isRegisterInfoValid)
                   Text(
                     AppLocalizations.of(context).twoPasswordsDoNotMatch,
-                    style: TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.red),
                   ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed:
                       _isRegisterInfoValid && _isConfirmValid ? _signup : null,
-                  child: Text(AppLocalizations.of(context).submit),
                   style: ElevatedButton.styleFrom(
-                      minimumSize: Size(double.infinity, 48)),
+                      minimumSize: const Size(double.infinity, 48)),
+                  child: Text(AppLocalizations.of(context).submit),
                 ),
               ],
             ),

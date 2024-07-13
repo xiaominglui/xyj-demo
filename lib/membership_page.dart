@@ -156,7 +156,7 @@ class _MembershipPageState extends State<MembershipPage>
                   size: 50.0,
                   color: Colors.black45,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 16.0,
                 ),
                 Column(
@@ -166,7 +166,7 @@ class _MembershipPageState extends State<MembershipPage>
                         isLoggedIn
                             ? userName
                             : AppLocalizations.of(context).titleNotLoggedIn,
-                        style: TextStyle(fontSize: 20.0)),
+                        style: const TextStyle(fontSize: 20.0)),
                     Text(
                         AppLocalizations.of(context).renewalDate +
                             renewalDateString,
@@ -180,7 +180,7 @@ class _MembershipPageState extends State<MembershipPage>
           ),
           TabBar(
             controller: _tabController,
-            indicator: BoxDecoration(
+            indicator: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [Colors.yellow, Colors.yellowAccent],
                 end: Alignment.centerLeft,
@@ -198,7 +198,7 @@ class _MembershipPageState extends State<MembershipPage>
                       width: 36,
                       color: Colors.black45,
                     ),
-                    Text("VIP", style: TextStyle(color: Colors.black54)),
+                    const Text("VIP", style: TextStyle(color: Colors.black54)),
                   ],
                 ),
               ),
@@ -212,7 +212,7 @@ class _MembershipPageState extends State<MembershipPage>
                       width: 36,
                       color: Colors.black45,
                     ),
-                    Text("SVIP", style: TextStyle(color: Colors.black54)),
+                    const Text("SVIP", style: TextStyle(color: Colors.black54)),
                   ],
                 ),
               ),
@@ -239,7 +239,7 @@ class MembershipTab extends StatelessWidget {
   final List<String> benefits;
   final List<Map<String, String>> paymentOptions;
 
-  MembershipTab({required this.benefits, required this.paymentOptions});
+  const MembershipTab({super.key, required this.benefits, required this.paymentOptions});
 
   @override
   Widget build(BuildContext context) {
@@ -247,8 +247,8 @@ class MembershipTab extends StatelessWidget {
       children: [
         BenefitsList(benefits: benefits),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(children: [
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: const Row(children: [
             Icon(
               Icons.support_agent_rounded,
               color: Colors.blue,
@@ -278,18 +278,18 @@ class MembershipTab extends StatelessWidget {
 class BenefitsList extends StatelessWidget {
   final List<String> benefits;
 
-  BenefitsList({required this.benefits});
+  const BenefitsList({super.key, required this.benefits});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 150.0,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: benefits.length,
         itemBuilder: (context, index) {
           return Container(
-            margin: EdgeInsets.all(10.0),
+            margin: const EdgeInsets.all(10.0),
             child: Column(
               children: [
                 Container(
@@ -309,12 +309,12 @@ class BenefitsList extends StatelessWidget {
                     child: Column(
                       // Add your child widgets here
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.card_giftcard,
                           size: 50.0,
                           color: Colors.orange,
                         ),
-                        Text(benefits[index], style: TextStyle(fontSize: 16.0)),
+                        Text(benefits[index], style: const TextStyle(fontSize: 16.0)),
                       ],
                     ),
                   ),
@@ -331,11 +331,11 @@ class BenefitsList extends StatelessWidget {
 class PaymentOptionsList extends StatelessWidget {
   final List<Map<String, String>> paymentOptions;
 
-  PaymentOptionsList({super.key, required this.paymentOptions});
+  const PaymentOptionsList({super.key, required this.paymentOptions});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 260.0,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -352,12 +352,12 @@ class PaymentOptionsList extends StatelessWidget {
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: Text("👑请添加客服微信充值或咨询👑"),
-                          content: Text(" 🙋客服微信: jeff-studio"),
+                          title: const Text("👑请添加客服微信充值或咨询👑"),
+                          content: const Text(" 🙋客服微信: jeff-studio"),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () => Navigator.pop(context),
-                              child: Text('我再想想'),
+                              child: const Text('我再想想'),
                             ),
                             TextButton(
                               onPressed: () async {
@@ -367,7 +367,7 @@ class PaymentOptionsList extends StatelessWidget {
                                 await Clipboard.setData(
                                     const ClipboardData(text: 'jeff-studio'));
                               },
-                              child: Text('点我复制'),
+                              child: const Text('点我复制'),
                             ),
                           ],
                         );
@@ -381,44 +381,44 @@ class PaymentOptionsList extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         paymentOptions[index]['name']!,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
                         paymentOptions[index]['description']!,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.red,
                           fontSize: 16,
                         ),
                       ),
                       Text(
                         paymentOptions[index]['promotionalPrice']!,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.deepOrange,
                           fontSize: 32,
                         ),
                       ),
                       Text(
                         paymentOptions[index]['price']!,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           color: Colors.black26,
                           decoration: TextDecoration.lineThrough,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 8.0,
                       ),
                       Container(
                         padding:
-                            EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                            const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                         color: Colors.red,
                         alignment: Alignment.center,
                         child: Text(
                           paymentOptions[index]['discount']!,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 12,
                           ),
@@ -439,24 +439,24 @@ class PaymentOptionsList extends StatelessWidget {
 class PaymentOptionCard extends StatelessWidget {
   final int currentPrice;
 
-  PaymentOptionCard(this.currentPrice);
+  const PaymentOptionCard(this.currentPrice, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return new Card(
-      child: new Padding(
+    return Card(
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: new Column(children: <Widget>[
-          new Text('Option title',
+        child: Column(children: <Widget>[
+          const Text('Option title',
               style: TextStyle(fontSize: 20.0, color: Colors.blue)),
-          new SizedBox(height: 16.0),
-          new Text('Option hint'),
-          new SizedBox(height: 16.0),
-          new Text('￥ $currentPrice'),
-          new SizedBox(height: 16.0),
-          new Text('Origin price'),
-          new SizedBox(height: 16.0),
-          new Text('Due date'),
+          const SizedBox(height: 16.0),
+          const Text('Option hint'),
+          const SizedBox(height: 16.0),
+          Text('￥ $currentPrice'),
+          const SizedBox(height: 16.0),
+          const Text('Origin price'),
+          const SizedBox(height: 16.0),
+          const Text('Due date'),
         ]),
       ),
     );

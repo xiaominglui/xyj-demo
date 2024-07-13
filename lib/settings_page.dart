@@ -17,7 +17,7 @@ class SettingsPage extends StatelessWidget {
     }
     if (!status.isGranted) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('无法访问外部存储')));
+          .showSnackBar(const SnackBar(content: Text('无法访问外部存储')));
       return;
     }
 
@@ -28,7 +28,7 @@ class SettingsPage extends StatelessWidget {
         .join('\n');
 
     Directory? directory = await getApplicationDocumentsDirectory();
-    String backupFilePath = '${directory!.path}/xyj_my_accounts.txt';
+    String backupFilePath = '${directory.path}/xyj_my_accounts.txt';
 
     File backupFile = File(backupFilePath);
     await backupFile.writeAsString(content);
@@ -44,17 +44,17 @@ class SettingsPage extends StatelessWidget {
     }
     if (!status.isGranted) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('无法访问外部存储')));
+          .showSnackBar(const SnackBar(content: Text('无法访问外部存储')));
       return;
     }
 
     Directory? directory = await getApplicationDocumentsDirectory();
-    String backupFilePath = '${directory!.path}/xyj_my_accounts.txt';
+    String backupFilePath = '${directory.path}/xyj_my_accounts.txt';
 
     File backupFile = File(backupFilePath);
     if (!await backupFile.exists()) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('无有效备份文件')));
+          .showSnackBar(const SnackBar(content: Text('无有效备份文件')));
       return;
     }
 
@@ -70,28 +70,28 @@ class SettingsPage extends StatelessWidget {
     await accountProvider.restoreAccounts(restoredAccounts);
 
     ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('帐号信息恢复成功')));
+        .showSnackBar(const SnackBar(content: Text('帐号信息恢复成功')));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('设置'),
+        title: const Text('设置'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ElevatedButton(
               onPressed: () => _backupAccounts(context),
-              child: Text('备份'),
+              child: const Text('备份'),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => _restoreAccounts(context),
-              child: Text('恢复'),
+              child: const Text('恢复'),
             ),
           ],
         ),

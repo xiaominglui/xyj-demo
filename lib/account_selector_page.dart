@@ -4,6 +4,8 @@ import 'package:xyj_helper/account_provider.dart';
 import 'package:xyj_helper/l10n/l10n.dart';
 
 class AccountSelectorPage extends StatelessWidget {
+  const AccountSelectorPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

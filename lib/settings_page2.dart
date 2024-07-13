@@ -10,7 +10,6 @@ import 'package:xyj_helper/l10n/l10n.dart';
 import 'package:xyj_helper/membership_page.dart';
 import 'package:xyj_helper/utils.dart';
 
-import 'user_info_page.dart';
 import 'user_pages.dart';
 
 class SettingsPage2 extends StatefulWidget {
@@ -23,6 +22,7 @@ class SettingsPage2 extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage2> {
   User? _currentUser;
 
+  @override
   initState() {
     super.initState();
     _getCurrentUser();
@@ -55,7 +55,7 @@ class _SettingsPageState extends State<SettingsPage2> {
   @override
   Widget build(BuildContext context) {
     return VisibilityDetector(
-      key: Key('settings'),
+      key: const Key('settings'),
       onVisibilityChanged: (visibilityInfo) {
         if (visibilityInfo.visibleFraction == 1.0) {
           print('settings Visible');
@@ -80,16 +80,16 @@ class _SettingsPageState extends State<SettingsPage2> {
                         context: context,
                         builder: (context) {
                           return AlertDialog(
-                            title: Text('确认退出？'),
+                            title: const Text('确认退出？'),
                             actions: <Widget>[
                               TextButton(
-                                child: Text('取消'),
+                                child: const Text('取消'),
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
                               ),
                               TextButton(
-                                child: Text('确定'),
+                                child: const Text('确定'),
                                 onPressed: () async {
                                   AuthResult result = await AuthClient.logout();
                                   var code = result.code;
@@ -121,7 +121,7 @@ class _SettingsPageState extends State<SettingsPage2> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => MembershipPage()),
+                            builder: (context) => const MembershipPage()),
                       );
                     }),
                 //SettingItem(title: '我的优惠券'),
@@ -165,7 +165,7 @@ class _SettingsPageState extends State<SettingsPage2> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 16.0,
             ),
             FutureBuilder(
@@ -183,7 +183,7 @@ class _SettingsPageState extends State<SettingsPage2> {
                           await AppCenter.checkForUpdateAsync();
                         },
                         child: Text('version: ${packageInfo.version}',
-                            style: TextStyle(color: Colors.grey)),
+                            style: const TextStyle(color: Colors.grey)),
                       ),
                       const SizedBox(
                         height: 16.0,

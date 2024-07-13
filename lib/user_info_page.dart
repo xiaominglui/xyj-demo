@@ -3,6 +3,8 @@ import 'package:authing_sdk/result.dart';
 import 'package:flutter/material.dart';
 
 class UserInfoPage extends StatefulWidget {
+  const UserInfoPage({super.key});
+
   @override
   _UserInfoPageState createState() => _UserInfoPageState();
 }
@@ -14,18 +16,18 @@ class _UserInfoPageState extends State<UserInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('用户信息')),
+      appBar: AppBar(title: const Text('用户信息')),
       body: ListView(
         children: <Widget>[
           ListTile(
-            title: Text('昵称'),
+            title: const Text('昵称'),
             trailing: Text(nickname),
             onTap: () async {
               final result = await showDialog(
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: Text('设置昵称'),
+                      title: const Text('设置昵称'),
                       content: TextField(
                         onChanged: (value) {
                           nickname = value;
@@ -37,13 +39,13 @@ class _UserInfoPageState extends State<UserInfoPage> {
                       ),
                       actions: <Widget>[
                         TextButton(
-                          child: Text('取消'),
+                          child: const Text('取消'),
                           onPressed: () {
                             Navigator.pop(context);
                           },
                         ),
                         TextButton(
-                          child: Text('确定'),
+                          child: const Text('确定'),
                           onPressed: () {
                             Navigator.pop(context);
                             setState(() {});
@@ -55,11 +57,11 @@ class _UserInfoPageState extends State<UserInfoPage> {
             },
           ),
           ListTile(
-            title: Text('手机号'),
+            title: const Text('手机号'),
             trailing: Text(phoneNumber),
           ),
           TextButton(
-              style: TextButton.styleFrom(textStyle: TextStyle()),
+              style: TextButton.styleFrom(textStyle: const TextStyle()),
               onPressed: () async {
                 // show a dialog with cancel and confirm button
 
@@ -67,16 +69,16 @@ class _UserInfoPageState extends State<UserInfoPage> {
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        title: Text('确认退出？'),
+                        title: const Text('确认退出？'),
                         actions: <Widget>[
                           TextButton(
-                            child: Text('取消'),
+                            child: const Text('取消'),
                             onPressed: () {
                               Navigator.pop(context);
                             },
                           ),
                           TextButton(
-                            child: Text('确定'),
+                            child: const Text('确定'),
                             onPressed: () async {
                               AuthResult result = await AuthClient.logout();
                               var code = result.code;
@@ -89,7 +91,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                       );
                     });
               },
-              child: Text('退出登录'))
+              child: const Text('退出登录'))
         ],
       ),
     );

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_appcenter_bundle_updated_to_null_safety/flutter_appcenter_bundle_updated_to_null_safety.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 class AppCenterTest extends StatefulWidget {
+  const AppCenterTest({super.key});
+
   @override
   _AppCenterTestState createState() => _AppCenterTestState();
 }
@@ -21,7 +23,7 @@ class _AppCenterTestState extends State<AppCenterTest> {
           title: const Text('Plugin example app'),
         ),
         body: Container(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +77,7 @@ class _AppCenterTestState extends State<AppCenterTest> {
 }
 
 class PackageInfoContent extends StatelessWidget {
-  const PackageInfoContent();
+  const PackageInfoContent({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,7 @@ bool isLoggedToday(Account account) {
 String obscurePhoneNumber(String str) {
   var start = str.length ~/ 2 - 2;
   var end = start + 4;
-  return str.substring(0, start) + '****' + str.substring(end);
+  return '${str.substring(0, start)}****${str.substring(end)}';
 }
 
 

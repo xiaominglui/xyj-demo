@@ -11,7 +11,6 @@ import 'l10n/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'l10n/l10n_utils.dart';
-import 'settings_page2.dart';
 
 
 
@@ -60,9 +59,9 @@ class _MainPageState extends State<MainPage> {
 
   Future<void> _checkPolicyConfirmed() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool _confirmed = (prefs.getBool('policy_confirmed') ?? false);
+    bool confirmed = (prefs.getBool('policy_confirmed') ?? false);
 
-    if (!_confirmed) {
+    if (!confirmed) {
       _showPolicyDialog();
     }
   }
@@ -76,18 +75,18 @@ class _MainPageState extends State<MainPage> {
             content: RichText(
               text: TextSpan(
                 text: AppLocalizations.of(context).welcomeDialogPrefix,
-                style: TextStyle(color: Colors.black54),
+                style: const TextStyle(color: Colors.black54),
                 children: [
                   TextSpan(
                     text: AppLocalizations.of(context).userAgreement,
-                    style: TextStyle(color: Colors.blue),
+                    style: const TextStyle(color: Colors.blue),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () => print('Tap Here onTap'),
                   ),
                   TextSpan(text: AppLocalizations.of(context).andString),
                   TextSpan(
                     text: AppLocalizations.of(context).privacyPolicy,
-                    style: TextStyle(color: Colors.blue),
+                    style: const TextStyle(color: Colors.blue),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () => print('Tap Here onTap'),
                   ),
