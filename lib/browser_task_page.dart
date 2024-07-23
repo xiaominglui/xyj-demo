@@ -38,7 +38,7 @@ class BrowserTaskPage extends StatefulWidget {
 }
 
 class _BrowserTaskPageState extends State<BrowserTaskPage> {
-  final _url = 'https://m.zmxyj.com/login/index';
+  final _url = 'https://m.zmxyj.com/#/pages/login/login';
   late final WebViewController _webViewController;
   late AccountProvider _accountProvider;
   int _currentAccountIndex = -1;
@@ -58,7 +58,7 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
     print("onPageFinished===$_currentAccountIndex");
     if (_currentAccountIndex > -1) {
       // in auto logging
-      if (url == 'https://m.zmxyj.com/login/me.html') {
+      if (url == 'https://m.zmxyj.com/#/pages/my/my') {
         if (_processedAccountIndexes.contains(_currentAccountIndex)) {
           return; // if processed, ignore. Due to onPageFinished multi-callback
         }
@@ -71,7 +71,10 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
           await Future.delayed(const Duration(seconds: 1));
         }
 
-        _completers[_currentAccountIndex]!.complete();
+        if(!_completers[_currentAccountIndex]!.isCompleted) {
+          _completers[_currentAccountIndex]!.complete();
+        }
+
         _accountProcessedController.add(null);
         print(
             "autoTask continue via logged in===$_currentAccountIndex, continue");
@@ -96,10 +99,10 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
   Future<void> _logout() async {
     await _webViewController.runJavaScript('''
         (function() {
-          document.getElementsByClassName("header-message-t back")[2].click();
+          document.getElementsByClassName("my_header_list_tag")[2].click();
           setTimeout(function() {
-            document.querySelector("body > div.modal.modal-in > div.modal-buttons > span.modal-button.modal-button-bold").click();
-          }, 500);
+            document.querySelector('.uni-modal__btn.uni-modal__btn_primary').click();
+          }, 1000);
         })();
       ''');
   }
@@ -322,22 +325,33 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
 
     await _webViewController.runJavaScript('''
         (function() {
-          //document.getElementById('phone').value = '$phoneNumber';
-          \$('#phone').val('$phoneNumber');
-          var rsa = new RSAKey();
-          rsa.setPublic(public_key, public_length);
-          var password = rsa.encrypt('$password');
-          if(password) {
-            \$('#password').val(password);
-          }
-          //document.getElementById('password').value = '$password';
-          var arithmeticQuestion = document.getElementById('newCode').innerText.replace(/&nbsp;/g, '');
-          var result = eval(arithmeticQuestion.slice(0, -1));
-          document.getElementById('veryCode').value = result;
+          document.querySelector('.login_agreement_check .checkBox_on').classList.remove('checkBox_none');
+          document.querySelector('.login_agreement_check .checkBox_out').classList.add('checkBox_none');
+          
+          setTimeout(function() {
+            document.querySelectorAll('input')[0].valueAsNumber = '$phoneNumber';
+            document.querySelectorAll('input')[0].dispatchEvent(new Event('input'));
+          }, 500);
+          
+          
+          setTimeout(function() {
+            document.querySelectorAll('input')[1].value = '$password';
+            document.querySelectorAll('input')[1].dispatchEvent(new Event('input'));
+          }, 500);
+          
+          setTimeout(function() {
+            var arithmeticQuestion = document.querySelector('.register_cont_list_text').querySelector('span').textContent.replace(/&nbsp;/g, '');
+            var result = eval(arithmeticQuestion.slice(0, -1));
+          
+            document.querySelectorAll('input')[2].value = result;
+            document.querySelectorAll('input')[2].dispatchEvent(new Event('input'));
+          }, 500);
+          
           // alert("question: " + arithmeticQuestion + " result: " + result);
           // alert("password: " + document.getElementById('password').value);
+          
           setTimeout(function() {
-            document.getElementById('login-btn').click();
+            document.querySelector('.login_btn .apy_buttom_confirm_large').click();
           }, 500);
         })();
       ''');

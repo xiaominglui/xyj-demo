@@ -1,7 +1,15 @@
 import 'account.dart';
 
 bool isLoggedToday(Account account) {
-  return account.lastLoggedIn != null && DateTime.now().difference(account.lastLoggedIn!).inDays == 0;
+  if (account.lastLoggedIn == null) {
+    return false;
+  }
+
+  DateTime now = DateTime.now();
+  DateTime todayStart = DateTime(now.year, now.month, now.day);
+  DateTime loginStart = DateTime(account.lastLoggedIn!.year, account.lastLoggedIn!.month, account.lastLoggedIn!.day);
+
+  return todayStart == loginStart;
 }
 
 String obscurePhoneNumber(String str) {
