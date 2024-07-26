@@ -325,27 +325,32 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
 
     await _webViewController.runJavaScript('''
         (function() {
-          document.querySelector('.login_agreement_check .checkBox_on').classList.remove('checkBox_none');
-          document.querySelector('.login_agreement_check .checkBox_out').classList.add('checkBox_none');
+          const needAgreement = document.querySelector('.checkBox_on.checkBox_none');
+          if (needAgreement) {
+            document.querySelector('.checkBox.login_agreement_check').click();
+          } else {
+            console.log('has agreement');
+          }
           
-          setTimeout(function() {
-            document.querySelectorAll('input')[0].valueAsNumber = '$phoneNumber';
-            document.querySelectorAll('input')[0].dispatchEvent(new Event('input'));
-          }, 500);
+          const clearIconElement = document.querySelector('.u-icon.u-icon--right');
+          if (clearIconElement) {
+            clearIconElement.click();
+          } else {
+            console.log('clear button NOT exist');
+          }
           
+          document.querySelectorAll('input')[0].valueAsNumber = '$phoneNumber';
+          document.querySelectorAll('input')[0].dispatchEvent(new Event('input'));
           
-          setTimeout(function() {
-            document.querySelectorAll('input')[1].value = '$password';
-            document.querySelectorAll('input')[1].dispatchEvent(new Event('input'));
-          }, 500);
+          document.querySelectorAll('input')[1].value = '$password';
+          document.querySelectorAll('input')[1].dispatchEvent(new Event('input'));
           
-          setTimeout(function() {
-            var arithmeticQuestion = document.querySelector('.register_cont_list_text').querySelector('span').textContent.replace(/&nbsp;/g, '');
-            var result = eval(arithmeticQuestion.slice(0, -1));
+          var arithmeticQuestion = document.querySelector('.register_cont_list_text').querySelector('span').textContent.replace(/&nbsp;/g, '');
+          var result = eval(arithmeticQuestion.slice(0, -1));
           
-            document.querySelectorAll('input')[2].value = result;
-            document.querySelectorAll('input')[2].dispatchEvent(new Event('input'));
-          }, 500);
+          document.querySelectorAll('input')[2].value = result;
+          document.querySelectorAll('input')[2].dispatchEvent(new Event('input'));
+
           
           // alert("question: " + arithmeticQuestion + " result: " + result);
           // alert("password: " + document.getElementById('password').value);
