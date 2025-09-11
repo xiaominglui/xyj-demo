@@ -38,7 +38,7 @@ class BrowserTaskPage extends StatefulWidget {
 }
 
 class _BrowserTaskPageState extends State<BrowserTaskPage> {
-  final _url = 'https://m.zmxyj.com/#/pages/login/login';
+  final _url = 'https://m.xyjadd.com/#/pages/login/login';
   late final WebViewController _webViewController;
   late AccountProvider _accountProvider;
   int _currentAccountIndex = -1;
@@ -58,7 +58,7 @@ class _BrowserTaskPageState extends State<BrowserTaskPage> {
     print("onPageFinished===$_currentAccountIndex");
     if (_currentAccountIndex > -1) {
       // in auto logging
-      if (url == 'https://m.zmxyj.com/#/pages/my/my') {
+      if (url == 'https://m.xyjadd.com/#/pages/my/my') {
         if (_processedAccountIndexes.contains(_currentAccountIndex)) {
           return; // if processed, ignore. Due to onPageFinished multi-callback
         }
